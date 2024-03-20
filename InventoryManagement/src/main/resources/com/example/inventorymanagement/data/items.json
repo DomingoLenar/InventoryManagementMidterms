@@ -1,0 +1,52 @@
+{
+  "items": [
+    {
+      "itemName": "",
+      "itemId": "",
+      "totalQty": "",
+      "stocks": [
+        {
+          "batchNo": "",
+          "qty": "",
+          "price": "",
+          "cost": "",
+          "supplier": "",
+          "date": ""
+        },
+        {
+          "batchNo": "",
+          "qty": "",
+          "price": "",
+          "cost": "",
+          "supplier": "",
+          "date": ""
+        }
+
+      ]
+    },
+    {
+      "itemName": "",
+      "itemId": "",
+      "totalQty": "",
+      "stocks": [
+        {
+          "batchNo": "",
+          "qty": "",
+          "price": "",
+          "cost": "",
+          "supplier": "",
+          "date": ""
+        },
+        {
+          "batchNo": "",
+          "qty": "",
+          "price": "",
+          "cost": "",
+          "supplier": "",
+          "date": ""
+        }
+
+      ]
+    }
+  ]
+}

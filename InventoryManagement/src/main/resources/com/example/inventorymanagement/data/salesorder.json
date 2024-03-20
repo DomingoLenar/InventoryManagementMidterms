@@ -1,0 +1,36 @@
+{
+  "salesOrders": [
+    {
+      "orderID": "",
+      "byUser": "",
+      "date": "",
+      "orderDetails":[
+        {
+          "itemID": "",
+          "qty": "",
+          "unitPrice": "",
+          "batchNo": ""
+        },
+        {
+          "itemID": "",
+          "qty": "",
+          "unitPrice": "",
+          "batchNo": ""
+        }
+      ]
+    },
+    {
+      "orderID": "",
+      "byUser": "",
+      "date": "",
+      "orderDetails":[
+        {
+          "itemID": "",
+          "qty": "",
+          "unitPrice": "",
+          "batchNo": ""
+        }
+      ]
+    }
+  ]
+}
