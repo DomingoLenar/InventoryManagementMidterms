@@ -1,4 +1,4 @@
-package com.example.inventorymanagement;
+package com.example.inventorymanagement.client.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

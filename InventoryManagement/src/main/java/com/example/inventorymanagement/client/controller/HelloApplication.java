@@ -1,4 +1,4 @@
-package com.example.inventorymanagement;
+package com.example.inventorymanagement.client.controller;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
