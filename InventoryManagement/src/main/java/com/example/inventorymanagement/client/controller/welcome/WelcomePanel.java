@@ -1,5 +1,6 @@
-package com.example.inventorymanagement.client.controller;
+package com.example.inventorymanagement.client.controller.welcome;
 
+import com.example.inventorymanagement.client.controller.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,13 +12,15 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class WelcomePanel extends Application {
+
     @Override
     public void start(Stage stage) throws IOException {
+        Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
 
-        Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"),20);
+        MainController mainController = MainController.getInstance(); // Get the instance
 
-        FXMLLoader fxmlLoader = new FXMLLoader(WelcomePanel.class.getResource("/com/example/inventorymanagement/client/view/welcome.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+        FXMLLoader fxmlLoader = new FXMLLoader(WelcomePanel.class.getResource("/com/example/inventorymanagement/client/view/welcome/welcome-view.fxml"));
+        Scene sceneWelcome = new Scene(fxmlLoader.load(), 600, 400);
 
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
         if (inputStream != null) {
@@ -28,7 +31,10 @@ public class WelcomePanel extends Application {
         }
 
         stage.setTitle("Stock Pilot");
-        stage.setScene(scene);
+        stage.setScene(sceneWelcome);
+
+        mainController.setStage(stage); // Set the stage in MainController
+
         stage.show();
     }
 
