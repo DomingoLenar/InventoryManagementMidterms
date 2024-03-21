@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 
-public class LoginController {
+public class WelcomeController {
     @FXML
     private BorderPane borderPane;
     @FXML

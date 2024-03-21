@@ -10,13 +10,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class LoginPanel extends Application {
+public class WelcomePanel extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"),20);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(LoginPanel.class.getResource("/com/example/inventorymanagement/client/view/login.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(WelcomePanel.class.getResource("/com/example/inventorymanagement/client/view/welcome.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
 
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
