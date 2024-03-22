@@ -1,10 +1,22 @@
 {
   "suppliers":[
     {
-      "name": ""
+      "name": "HealthyHarvest"
     },
     {
-      "name": ""
+      "name": "EcoSolutions"
+    },
+    {
+      "name": "GlobeWares"
+    },
+    {
+      "name": "NaturesNest"
+    },
+    {
+      "name": "GlobalMaterials"
+    },
+    {
+      "name": "CreaCraftSupplies"
     }
   ]
 }
