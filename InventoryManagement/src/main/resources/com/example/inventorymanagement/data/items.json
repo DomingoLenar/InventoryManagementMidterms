@@ -1,51 +1,156 @@
 {
   "items": [
     {
-      "itemName": "",
-      "itemId": "",
-      "totalQty": "",
+      "itemName": "Smartphone",
+      "itemId": "3",
+      "totalQty": "80",
       "stocks": [
         {
-          "batchNo": "",
-          "qty": "",
-          "price": "",
-          "cost": "",
-          "supplier": "",
-          "date": ""
-        },
-        {
-          "batchNo": "",
-          "qty": "",
-          "price": "",
-          "cost": "",
-          "supplier": "",
-          "date": ""
+          "batchNo": "GlobeWares_2023-12-20_240.00",
+          "qty": "80",
+          "price": "250.00",
+          "cost": "240.00",
+          "supplier": "GlobeWares",
+          "date": "2023-12-20"
         }
-
       ]
     },
     {
-      "itemName": "",
-      "itemId": "",
-      "totalQty": "",
+      "itemName": "Eggs",
+      "itemId": "1",
+      "totalQty": "100",
       "stocks": [
         {
-          "batchNo": "",
-          "qty": "",
-          "price": "",
-          "cost": "",
-          "supplier": "",
-          "date": ""
+          "batchNo": "HealthyHarvest_2023-12-22_4.50",
+          "qty": "50",
+          "price": "5.10",
+          "cost": "4.50",
+          "supplier": "HealthyHarvest",
+          "date": "2023-12-22"
         },
         {
-          "batchNo": "",
-          "qty": "",
-          "price": "",
-          "cost": "",
-          "supplier": "",
-          "date": ""
+          "batchNo": "HealthyHarvest_2023-12-23_4.50",
+          "qty": "50",
+          "price": "5.00",
+          "cost": "4.50",
+          "supplier": "HealthyHarvest",
+          "date": "2023-12-23"
         }
-
+      ]
+    },
+    {
+      "itemName": "PlywoodSheets",
+      "itemId": "6",
+      "totalQty": "120",
+      "stocks": [
+        {
+          "batchNo": "GlobalMaterials_2024-01-03_12.00",
+          "qty": "60",
+          "price": "13.80",
+          "cost": "12.00",
+          "supplier": "GlobalMaterials",
+          "date": "2024-01-03"
+        },
+        {
+          "batchNo": "GlobalMaterials_2024-01-04_12.00",
+          "qty": "60",
+          "price": "13.80",
+          "cost": "12.00",
+          "supplier": "GlobalMaterials",
+          "date": "2024-01-04"
+        }
+      ]
+    },
+    {
+      "itemName": "Cookies",
+      "itemId": "5",
+      "totalQty": "50",
+      "stocks": [
+        {
+          "batchNo": "NaturesNest_2024-02-02_9.50",
+          "qty": "25",
+          "price": "3.00",
+          "cost": "2.50",
+          "supplier": "NaturesNest",
+          "date": "2024-02-02"
+        },
+        {
+          "batchNo": "NaturesNest_2024-02-11_2.50",
+          "qty": "25",
+          "price": "3.05",
+          "cost": "2.50",
+          "supplier": "NaturesNest",
+          "date": "2024-02-11"
+        }
+      ]
+    },
+    {
+      "itemName": "OrganicFertilizer",
+      "itemId": "2",
+      "totalQty": "150",
+      "stocks": [
+        {
+          "batchNo": "EcoSolutions_2024-03-10_8.00",
+          "qty": "50",
+          "price": "8.51",
+          "cost": "8.00",
+          "supplier": "EcoSolutions",
+          "date": "2024-03-10"
+        },
+        {
+          "batchNo": "EcoSolutions_2024-03-11_8.00",
+          "qty": "100",
+          "price": "8.80",
+          "cost": "8.00",
+          "supplier": "EcoSolutions",
+          "date": "2024-03-11"
+        }
+      ]
+    },
+    {
+      "itemName": "ArtKit",
+      "itemId": "7",
+      "totalQty": "90",
+      "stocks": [
+        {
+          "batchNo": "CreaCraftSupplies_2024-03-11_18.00",
+          "qty": "45",
+          "price": "20.00",
+          "cost": "18.00",
+          "supplier": "CreaCraftSupplies",
+          "date": "2024-03-11"
+        },
+        {
+          "batchNo": "CreaCraftSupplies_2024-03-12_18.00",
+          "qty": "45",
+          "price": "20.70",
+          "cost": "18.00",
+          "supplier": "CreaCraftSupplies",
+          "date": "2024-03-12"
+        }
+      ]
+    },
+    {
+      "itemName": "Honey",
+      "itemId": "4",
+      "totalQty": "200",
+      "stocks": [
+        {
+          "batchNo": "NaturesNest_2024-03-22_45.00",
+          "qty": "100",
+          "price": "49.50",
+          "cost": "45.00",
+          "supplier": "NaturesNest",
+          "date": "2024-03-22"
+        },
+        {
+          "batchNo": "NaturesNest_2024-03-22_45.00",
+          "qty": "100",
+          "price": "49.50",
+          "cost": "45.00",
+          "supplier": "NaturesNest",
+          "date": "2024-03-22"
+        }
       ]
     }
   ]
