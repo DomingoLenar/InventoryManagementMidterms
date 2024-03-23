@@ -32,6 +32,8 @@ public class LoginPanel extends Application {
         stage.setScene(sceneLogin);
         stage.show();
 
+        stage.setResizable(false);
+
     }
     public static void main(String[] args) {
         launch();

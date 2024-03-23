@@ -32,8 +32,9 @@ public class WelcomePanel extends Application {
 
         stage.setTitle("Stock Pilot");
         stage.setScene(sceneWelcome);
+        stage.setResizable(false);
 
-        mainController.setStage(stage); // Set the stage in MainController
+        mainController.setStage(stage);
 
         stage.show();
     }
