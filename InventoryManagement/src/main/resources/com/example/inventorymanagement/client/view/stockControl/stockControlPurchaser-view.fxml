@@ -12,7 +12,7 @@
     <top>
         <AnchorPane prefHeight="58.0" prefWidth="653.0" BorderPane.alignment="CENTER">
             <children>
-                <TextField fx:id="searchFieldAdmin" layoutX="12.0" layoutY="14.0" prefHeight="30.0" prefWidth="827.0" promptText="Search">
+                <TextField fx:id="searchFieldPurchaser" layoutX="12.0" layoutY="14.0" prefHeight="30.0" prefWidth="827.0" promptText="Search">
                     <font>
                         <Font name="Share Tech Mono" size="15.0" />
                     </font></TextField>
