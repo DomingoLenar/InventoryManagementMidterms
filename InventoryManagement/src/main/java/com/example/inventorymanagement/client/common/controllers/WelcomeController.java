@@ -1,6 +1,5 @@
-package com.example.inventorymanagement.client.controller.welcome;
+package com.example.inventorymanagement.client.common.controllers;
 
-import com.example.inventorymanagement.client.controller.MainController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
