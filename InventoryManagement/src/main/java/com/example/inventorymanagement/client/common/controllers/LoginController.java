@@ -1,4 +1,4 @@
-package com.example.inventorymanagement.client.common.controller;
+package com.example.inventorymanagement.client.common.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

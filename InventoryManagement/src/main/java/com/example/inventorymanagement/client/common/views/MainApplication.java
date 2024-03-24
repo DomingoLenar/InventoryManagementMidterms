@@ -1,4 +1,6 @@
-package com.example.inventorymanagement.client.common.controller;
+package com.example.inventorymanagement.client.common.views;
+
+import com.example.inventorymanagement.client.common.controllers.MainController;
 
 import com.example.inventorymanagement.client.common.views.WelcomePanel;
 import javafx.application.Application;
