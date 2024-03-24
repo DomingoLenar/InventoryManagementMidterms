@@ -36,4 +36,15 @@ public class StockControlPurchaserController {
 
     @FXML
     public TableView getStockControlPurchaserTable() { return stockControlPurchaserTable; }
+
+    @FXML
+    private void initialize() {
+        addHoverEffect(lowStocksButtonPurchaser);
+        addHoverEffect(addItemButtonPurchaser);
+    }
+
+    private void addHoverEffect(Button button) {
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
+    }
 }

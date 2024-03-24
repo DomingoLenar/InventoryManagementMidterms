@@ -27,4 +27,14 @@ public class StockControlSalesController {
 
     @FXML
     public TableView getStockControlSalesTable() { return stockControlSalesTable; }
+
+    @FXML
+    private void initialize() {
+        addHoverEffect(salesInvoiceButtonSales);
+    }
+
+    private void addHoverEffect(Button button) {
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
+    }
 }

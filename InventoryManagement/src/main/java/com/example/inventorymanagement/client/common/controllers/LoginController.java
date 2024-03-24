@@ -30,4 +30,14 @@ public class LoginController {
 
     @FXML
     public TextField getPasswordField() { return passwordField; }
+
+    @FXML
+    private void initialize() {
+        addHoverEffect(loginButtonLogin);
+    }
+
+    private void addHoverEffect(Button button) {
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#FFFFFF, -10%);"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #FFFFFF;"));
+    }
 }

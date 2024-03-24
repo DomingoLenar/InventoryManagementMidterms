@@ -42,4 +42,17 @@ public class StockControlAdminController {
 
     @FXML
     public TableView getStockControlAdminTable() { return stockControlAdminTable; }
+
+    @FXML
+    private void initialize() {
+        addHoverEffect(lowStocksButtonAdmin);
+        addHoverEffect(salesInvoiceButtonAdmin);
+        addHoverEffect(addItemButtonAdmin);
+        addHoverEffect(addListingButtonAdmin);
+    }
+
+    private void addHoverEffect(Button button) {
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
+    }
 }

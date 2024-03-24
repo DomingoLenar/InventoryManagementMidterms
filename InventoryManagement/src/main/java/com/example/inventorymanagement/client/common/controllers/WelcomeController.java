@@ -23,6 +23,16 @@ public class WelcomeController {
     }
 
     @FXML
+    private void initialize() {
+        addHoverEffect(loginButtonWelcome);
+    }
+
+    private void addHoverEffect(Button button) {
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#FFFFFF, -10%);"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #FFFFFF;"));
+    }
+
+    @FXML
     private void handleLoginButtonAction(ActionEvent event) {
         Node source = (Node) event.getSource();
         source.getScene().getWindow().hide();
