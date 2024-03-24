@@ -1,4 +1,4 @@
-package com.example.inventorymanagement.client.sales.views;
+package com.example.inventorymanagement.client.purchaser.views;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,13 +11,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class StockControlSalesPanel extends Application {
+public class StockControlPurchaserPanel extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"),20);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(StockControlSalesPanel.class.getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlSales-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(StockControlPurchaserPanel.class.getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlPurchaser-view.fxml"));
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
 
         if (inputStream != null) {
@@ -27,9 +27,9 @@ public class StockControlSalesPanel extends Application {
             System.err.println("Failed to load image: logo.png");
         }
 
-        Scene sceneStockControlSalesPanel = new Scene(fxmlLoader.load(), 850, 650);
+        Scene sceneStockControlPurchaserPanel = new Scene(fxmlLoader.load(), 850, 650);
         stage.setTitle("Stock Pilot");
-        stage.setScene(sceneStockControlSalesPanel);
+        stage.setScene(sceneStockControlPurchaserPanel);
         stage.show();
 
         stage.setResizable(false);
