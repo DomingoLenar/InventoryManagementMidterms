@@ -36,22 +36,22 @@
    <bottom>
       <AnchorPane prefHeight="62.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="addItemButton" layoutX="755.0" layoutY="17.0" mnemonicParsing="false" style="-fx-background-color: EAD7D7;" text="Add Item">
+            <Button fx:id="addItemButtonAdmin" layoutX="755.0" layoutY="17.0" mnemonicParsing="false" style="-fx-background-color: EAD7D7;" text="Add Item">
                <font>
                   <Font name="Share Tech Mono" size="15.0" />
                </font>
             </Button>
-            <Button fx:id="addListingButton" layoutX="634.0" layoutY="18.0" mnemonicParsing="false" style="-fx-background-color: EAD7D7;" text="Add Listing">
+            <Button fx:id="addListingButtonAdmin" layoutX="634.0" layoutY="18.0" mnemonicParsing="false" style="-fx-background-color: EAD7D7;" text="Add Listing">
                <font>
                   <Font name="Share Tech Mono" size="15.0" />
                </font>
             </Button>
-            <Button fx:id="salesInvoiceButton" layoutX="497.0" layoutY="18.0" mnemonicParsing="false" style="-fx-background-color: EAD7D7;" text="Sales Invoice">
+            <Button fx:id="salesInvoiceButtonAdmin" layoutX="497.0" layoutY="18.0" mnemonicParsing="false" style="-fx-background-color: EAD7D7;" text="Sales Invoice">
                <font>
                   <Font name="Share Tech Mono" size="15.0" />
                </font>
             </Button>
-            <Button fx:id="lowStocksButton" layoutX="384.0" layoutY="18.0" mnemonicParsing="false" style="-fx-background-color: EAD7D7;" text="Low Stocks">
+            <Button fx:id="lowStocksButtonAdmin" layoutX="384.0" layoutY="18.0" mnemonicParsing="false" style="-fx-background-color: EAD7D7;" text="Low Stocks">
                <font>
                   <Font name="Share Tech Mono" size="15.0" />
                </font>

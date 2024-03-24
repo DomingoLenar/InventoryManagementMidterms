@@ -10,36 +10,32 @@ public class StockControlAdminController {
     @FXML
     private BorderPane borderPaneStockControlAdmin;
     @FXML
-    private Button lowStocksButton;
+    private Button lowStocksButtonAdmin;
     @FXML
-    private Button salesInvoiceButton;
+    private Button salesInvoiceButtonAdmin;
     @FXML
-    private Button addListingButton;
+    private Button addListingButtonAdmin;
     @FXML
-    private Button addItemButton;
+    private Button addItemButtonAdmin;
     @FXML
     private TextField searchFieldAdmin;
     @FXML
     private TableView stockControlAdminTable;
 
     @FXML
-    public BorderPane getBorderPaneStockControlAdmin() {
-        return borderPaneStockControlAdmin;
-    }
+    public BorderPane getBorderPaneStockControlAdmin() { return borderPaneStockControlAdmin;}
 
     @FXML
-    public Button getLowStocksButton() {
-        return lowStocksButton;
-    }
+    public Button getLowStocksButton() { return lowStocksButtonAdmin; }
 
     @FXML
-    public Button getSalesInvoiceButton() { return salesInvoiceButton; }
+    public Button getSalesInvoiceButton() { return salesInvoiceButtonAdmin; }
 
     @FXML
-    public Button getAddListingButton() { return addListingButton;}
+    public Button getAddListingButton() { return addListingButtonAdmin;}
 
     @FXML
-    public Button getAddItemButton() { return addItemButton;}
+    public Button getAddItemButton() { return addItemButtonAdmin;}
 
     @FXML
     public TextField getSearchFieldAdmin() { return searchFieldAdmin; }
