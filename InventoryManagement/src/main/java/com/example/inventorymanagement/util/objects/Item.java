@@ -1,4 +1,4 @@
-package com.example.inventorymanagement.util;
+package com.example.inventorymanagement.util.objects;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
