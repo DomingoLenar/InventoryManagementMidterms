@@ -1,15 +1,12 @@
 package com.example.inventorymanagement.server.model;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.example.inventorymanagement.util.objects.Item;
+import com.google.gson.*;
 
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class GSONProcessing {
     public static boolean changePassword(String userName, String newPassword, String oldPassword) {
@@ -91,5 +88,24 @@ public class GSONProcessing {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+    public static LinkedList<Item> fetchListOfItems(){
+        LinkedList<Item> itemList = new LinkedList<>();
+        try{
+            String itemJsonFile = "com/example.inventorymanagement/data/items.json";
+            JsonElement rootElement = JsonParser.parseReader(new FileReader(itemJsonFile));
+            JsonObject rootObject = rootElement.getAsJsonObject();
+            JsonArray itemJsonArray = rootObject.getAsJsonArray("items");
+            for(JsonElement jsonElement : itemJsonArray){
+                Gson gson = new Gson();
+                Item item = gson.fromJson(jsonElement, Item.class);
+                itemList.addLast(item);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return itemList;
     }
 }
