@@ -37,7 +37,7 @@
             <Button fx:id="taxDeductableBg" layoutX="237.0" layoutY="82.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="142.0" prefWidth="192.0" style="-fx-background-color: #FFFFFF;" />
             <Button fx:id="salesWorthBg" layoutX="448.0" layoutY="82.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="142.0" prefWidth="192.0" style="-fx-background-color: #FFFFFF;" />
             <Button fx:id="grossProfitsBg" layoutX="652.0" layoutY="82.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="142.0" prefWidth="192.0" style="-fx-background-color: #FFFFFF;" />
-            <Label fx:id="helloLabel" layoutX="14.0" layoutY="23.0" text="Hello, Makil Panot!">
+            <Label fx:id="helloLabel" layoutX="14.0" layoutY="23.0" text="Hello, User!">
                <font>
                   <Font name="Share Tech Mono" size="24.0" />
                </font>

@@ -19,67 +19,67 @@ import java.time.LocalTime;
 
 public class FinancesAdminController {
     @FXML
-    public BorderPane borderPaneFinancesAdmin;
+    private BorderPane borderPaneFinancesAdmin;
     @FXML
-    public TextField searchBar;
+    private TextField searchBar;
     @FXML
-    public Button grossRevenueBg;
+    private Button grossRevenueBg;
     @FXML
-    public Button taxDeductableBg;
+    private Button taxDeductableBg;
     @FXML
-    public Button salesWorthBg;
+    private Button salesWorthBg;
     @FXML
-    public Button grossProfitsBg;
+    private Button grossProfitsBg;
     @FXML
-    public Label helloLabel;
+    private Label helloLabel;
     @FXML
-    public Label grossRevenueLabel;
+    private Label grossRevenueLabel;
     @FXML
-    public Label taxDeductableLabel;
+    private Label taxDeductableLabel;
     @FXML
-    public Label salesWorthLabel;
+    private Label salesWorthLabel;
     @FXML
-    public Label grossProfitLabel;
+    private Label grossProfitLabel;
     @FXML
-    public Label grossRevenueAmount;
+    private Label grossRevenueAmount;
     @FXML
-    public Label taxDeductableAmount;
+    private Label taxDeductableAmount;
     @FXML
-    public Label salesWorthAmount;
+    private Label salesWorthAmount;
     @FXML
-    public Label grossProfitsAmount;
+    private Label grossProfitsAmount;
     @FXML
-    public ImageView grossRevenueIcon;
+    private ImageView grossRevenueIcon;
     @FXML
-    public ImageView taxDeductableIcon;
+    private ImageView taxDeductableIcon;
     @FXML
-    public ImageView salesWorthIcon;
+    private ImageView salesWorthIcon;
     @FXML
-    public ImageView grossProfitsIcon;
+    private ImageView grossProfitsIcon;
     @FXML
-    public StackedBarChart revenueCostChart;
+    private StackedBarChart revenueCostChart;
     @FXML
-    public PieChart productsSoldChart;
+    private PieChart productsSoldChart;
     @FXML
-    public Label analyticsTrackingLabel;
+    private Label analyticsTrackingLabel;
     @FXML
-    public Button dateBg;
+    private Button dateBg;
     @FXML
-    public Button timeBg;
+    private Button timeBg;
     @FXML
-    public Button dateWhiteBg;
+    private Button dateWhiteBg;
     @FXML
-    public Label dayLabel;
+    private Label dayLabel;
     @FXML
-    public Label timeLabel;
+    private Label timeLabel;
     @FXML
-    public Circle clockFace;
+    private Circle clockFace;
     @FXML
-    public Line hourHand;
+    private Line hourHand;
     @FXML
-    public Line minuteHand;
+    private Line minuteHand;
     @FXML
-    public Label dateTodayLabel;
+    private Label dateTodayLabel;
 
     public BorderPane getBorderPaneFinancesAdmin() {
         return borderPaneFinancesAdmin;
