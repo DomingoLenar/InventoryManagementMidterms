@@ -12,8 +12,6 @@ public class NavigationBarSalesController {
     @FXML
     private Button salesInvoiceButtonSales;
     @FXML
-    private Button financesButtonSales;
-    @FXML
     private Button profileButtonSales;
 
     @FXML
@@ -25,8 +23,6 @@ public class NavigationBarSalesController {
     @FXML
     public Button getSalesInvoiceButtonSales() { return salesInvoiceButtonSales; }
 
-    @FXML
-    public Button getFinancesButtonSales() { return financesButtonSales; }
 
     @FXML
     public Button getProfileButtonSales() { return profileButtonSales; }
@@ -35,7 +31,6 @@ public class NavigationBarSalesController {
     private void initialize() {
         addHoverEffect(stockControlButtonSales);
         addHoverEffect(salesInvoiceButtonSales);
-        addHoverEffect(financesButtonSales);
         addHoverEffect(profileButtonSales);
     }
 
