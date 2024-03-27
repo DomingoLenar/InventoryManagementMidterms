@@ -9,11 +9,11 @@
 <?import javafx.scene.text.Font?>
 
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="850.0" style="-fx-background-color: linear-gradient(to bottom, #EFD1D1, #FFFFFF);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="borderPaneUserManagement" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="850.0" style="-fx-background-color: linear-gradient(to bottom, #EFD1D1, #FFFFFF);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="653.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField layoutX="-87.0" layoutY="14.0" prefHeight="30.0" prefWidth="827.0" promptText="Search">
+            <TextField fx:id="searchTextField" layoutX="-87.0" layoutY="14.0" prefHeight="30.0" prefWidth="827.0" promptText="Search">
                <font>
                   <Font name="Share Tech Mono" size="15.0" />
                </font>
@@ -24,14 +24,14 @@
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-font-family: 'Share Tech Mono'; -fx-font-size: 15;" BorderPane.alignment="CENTER">
          <children>
-            <TableView layoutX="10.0" layoutY="-6.0" prefHeight="530.0" prefWidth="830.0">
+            <TableView fx:id="userManagementTableView" layoutX="10.0" layoutY="-6.0" prefHeight="530.0" prefWidth="830.0">
               <columns>
-                <TableColumn prefWidth="208.79999351501465" text="ID" />
-                <TableColumn minWidth="3.20001220703125" prefWidth="423.1999816894531" text="Name" />
-                  <TableColumn minWidth="0.0" prefWidth="196.79998779296875" text="Role" />
+                <TableColumn fx:id="idTableColumn" prefWidth="208.79999351501465" text="ID" />
+                <TableColumn fx:id="nameTableColumn" minWidth="3.20001220703125" prefWidth="423.1999816894531" text="Name" />
+                  <TableColumn fx:id="roleTableColumn" minWidth="0.0" prefWidth="196.79998779296875" text="Role" />
               </columns>
             </TableView>
-            <Button layoutX="754.0" layoutY="538.0" mnemonicParsing="false" style="-fx-background-color: EAD7D7;" text="Add User" />
+            <Button fx:id="addUserButton" layoutX="754.0" layoutY="538.0" mnemonicParsing="false" style="-fx-background-color: EAD7D7;" text="Add User" />
          </children>
       </AnchorPane>
    </center>
