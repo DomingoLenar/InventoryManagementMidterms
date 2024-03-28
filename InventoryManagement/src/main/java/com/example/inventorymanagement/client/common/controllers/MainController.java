@@ -1,8 +1,8 @@
 package com.example.inventorymanagement.client.common.controllers;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -26,20 +26,43 @@ public class MainController {
         this.stage = stage;
     }
 
-    public void showLogin() {
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void showWelcome() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/welcome/welcome-view.fxml"));
+            BorderPane welcomePane = fxmlLoader.load();
+
+            Scene scene = new Scene(welcomePane);
+            stage.setScene(scene);
+            stage.setTitle("Stock Pilot");
+
+            WelcomeController welcomeController = fxmlLoader.getController();
+            welcomeController.setMainController(this); // Pass MainController instance to WelcomeController
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showLoginPanel() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/login/login-view.fxml"));
-            Parent root = fxmlLoader.load();
-            Scene scene = new Scene(root);
+            BorderPane loginPane = fxmlLoader.load();
 
-            Stage loginStage = new Stage();  // Create a new stage for the login scene
-            loginStage.setScene(scene);
-            loginStage.setTitle("Stock Pilot - Login");
+            Scene scene = new Scene(loginPane);
 
-            // Close the main stage when login stage is shown
-            stage.close();
+            // Retrieve the current stage
+            if (stage == null) {
+                throw new IllegalStateException("Stage is not set. Please set the stage before calling showLoginPanel.");
+            }
+            stage.setScene(scene);
+            stage.setTitle("Stock Pilot");
 
-            loginStage.show();
+            LoginController loginController = fxmlLoader.getController();
+            loginController.setMainController(this);
+            loginController.initialize();
         } catch (IOException e) {
             e.printStackTrace();
         }
