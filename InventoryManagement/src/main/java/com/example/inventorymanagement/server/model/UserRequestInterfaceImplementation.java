@@ -53,12 +53,37 @@ public class UserRequestInterfaceImplementation implements UserRequestInterface 
     }
 
     @Override
-    public void changeUserRole(ClientCallback clientCallback, User requestBy, User toChange) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
-        clientCallback.objectCall(false);
+    public void changeUserRole(ClientCallback clientCallback, User requestBy, User toChange, String newRole) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
+      if (!clientCallbacks.containsKey(requestBy)){
+          throw new NotLoggedInException("Requesting user is not logged in");
+      }
+
+      if (!"admin".equals(requestBy.getRole())) {
+          throw new OutOfRoleException("User does not have permission to change roles.");
+      }
+
+      boolean success = GSONProcessing.changeUserRole(toChange, newRole);
+
+      if (!success){
+          throw new UserExistenceException("User does not exist. Failed to change the role");
+      }
+
+      clientCallback.objectCall(true);
     }
 
     @Override
-    public void changePassword(ClientCallback clientCallback, User requestBy, User toChange) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
-        clientCallback.objectCall(false);
+    public void changePassword(ClientCallback clientCallback, User requestBy, User toChange, String newPassword) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
+
+        if (!clientCallbacks.containsKey(requestBy)){
+            throw new UserExistenceException("Requesting user is not logged in");
+        }
+
+        boolean success = GSONProcessing.changePassword(toChange.getUsername(), newPassword, toChange.getPassword());
+
+        if (!success){
+            throw new UserExistenceException("User does not exist. Failed to change the password");
+        }
+
+        clientCallback.objectCall(true);
     }
 }
