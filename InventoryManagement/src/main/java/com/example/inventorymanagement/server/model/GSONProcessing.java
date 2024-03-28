@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GSONProcessing {
-    public static boolean changePassword(String userName, String newPassword, String oldPassword) {
+    public static boolean changePassword(User toChange, String newPassword) {
         try {
             String filePath = "com/example/inventorymanagement/data/users.json";
             JsonParser jsonParser = new JsonParser();
@@ -27,9 +27,9 @@ public class GSONProcessing {
             for (JsonElement userElement : userList) {
                 JsonObject userObject = userElement.getAsJsonObject();
                 String name = userObject.get("username").getAsString();
-                if (name.equals(userName)) {
+                if (name.equals(toChange.getUsername())) {
                     String password = userObject.get("password").getAsString();
-                    if (password.equals(oldPassword)) {
+                    if (password.equals(toChange.getPassword())) {
                         userObject.addProperty("password", newPassword);
                         Gson gson = new GsonBuilder().setPrettyPrinting().create();
                         FileWriter writer = new FileWriter(filePath);

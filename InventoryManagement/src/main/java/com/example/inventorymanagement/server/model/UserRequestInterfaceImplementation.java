@@ -78,7 +78,7 @@ public class UserRequestInterfaceImplementation implements UserRequestInterface 
             throw new UserExistenceException("Requesting user is not logged in");
         }
 
-        boolean success = GSONProcessing.changePassword(toChange.getUsername(), newPassword, toChange.getPassword());
+        boolean success = GSONProcessing.changePassword(toChange, newPassword);
 
         if (!success){
             throw new UserExistenceException("User does not exist. Failed to change the password");
