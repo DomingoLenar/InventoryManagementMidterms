@@ -92,6 +92,34 @@ public class GSONProcessing {
         }
     }
 
+
+    /**
+     * Method for fetching object of user
+     * @param username  String of username will be used as a search key to find the object of user inside the json
+     * @return  object of User or null if not found
+     */
+    public static User fetchUser(String username){
+        try{
+            String jsonFile = "com/example/inventorymanagement/data/users.json";
+            JsonElement rootElement = JsonParser.parseReader(new FileReader(jsonFile));
+            JsonObject jsonObject = rootElement.getAsJsonObject();
+            JsonArray jsonArray = jsonObject.getAsJsonArray("users");
+            for(JsonElement jsonElement: jsonArray){
+                Gson gson = new Gson();
+
+                JsonObject userObject = jsonElement.getAsJsonObject();
+                if(userObject.get("username").getAsString().equals(username))
+                    return gson.fromJson(jsonElement, User.class);
+
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+        return null;
+    }
+
+
     /**
      *   Method for fetching list of item orders (purchase or sales)
      * @param type  String value, should be either purchase or sales
