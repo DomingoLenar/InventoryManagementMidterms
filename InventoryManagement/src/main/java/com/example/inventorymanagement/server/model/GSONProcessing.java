@@ -1,6 +1,8 @@
 package com.example.inventorymanagement.server.model;
 
 import com.example.inventorymanagement.util.objects.Item;
+import com.example.inventorymanagement.util.objects.ItemOrder;
+import com.example.inventorymanagement.util.objects.User;
 import com.google.gson.*;
 
 import java.io.FileReader;
@@ -88,6 +90,30 @@ public class GSONProcessing {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     *   Method for fetching list of item orders (purchase or sales)
+     * @param type  String value, should be either purchase or sales
+     * @return  Returns LinkedList of object ItemOrder
+     */
+    public static LinkedList<ItemOrder> fetchListOfItemOrder(String type){
+        LinkedList<ItemOrder> listOfItemOrder = new LinkedList<>();
+        try{
+            String jsonFile = "com/example/inventorymanagement/data/"+type+"order.json";
+            JsonElement rootElement = JsonParser.parseReader(new FileReader(jsonFile));
+            JsonObject rootObject = rootElement.getAsJsonObject();
+            JsonArray jsonArray = rootObject.getAsJsonArray(type+"Orders");
+            for(JsonElement jsonElement: jsonArray){
+                Gson gson = new Gson();
+                ItemOrder itemOrder = gson.fromJson(jsonElement, ItemOrder.class);
+                listOfItemOrder.addLast(itemOrder);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+        return listOfItemOrder;
     }
 
     public static LinkedList<Item> fetchListOfItems(){
