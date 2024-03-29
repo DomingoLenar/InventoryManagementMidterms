@@ -1,22 +1,19 @@
 {
-  "suppliers": [
+  "suppliers":[
     {
-      "name": "HealthyHarvest"
+      "name": "FeatherFarms"
     },
     {
-      "name": "EcoSolutions"
+      "name": "OfficeEase"
     },
     {
-      "name": "GlobeWares"
+      "name": "SweetTreats"
     },
     {
-      "name": "NaturesNest"
+      "name": "SteelCraft"
     },
     {
-      "name": "GlobalMaterials"
-    },
-    {
-      "name": "CreaCraftSupplies"
+      "name": "ComMeats"
     }
   ]
 }
