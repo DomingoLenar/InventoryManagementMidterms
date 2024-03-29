@@ -16,6 +16,7 @@ import java.util.LinkedList;
 public class UserRequestInterfaceImplementation implements UserRequestInterface {
     LinkedList<ClientCallback> clientCallbacks = new LinkedList<>();
 
+    //This method changes the object of user inside the callback for the user to be able to access their role
     @Override
     public void login(ClientCallback clientCallback) throws RemoteException, AlreadyLoggedInException, UserExistenceException {
         if(clientCallbacks.contains(clientCallback)){
@@ -42,6 +43,7 @@ public class UserRequestInterfaceImplementation implements UserRequestInterface 
         }
     }
 
+    // This returns an object of LinkedList of object User
     @Override
     public void getActiveUser(ClientCallback clientCallback) throws OutOfRoleException, NotLoggedInException, RemoteException {
         if(clientCallback.getUser().getRole().equals("admin")){
@@ -75,6 +77,7 @@ public class UserRequestInterfaceImplementation implements UserRequestInterface 
         clientCallback.objectCall(false);
     }
 
+    // This method returns boolean object
     @Override
     public void changePassword(ClientCallback clientCallback, User requestBy, User toChange, String oldPassword) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
         if(requestBy.getRole().equals("admin") || requestBy.equals(toChange)){
