@@ -19,12 +19,18 @@ public class UserRequestInterfaceImplementation implements UserRequestInterface 
     @Override
     public void login(ClientCallback clientCallback, User toLogin) throws RemoteException, AlreadyLoggedInException {
         if(clientCallbacks.containsKey(toLogin)){
+    public void login(ClientCallback clientCallback) throws RemoteException, AlreadyLoggedInException, UserExistenceException {
+        if(clientCallbacks.contains(clientCallback)){
             throw new AlreadyLoggedInException("User is already logged in");
         }else{
-            //Use gson processor to validate login of user if valid then:
-            User localUserData = new User(null,null,null); // Use gson processor to acquire this
-            clientCallbacks.putFirst(toLogin,clientCallback);
-            clientCallback.objectCall(localUserData);
+            User toLogIn = clientCallback.getUser();
+            User localUserData = GSONProcessing.fetchUser(toLogIn.getUsername());
+            if(localUserData!=null && toLogIn.getPassword().equals(localUserData.getPassword())){
+                clientCallbacks.addFirst(clientCallback);
+                clientCallback.setUser(localUserData);
+            }else{
+                throw new UserExistenceException("Invalid credentials");
+            }
         }
 
     }
