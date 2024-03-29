@@ -76,7 +76,12 @@ public class UserRequestInterfaceImplementation implements UserRequestInterface 
     }
 
     @Override
-    public void changePassword(ClientCallback clientCallback, User requestBy, User toChange) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
-        clientCallback.objectCall(false);
+    public void changePassword(ClientCallback clientCallback, User requestBy, User toChange, String oldPassword) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
+        if(requestBy.getRole().equals("admin") || requestBy.equals(toChange)){
+            boolean status = GSONProcessing.changePassword(toChange.getUsername(),toChange.getPassword(), oldPassword);
+            clientCallback.objectCall(status);
+        }else{
+            throw new OutOfRoleException("You don't have permission to perform this operation");
+        }
     }
 }
