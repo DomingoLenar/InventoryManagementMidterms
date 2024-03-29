@@ -10,10 +10,11 @@ import com.example.inventorymanagement.util.objects.User;
 
 import java.rmi.RemoteException;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 // #TODO: Implement GSONProcessing methods, add real logic
 public class UserRequestInterfaceImplementation implements UserRequestInterface {
-    LinkedHashMap<User, ClientCallback> clientCallbacks = new LinkedHashMap<>();
+    LinkedList<ClientCallback> clientCallbacks = new LinkedList<>();
 
     @Override
     public void login(ClientCallback clientCallback, User toLogin) throws RemoteException, AlreadyLoggedInException {
@@ -38,8 +39,21 @@ public class UserRequestInterfaceImplementation implements UserRequestInterface 
     }
 
     @Override
-    public void getActiveUser(ClientCallback clientCallback, User requestBy) throws OutOfRoleException, NotLoggedInException, RemoteException {
-        //clientCallback.returnCall();
+    public void getActiveUser(ClientCallback clientCallback) throws OutOfRoleException, NotLoggedInException, RemoteException {
+        if(clientCallback.getUser().getRole().equals("admin")){
+
+            if(!clientCallbacks.contains(clientCallback)){
+                throw new NotLoggedInException("Not logged in");
+            }else{
+                LinkedList<User> listOfUsers = new LinkedList<>();
+                for(ClientCallback clients : clientCallbacks){
+                    listOfUsers.addLast(clients.getUser());
+                }
+                clientCallback.objectCall(listOfUsers);
+            }
+        }else{
+            throw new OutOfRoleException("Your are not allowed to perform this request");
+        }
     }
 
     @Override
