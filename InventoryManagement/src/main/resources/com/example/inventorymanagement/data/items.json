@@ -1,155 +1,137 @@
 {
   "items": [
     {
-      "itemName": "Smartphone",
-      "itemId": "3",
-      "totalQty": "80",
+      "itemName": "FreshWholeChicken",
+      "itemId": 1,
+      "totalQty": 100,
       "stocks": [
         {
-          "batchNo": "GlobeWares_2023-12-20_240.00",
-          "qty": "80",
-          "price": "250.00",
-          "cost": "240.00",
-          "supplier": "GlobeWares",
-          "date": "2023-12-20"
+          "actualbatchno": {
+            "batchNo": "FeatherFarms_2023-12-29_200.00",
+            "qty": 50,
+            "price": 299.75,
+            "cost": 200.00,
+            "supplier": "FeatherFarms",
+            "date": "2023-12-29"
+          }
+        },
+        {
+          "actualbatchno": {
+            "batchNo": "FeatherFarms_2024-01-03_200.00",
+            "qty": 50,
+            "price": 299.75,
+            "cost": 200.00,
+            "supplier": "FeatherFarms",
+            "date": "2023-01-03"
+          }
         }
       ]
     },
     {
-      "itemName": "Eggs",
-      "itemId": "1",
-      "totalQty": "100",
+      "itemName": "PrinterPaper",
+      "itemId": 2,
+      "totalQty": 200,
       "stocks": [
         {
-          "batchNo": "HealthyHarvest_2023-12-22_4.50",
-          "qty": "50",
-          "price": "5.10",
-          "cost": "4.50",
-          "supplier": "HealthyHarvest",
-          "date": "2023-12-22"
+          "actualbatchno": {
+            "batchNo": "OfficeEase_2023-12-29_500",
+            "qty": 100,
+            "price": 525.00,
+            "cost": 500.00,
+            "supplier": "OfficeEase",
+            "date": "2023-12-29"
+          }
         },
         {
-          "batchNo": "HealthyHarvest_2023-12-23_4.50",
-          "qty": "50",
-          "price": "5.00",
-          "cost": "4.50",
-          "supplier": "HealthyHarvest",
-          "date": "2023-12-23"
+          "actualbatchno": {
+            "batchNo": "OfficeEase_2024-01-03_505.00",
+            "qty": 50,
+            "price": 527.50,
+            "cost": 505.00,
+            "supplier": "OfficeEase",
+            "date": "2024-01-03"
+          }
+        },
+        {
+          "actualbatchno": {
+            "batchNo": "OfficeEase_2024-01-04_506.00",
+            "qty": 50,
+            "price": 528.00,
+            "cost": 506.00,
+            "supplier": "OfficeEase",
+            "date": "2024-01-04"
+          }
         }
       ]
     },
     {
-      "itemName": "PlywoodSheets",
-      "itemId": "6",
-      "totalQty": "120",
+      "itemName": "ChocolateMuffins",
+      "itemId": 3,
+      "totalQty": 150,
       "stocks": [
         {
-          "batchNo": "GlobalMaterials_2024-01-03_12.00",
-          "qty": "60",
-          "price": "13.80",
-          "cost": "12.00",
-          "supplier": "GlobalMaterials",
-          "date": "2024-01-03"
+          "actualbatchno": {
+            "batchNo": "SweetTreats_2024-02-11_7.00",
+            "qty": 100,
+            "price": 7.70,
+            "cost": 7.00,
+            "supplier": "SweetTreats",
+            "date": "2024-02-11"
+          }
         },
         {
-          "batchNo": "GlobalMaterials_2024-01-04_12.00",
-          "qty": "60",
-          "price": "13.80",
-          "cost": "12.00",
-          "supplier": "GlobalMaterials",
-          "date": "2024-01-04"
+          "actualbatchno": {
+            "batchNo": "SweetTreats_2024-02-12_7.20",
+            "qty": 50,
+            "price": 7.90,
+            "cost": 7.20,
+            "supplier": "SweetTreats",
+            "date": "2024-02-12"
+          }
         }
       ]
     },
     {
-      "itemName": "Cookies",
-      "itemId": "5",
-      "totalQty": "50",
+      "itemName": "SteelBeams",
+      "itemId": 4,
+      "totalQty": 200,
       "stocks": [
         {
-          "batchNo": "NaturesNest_2024-02-02_9.50",
-          "qty": "25",
-          "price": "3.00",
-          "cost": "2.50",
-          "supplier": "NaturesNest",
-          "date": "2024-02-02"
-        },
-        {
-          "batchNo": "NaturesNest_2024-02-11_2.50",
-          "qty": "25",
-          "price": "3.05",
-          "cost": "2.50",
-          "supplier": "NaturesNest",
-          "date": "2024-02-11"
+          "actualbatchno": {
+            "batchNo": "SteelCraft_2024-02-12_250.00",
+            "qty": 200,
+            "price": 275.00,
+            "cost": 250.00,
+            "supplier": "SteelCraft",
+            "date": "2024-02-12"
+          }
         }
       ]
     },
     {
-      "itemName": "OrganicFertilizer",
-      "itemId": "2",
-      "totalQty": "150",
+      "itemName": "SlicedHam",
+      "itemId": 5,
+      "totalQty": 120,
       "stocks": [
         {
-          "batchNo": "EcoSolutions_2024-03-10_8.00",
-          "qty": "50",
-          "price": "8.51",
-          "cost": "8.00",
-          "supplier": "EcoSolutions",
-          "date": "2024-03-10"
+          "actualbatchno": {
+            "batchNo": "ComMeats_2024-03-16_6.00",
+            "qty": 60,
+            "price": 6.65,
+            "cost": 6.00,
+            "supplier": "ComMeats",
+            "date": "2024-03-26"
+          }
         },
         {
-          "batchNo": "EcoSolutions_2024-03-11_8.00",
-          "qty": "100",
-          "price": "8.80",
-          "cost": "8.00",
-          "supplier": "EcoSolutions",
-          "date": "2024-03-11"
-        }
-      ]
-    },
-    {
-      "itemName": "ArtKit",
-      "itemId": "7",
-      "totalQty": "90",
-      "stocks": [
-        {
-          "batchNo": "CreaCraftSupplies_2024-03-11_18.00",
-          "qty": "45",
-          "price": "20.00",
-          "cost": "18.00",
-          "supplier": "CreaCraftSupplies",
-          "date": "2024-03-11"
-        },
-        {
-          "batchNo": "CreaCraftSupplies_2024-03-12_18.00",
-          "qty": "45",
-          "price": "20.70",
-          "cost": "18.00",
-          "supplier": "CreaCraftSupplies",
-          "date": "2024-03-12"
-        }
-      ]
-    },
-    {
-      "itemName": "Honey",
-      "itemId": "4",
-      "totalQty": "200",
-      "stocks": [
-        {
-          "batchNo": "NaturesNest_2024-03-22_45.00",
-          "qty": "100",
-          "price": "49.50",
-          "cost": "45.00",
-          "supplier": "NaturesNest",
-          "date": "2024-03-22"
-        },
-        {
-          "batchNo": "NaturesNest_2024-03-22_45.00",
-          "qty": "100",
-          "price": "49.50",
-          "cost": "45.00",
-          "supplier": "NaturesNest",
-          "date": "2024-03-22"
+          "actualbatchno": {
+            "batchNo": "ComMeats_2024-03-23_60",
+            "qty": 60,
+            "price": 6.75,
+            "cost": 6.10,
+            "supplier": "ComMeats",
+            "date": "2024-03-23"
+          }
         }
       ]
     }
