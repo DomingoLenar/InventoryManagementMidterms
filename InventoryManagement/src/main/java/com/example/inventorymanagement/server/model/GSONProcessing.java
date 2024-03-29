@@ -28,15 +28,16 @@ public class GSONProcessing {
                 JsonObject userObject = userElement.getAsJsonObject();
                 String name = userObject.get("username").getAsString();
                 if (name.equals(toChange.getUsername())) {
-                    String password = userObject.get("password").getAsString();
-                    if (password.equals(toChange.getPassword())) {
+                    String currentPassword = userObject.get("password").getAsString();
+                    if (currentPassword.equals(newPassword)) {
+                        throw new Exception("Your new password cannot be the same as the old password");
+                    }
                         userObject.addProperty("password", newPassword);
                         Gson gson = new GsonBuilder().setPrettyPrinting().create();
                         FileWriter writer = new FileWriter(filePath);
                         gson.toJson(rootElement, writer);
                         writer.close();
                         return true;
-                    }
                 }
             }
             return false;
