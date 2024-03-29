@@ -57,6 +57,11 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>11.0.2</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -80,7 +85,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.example.inventorymanagement.client.common.views.MainApplication
+                                com.example.inventorymanagement.client.common.views.MainPanel
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
