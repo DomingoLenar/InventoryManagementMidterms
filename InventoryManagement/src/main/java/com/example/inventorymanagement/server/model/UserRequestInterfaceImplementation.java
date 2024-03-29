@@ -17,8 +17,6 @@ public class UserRequestInterfaceImplementation implements UserRequestInterface 
     LinkedList<ClientCallback> clientCallbacks = new LinkedList<>();
 
     @Override
-    public void login(ClientCallback clientCallback, User toLogin) throws RemoteException, AlreadyLoggedInException {
-        if(clientCallbacks.containsKey(toLogin)){
     public void login(ClientCallback clientCallback) throws RemoteException, AlreadyLoggedInException, UserExistenceException {
         if(clientCallbacks.contains(clientCallback)){
             throw new AlreadyLoggedInException("User is already logged in");
@@ -36,11 +34,11 @@ public class UserRequestInterfaceImplementation implements UserRequestInterface 
     }
 
     @Override
-    public void logout(ClientCallback clientCallback, User toLogOut) throws RemoteException, NotLoggedInException {
-        if(!clientCallbacks.containsKey(toLogOut)){
+    public void logout(ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
+        if(!clientCallbacks.contains(clientCallback)){
             throw new NotLoggedInException("User is not logged in");
         }else{
-            clientCallbacks.remove(toLogOut);
+            clientCallbacks.remove(clientCallback);
         }
     }
 
