@@ -1,5 +1,8 @@
 package com.example.inventorymanagement.client.common.controllers;
 
+import com.example.inventorymanagement.client.admin.views.StockControlAdminPanel;
+import com.example.inventorymanagement.util.ClientCallback;
+import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -8,19 +11,33 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class MainController {
-    private static MainController instance;
     private Stage stage;
+    private ClientCallback clientCallback;
+    private UserRequestInterface userService;
 
-    private MainController() {
-        // Private constructor to prevent instantiation from outside
+    public MainController(UserRequestInterface userService) {
+        this.userService = userService;
+        this.clientCallback = null;
     }
 
-    public static MainController getInstance() {
-        if (instance == null) {
-            instance = new MainController();
-        }
-        return instance;
+    public ClientCallback getClientCallback() {
+        return clientCallback;
     }
+
+    public void setClientCallback(ClientCallback clientCallback) {
+        this.clientCallback = clientCallback;
+    }
+
+    public UserRequestInterface getUserService() {
+        return userService;
+    }
+
+    //    public static MainController getInstance() {
+//        if (instance == null) {
+//            instance = new MainController();
+//        }
+//        return instance;
+//    }
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -30,14 +47,13 @@ public class MainController {
         return stage;
     }
 
-    public void showWelcome() {
+    public void loadWelcomeView() { // load welcome/index view
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/welcome/welcome-view.fxml"));
             BorderPane welcomePane = fxmlLoader.load();
 
             Scene scene = new Scene(welcomePane);
             stage.setScene(scene);
-            stage.setTitle("Stock Pilot");
 
             WelcomeController welcomeController = fxmlLoader.getController();
             welcomeController.setMainController(this); // Pass MainController instance to WelcomeController
@@ -46,7 +62,7 @@ public class MainController {
         }
     }
 
-    public void showLoginPanel() {
+    public void loadLoginView() { // load login view
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/login/login-view.fxml"));
             BorderPane loginPane = fxmlLoader.load();
@@ -58,7 +74,6 @@ public class MainController {
                 throw new IllegalStateException("Stage is not set. Please set the stage before calling showLoginPanel.");
             }
             stage.setScene(scene);
-            stage.setTitle("Stock Pilot");
 
             LoginController loginController = fxmlLoader.getController();
             loginController.setMainController(this);
@@ -66,5 +81,9 @@ public class MainController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void displayAdminMainMenu() throws IOException {
+        new StockControlAdminPanel().start(new Stage());
     }
 }
