@@ -27,7 +27,7 @@ public class WelcomeController {
     @FXML
     private void handleLoginButtonAction(ActionEvent event) {
         if (mainController != null) {
-            mainController.showLoginPanel();
+            mainController.loadLoginView();
         }
     }
 }

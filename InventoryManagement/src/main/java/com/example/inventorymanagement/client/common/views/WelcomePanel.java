@@ -17,7 +17,7 @@ public class WelcomePanel extends Application {
     public void start(Stage stage) throws IOException {
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
 
-        MainController mainController = MainController.getInstance(); // Get the instance
+        MainController mainController = new MainController(null); // Get the instance
 
         FXMLLoader fxmlLoader = new FXMLLoader(WelcomePanel.class.getResource("/com/example/inventorymanagement/client/view/welcome/welcome-view.fxml"));
         Scene sceneWelcome = new Scene(fxmlLoader.load(), 600, 400);

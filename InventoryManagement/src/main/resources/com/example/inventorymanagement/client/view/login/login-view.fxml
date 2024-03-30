@@ -24,7 +24,7 @@
    <right>
       <AnchorPane prefHeight="400.0" prefWidth="415.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="loginButtonLogin" layoutX="254.0" layoutY="316.0" mnemonicParsing="false" style="-fx-background-color: #FFFFFF;" text="Log-In" textFill="#ff7777">
+            <Button fx:id="loginButtonLogin" layoutX="254.0" layoutY="316.0" mnemonicParsing="false" style="-fx-background-color: #FFFFFF;" text="Log-In" textFill="#ff7777" onAction="#OnLogin">
                <font>
                   <Font name="Share Tech Mono" size="20.0" />
                </font>
