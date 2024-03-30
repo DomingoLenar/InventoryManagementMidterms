@@ -1,14 +1,37 @@
 package com.example.inventorymanagement.server.model;
 
 import com.example.inventorymanagement.util.objects.Item;
+import com.example.inventorymanagement.util.objects.User;
 import com.google.gson.*;
 
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class GSONProcessing {
+
+    public static User authenticate(User key) {
+        String filePath = "C:\\Users\\loudi\\IdeaProjects\\2023-2_9329-midteam1\\InventoryManagement\\src\\main\\resources\\com\\example\\inventorymanagement\\data\\users.json";
+
+        Gson gson = new GsonBuilder().create();
+
+        try {
+            JsonElement rootElement = JsonParser.parseReader(new FileReader(filePath));
+            JsonObject rootObject = rootElement.getAsJsonObject();
+            JsonArray userJsonArray = rootObject.getAsJsonArray("users");
+            for (JsonElement jsonElement : userJsonArray) {
+                User user = gson.fromJson(jsonElement, User.class);
+                if (user.username.equals(key.username) && user.password.equals(key.password)) {
+                    return user;
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
     public static boolean changePassword(String userName, String newPassword, String oldPassword) {
         try {
             String filePath = "com/example/inventorymanagement/data/users.json";
