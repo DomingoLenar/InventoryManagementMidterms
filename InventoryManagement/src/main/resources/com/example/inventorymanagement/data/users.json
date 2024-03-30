@@ -1,16 +1,16 @@
 {
   "users": [
     {
-      "username": "",
-      "password": "",
-      "role":"",
-      "isActive": ""
+      "username": "testsales",
+      "password": "salestest",
+      "role":"sales",
+      "isActive": "false"
     },
     {
-      "username": "",
-      "password": "",
-      "role":"",
-      "isActive": ""
+      "username": "testpurchase",
+      "password": "purchasetest",
+      "role":"purchaser",
+      "isActive": "false"
     }
   ]
 }
