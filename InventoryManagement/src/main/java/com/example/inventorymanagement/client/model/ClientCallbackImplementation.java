@@ -1,5 +1,6 @@
 package com.example.inventorymanagement.client.model;
 
+import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.objects.User;
 
@@ -9,6 +10,7 @@ import java.rmi.RemoteException;
 public class ClientCallbackImplementation implements ClientCallback {
     private Object returnedObject;
     private User user;
+    private ControllerInterface currentController;
 
     public ClientCallbackImplementation(User user){
         this.user = user;
@@ -37,6 +39,20 @@ public class ClientCallbackImplementation implements ClientCallback {
     @Override
     public User getUser() throws RemoteException {
         return this.user;
+    }
+
+    public void setCurrentPanel(ControllerInterface currentController){
+        this.currentController = currentController;
+    }
+
+    @Override
+    public String getCurrentPanelOfController() throws RemoteException {
+        return currentController.getCurrentPanel();
+    }
+
+    @Override
+    public void updateUICall() throws RemoteException{
+        currentController.fetchAndUpdate();
     }
 
 
