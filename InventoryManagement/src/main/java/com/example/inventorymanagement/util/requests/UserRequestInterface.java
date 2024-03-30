@@ -8,12 +8,11 @@ import com.example.inventorymanagement.util.exceptions.UserExistenceException;
 import com.example.inventorymanagement.util.objects.User;
 
 import java.rmi.*;
-import java.util.LinkedHashMap;
 
 public interface UserRequestInterface extends Remote{
 
     //Method to log the user in
-    public void login(ClientCallback clientCallback, User toLogin)throws RemoteException, AlreadyLoggedInException, UserExistenceException;
+    public void login(ClientCallback clientCallback) throws RemoteException, AlreadyLoggedInException, UserExistenceException;
 
     //Method to log the user out
     public void logout(ClientCallback clientCallback, User toLogOut) throws RemoteException, NotLoggedInException;
@@ -33,5 +32,6 @@ public interface UserRequestInterface extends Remote{
     //Method for changing password
     public void changePassword(ClientCallback clientCallback, User requestBy, User toChange) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException;
 
-
+    //Method to keep track clients who are active at moment
+//    User[] activeUsers(ClientCallback clientCallback) throws RemoteException;
 }
