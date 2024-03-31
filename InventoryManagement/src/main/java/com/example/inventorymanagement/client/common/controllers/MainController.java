@@ -1,6 +1,8 @@
 package com.example.inventorymanagement.client.common.controllers;
 
 import com.example.inventorymanagement.client.admin.views.StockControlAdminPanel;
+import com.example.inventorymanagement.client.purchaser.views.StockControlPurchaserPanel;
+import com.example.inventorymanagement.client.sales.views.StockControlSalesPanel;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.fxml.FXMLLoader;
@@ -86,4 +88,13 @@ public class MainController {
     public void displayAdminMainMenu() throws IOException {
         new StockControlAdminPanel().start(new Stage());
     }
+
+    public void displayPurchaserMainMenu() throws IOException {
+        new StockControlPurchaserPanel().start(new Stage());
+    }
+
+    public void displaySalesMainMenu() throws IOException{
+        new StockControlSalesPanel().start(new Stage());
+    }
+
 }
