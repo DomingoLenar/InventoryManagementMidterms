@@ -8,6 +8,7 @@ import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -51,6 +52,8 @@ public class MainController {
 
     public void loadWelcomeView() { // load welcome/index view
         try {
+            Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/welcome/welcome-view.fxml"));
             BorderPane welcomePane = fxmlLoader.load();
 
@@ -66,6 +69,8 @@ public class MainController {
 
     public void loadLoginView() { // load login view
         try {
+            Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/login/login-view.fxml"));
             BorderPane loginPane = fxmlLoader.load();
 
