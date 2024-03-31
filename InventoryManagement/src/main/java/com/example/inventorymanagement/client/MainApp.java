@@ -1,4 +1,4 @@
-package com.example.inventorymanagement.client.common.views;
+package com.example.inventorymanagement.client;
 
 import com.example.inventorymanagement.client.common.controllers.MainController;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
@@ -10,7 +10,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-public class MainPanel extends Application {
+public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Registry registry = LocateRegistry.getRegistry("localhost");
