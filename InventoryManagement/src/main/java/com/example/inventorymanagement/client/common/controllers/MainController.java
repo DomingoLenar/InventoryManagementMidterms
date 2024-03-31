@@ -13,6 +13,12 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Purpose:
+ * - Loads .fxml and display the view/scene/activity
+ * - Main entry point of communication on the server
+ * - Temporarily display main menu for each client might modify in such a way...
+ */
 public class MainController {
     private Stage stage;
     private ClientCallback clientCallback;
@@ -35,19 +41,8 @@ public class MainController {
         return userService;
     }
 
-    //    public static MainController getInstance() {
-//        if (instance == null) {
-//            instance = new MainController();
-//        }
-//        return instance;
-//    }
-
     public void setStage(Stage stage) {
         this.stage = stage;
-    }
-
-    public Stage getStage() {
-        return stage;
     }
 
     public void loadWelcomeView() { // load welcome/index view

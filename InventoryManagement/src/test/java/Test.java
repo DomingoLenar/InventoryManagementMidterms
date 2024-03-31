@@ -1,6 +1,4 @@
-import com.example.inventorymanagement.server.model.GSONProcessing;
 import com.example.inventorymanagement.util.objects.User;
-
 public class Test {
     @org.junit.jupiter.api.Test
     public void testAuthenticate(){
