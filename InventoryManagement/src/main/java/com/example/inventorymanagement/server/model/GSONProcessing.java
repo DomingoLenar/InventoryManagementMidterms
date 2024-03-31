@@ -13,7 +13,7 @@ import java.util.LinkedList;
 public class GSONProcessing {
 
     public static User authenticate(User key) {
-        String filePath = "C:\\Users\\loudi\\IdeaProjects\\2023-2_9329-midteam1\\InventoryManagement\\src\\main\\resources\\com\\example\\inventorymanagement\\data\\users.json";
+        String filePath = "InventoryManagement/src/main/resources/com/example/inventorymanagement/data/users.json";
 
         Gson gson = new GsonBuilder().create();
 
