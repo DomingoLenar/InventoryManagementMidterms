@@ -1,6 +1,12 @@
 {
   "users": [
     {
+      "username": "testadmin",
+      "password": "admintest",
+      "role":"admin",
+      "isActive": "false"
+    },
+    {
       "username": "testsales",
       "password": "salestest",
       "role":"sales",
