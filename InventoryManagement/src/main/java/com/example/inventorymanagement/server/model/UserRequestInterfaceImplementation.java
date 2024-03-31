@@ -20,7 +20,7 @@ public class UserRequestInterfaceImplementation extends UnicastRemoteObject impl
     }
 
     @Override
-    public void login(ClientCallback clientCallback) throws RemoteException, AlreadyLoggedInException, UserExistenceException {
+    public User login(ClientCallback clientCallback) throws RemoteException, AlreadyLoggedInException, UserExistenceException {
         User toLogin = clientCallback.getUser();
         if(clientCallbacks.containsKey(toLogin.username)){
             throw new UserExistenceException("User already exist!");
@@ -32,7 +32,7 @@ public class UserRequestInterfaceImplementation extends UnicastRemoteObject impl
             User activeUser = GSONProcessing.authenticate(toLogin);
             if (activeUser != null) {
                 clientCallbacks.put(activeUser.username, clientCallback);
-                System.out.println("Success");
+                return activeUser;
 //            clientCallbacks.putFirst(toLogin,clientCallback);
             } else {
                 throw new UserExistenceException("User does not exist!");

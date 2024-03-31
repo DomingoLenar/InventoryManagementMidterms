@@ -12,7 +12,7 @@ import java.rmi.*;
 public interface UserRequestInterface extends Remote{
 
     //Method to log the user in
-    public void login(ClientCallback clientCallback) throws RemoteException, AlreadyLoggedInException, UserExistenceException;
+    public User login(ClientCallback clientCallback) throws RemoteException, AlreadyLoggedInException, UserExistenceException;
 
     //Method to log the user out
     public void logout(ClientCallback clientCallback, User toLogOut) throws RemoteException, NotLoggedInException;
