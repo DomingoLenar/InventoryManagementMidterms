@@ -15,8 +15,6 @@ module com.example.inventorymanagement {
     opens com.example.inventorymanagement.client.sales.controllers to javafx.fxml;
 
     // Views
-    exports com.example.inventorymanagement.client.common.views;
-    opens com.example.inventorymanagement.client.common.views to javafx.fxml;
     exports com.example.inventorymanagement.client.admin.views;
     opens com.example.inventorymanagement.client.admin.views to javafx.fxml;
     exports com.example.inventorymanagement.client.purchaser.views;
@@ -38,4 +36,6 @@ module com.example.inventorymanagement {
 
     // Requests
     exports com.example.inventorymanagement.util.requests;
+    exports com.example.inventorymanagement.client;
+    opens com.example.inventorymanagement.client to javafx.fxml;
 }
