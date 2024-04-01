@@ -182,4 +182,26 @@ public class GSONProcessing {
             return false;
         }
     }
+
+    public static synchronized boolean removeUser(User toRemove){
+        Gson gson = new Gson();
+        try{
+            String jsonFile = "com/example/inventorymanagement/data/users.json";
+            JsonElement rootElement = JsonParser.parseReader(new FileReader(jsonFile));
+            JsonObject rootObject = rootElement.getAsJsonObject();
+            JsonArray userArray = rootObject.getAsJsonArray("users");
+            for(JsonElement jsonElement: userArray){
+                User user = gson.fromJson(jsonElement, User.class);
+                if(user.getUsername().equals(toRemove.getUsername())){
+                    userArray.remove(jsonElement);
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
 }
