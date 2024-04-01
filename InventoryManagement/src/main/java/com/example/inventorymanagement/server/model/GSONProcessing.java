@@ -5,6 +5,7 @@ import com.example.inventorymanagement.util.objects.ItemOrder;
 import com.example.inventorymanagement.util.objects.User;
 import com.google.gson.*;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
@@ -147,7 +148,7 @@ public class GSONProcessing {
     public static synchronized LinkedList<Item> fetchListOfItems(){
         LinkedList<Item> itemList = new LinkedList<>();
         try{
-            String itemJsonFile = "com/example.inventorymanagement/data/items.json";
+            String itemJsonFile = "com/example/inventorymanagement/data/items.json";
             JsonElement rootElement = JsonParser.parseReader(new FileReader(itemJsonFile));
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray itemJsonArray = rootObject.getAsJsonArray("items");
@@ -161,5 +162,24 @@ public class GSONProcessing {
             throw new RuntimeException(e);
         }
         return itemList;
+    }
+
+    public static synchronized boolean addUser(User newUser){
+        Gson gson = new Gson();
+        try{
+            String jsonFile = "com/example/inventorymanagement/data/users.json";
+            JsonElement rootElement = JsonParser.parseReader(new FileReader(jsonFile));
+            JsonObject rootObject = rootElement.getAsJsonObject();
+            JsonArray userJsonArray = rootObject.getAsJsonArray("users");
+
+            String jsonString = gson.toJson(newUser);
+            JsonElement userElement = JsonParser.parseString(jsonString);
+            userJsonArray.add(userElement);
+
+            return true;
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 }
