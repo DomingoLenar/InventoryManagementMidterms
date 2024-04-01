@@ -62,6 +62,39 @@ public class GSONProcessing {
         }
     }//end of method
 
+    /**
+     * Removes an item from a JSON file based on its name.
+     *
+     * @param itemName name of the item to be removed.
+     * @return true if the item was successfully removed, false if otherwise.
+     */
+    public static boolean removeItem(String itemName) {
+        try {
+            String filePath = "com/example/inventorymanagement/data/items.json";
+            JsonParser jsonParser = new JsonParser();
+            JsonElement rootElement = jsonParser.parse(new FileReader(filePath));
+            JsonObject rootObject = rootElement.getAsJsonObject();
+            JsonArray itemJsonArray = rootObject.getAsJsonArray("items");
+
+            for (JsonElement jsonElement : itemJsonArray) {
+                JsonObject itemObject = jsonElement.getAsJsonObject();
+                String name = itemObject.get("name").getAsString();
+                if (name.equals(itemName)) {
+                    itemJsonArray.remove(jsonElement);
+                    FileWriter writer = new FileWriter(filePath);
+                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                    gson.toJson(rootElement, writer);
+                    writer.close();
+                    return true;
+                }
+            }
+            return false; // Item not found
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }//end of method
+
     public static boolean changePassword(String userName, String newPassword, String oldPassword) {
         try {
             String filePath = "com/example/inventorymanagement/data/users.json";
