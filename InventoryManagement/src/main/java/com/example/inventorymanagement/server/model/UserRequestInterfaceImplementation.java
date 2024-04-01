@@ -16,6 +16,10 @@ import java.util.LinkedList;
 public class UserRequestInterfaceImplementation implements UserRequestInterface {
     LinkedList<ClientCallback> clientCallbacks = new LinkedList<>();
 
+    public UserRequestInterfaceImplementation() throws RemoteException{
+
+    }
+
     //This method changes the object of user inside the callback for the user to be able to access their role
     @Override
     public void login(ClientCallback clientCallback) throws RemoteException, AlreadyLoggedInException, UserExistenceException {
@@ -74,7 +78,15 @@ public class UserRequestInterfaceImplementation implements UserRequestInterface 
 
     @Override
     public void changeUserRole(ClientCallback clientCallback, User requestBy, User toChange) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
-        clientCallback.objectCall(false);
+
+        if(clientCallback.getUser().getRole().equals("admin")) {
+
+            boolean success = GSONProcessing.changeUserRole(toChange.getUsername(), toChange.getRole());
+            clientCallback.objectCall(success);
+
+        }else{
+            throw new OutOfRoleException("Insufficient permission");
+        }
     }
 
     // This method returns boolean object
