@@ -68,7 +68,14 @@ public class UserRequestInterfaceImplementation implements UserRequestInterface 
 
     @Override
     public void addUser(ClientCallback clientCallback, User requestBy, User toAdd) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
-        clientCallback.objectCall(false);
+
+        if(clientCallback.getUser().getRole().equals("admin")) {
+
+            boolean success = GSONProcessing.addUser(toAdd);
+            clientCallback.objectCall(success);
+        } else{
+            throw new OutOfRoleException("Insufficient Permission");
+        }
     }
 
     @Override
