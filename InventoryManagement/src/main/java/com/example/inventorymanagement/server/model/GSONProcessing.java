@@ -32,6 +32,36 @@ public class GSONProcessing {
         }
         return null;
     }
+
+    /**
+     * Adds a new item to a JSON file.
+     *
+     * @param newItem item to be added
+     * @return true if item is added successfully, false if otherwise.
+     */
+    public static boolean addItem(Item newItem) {
+        try {
+            String filePath = "com/example/inventorymanagement/data/items.json";
+            JsonParser jsonParser = new JsonParser();
+            JsonElement rootElement = jsonParser.parse(new FileReader(filePath));
+            JsonObject rootObject = rootElement.getAsJsonObject();
+            JsonArray itemJsonArray = rootObject.getAsJsonArray("items");
+
+            Gson gson = new Gson();
+            JsonElement newItemJson = gson.toJsonTree(newItem);
+            itemJsonArray.add(newItemJson);
+
+            FileWriter writer = new FileWriter(filePath);
+            gson.toJson(rootElement, writer);
+            writer.close();
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }//end of method
+
     public static boolean changePassword(String userName, String newPassword, String oldPassword) {
         try {
             String filePath = "com/example/inventorymanagement/data/users.json";
