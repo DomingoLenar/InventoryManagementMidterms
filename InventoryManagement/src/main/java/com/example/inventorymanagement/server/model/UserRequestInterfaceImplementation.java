@@ -73,7 +73,12 @@ public class UserRequestInterfaceImplementation implements UserRequestInterface 
 
     @Override
     public void removeUser(ClientCallback clientCallback, User requestBy, User toRemove) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
-        clientCallback.objectCall(false);
+        if(clientCallback.getUser().getRole().equals("admin")){
+            boolean success = GSONProcessing.removeUser(toRemove);
+            clientCallback.objectCall(success);
+        }else{
+            throw new OutOfRoleException("Insufficient Permission");
+        }
     }
 
     @Override
