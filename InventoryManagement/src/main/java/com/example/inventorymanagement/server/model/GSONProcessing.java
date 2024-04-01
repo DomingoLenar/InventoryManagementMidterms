@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class GSONProcessing {
-    public static boolean changePassword(String userName, String newPassword, String oldPassword) {
+    public static synchronized boolean changePassword(String userName, String newPassword, String oldPassword) {
         try {
             String filePath = "com/example/inventorymanagement/data/users.json";
             JsonParser jsonParser = new JsonParser();
@@ -41,7 +41,7 @@ public class GSONProcessing {
         }
     }
 
-    public static boolean changeUserRole(String userName, String newRole) {
+    public static synchronized boolean changeUserRole(String userName, String newRole) {
         try {
             String filePath = "InventoryManagement/src/server/res/users.json";
             JsonParser jsonParser = new JsonParser();
@@ -71,7 +71,7 @@ public class GSONProcessing {
         }
     }
 
-    public static ArrayList<String> fetchListOfSuppliers() {
+    public static synchronized ArrayList<String> fetchListOfSuppliers() {
         ArrayList<String> suppliers = new ArrayList<>();
         try {
             String filePath = "InventoryManagement/src/server/res/suppliers.json";
@@ -98,7 +98,7 @@ public class GSONProcessing {
      * @param username  String of username will be used as a search key to find the object of user inside the json
      * @return  object of User or null if not found
      */
-    public static User fetchUser(String username){
+    public static synchronized User fetchUser(String username){
         try{
             String jsonFile = "com/example/inventorymanagement/data/users.json";
             JsonElement rootElement = JsonParser.parseReader(new FileReader(jsonFile));
@@ -125,7 +125,7 @@ public class GSONProcessing {
      * @param type  String value, should be either purchase or sales
      * @return  Returns LinkedList of object ItemOrder
      */
-    public static LinkedList<ItemOrder> fetchListOfItemOrder(String type){
+    public static synchronized LinkedList<ItemOrder> fetchListOfItemOrder(String type){
         LinkedList<ItemOrder> listOfItemOrder = new LinkedList<>();
         try{
             String jsonFile = "com/example/inventorymanagement/data/"+type+"order.json";
@@ -144,7 +144,7 @@ public class GSONProcessing {
         return listOfItemOrder;
     }
 
-    public static LinkedList<Item> fetchListOfItems(){
+    public static synchronized LinkedList<Item> fetchListOfItems(){
         LinkedList<Item> itemList = new LinkedList<>();
         try{
             String itemJsonFile = "com/example.inventorymanagement/data/items.json";
