@@ -93,7 +93,7 @@ public class UserRequestInterfaceImplementation implements UserRequestInterface 
 
         if(clientCallback.getUser().getRole().equals("admin")) {
 
-            boolean success = GSONProcessing.changeUserRole(toChange.getUsername(), toChange.getRole());
+            boolean success = GSONProcessing.changeUserRole(toChange, toChange.getRole());
             clientCallback.objectCall(success);
 
         }else{
@@ -103,9 +103,9 @@ public class UserRequestInterfaceImplementation implements UserRequestInterface 
 
     // This method returns boolean object
     @Override
-    public void changePassword(ClientCallback clientCallback, User requestBy, User toChange, String oldPassword) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
+    public void changePassword(ClientCallback clientCallback, User requestBy, User toChange, String newPassword) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
         if(requestBy.getRole().equals("admin") || requestBy.equals(toChange)){
-            boolean status = GSONProcessing.changePassword(toChange.getUsername(),toChange.getPassword(), oldPassword);
+            boolean status = GSONProcessing.changePassword(toChange, newPassword );
             clientCallback.objectCall(status);
         }else{
             throw new OutOfRoleException("You don't have permission to perform this operation");

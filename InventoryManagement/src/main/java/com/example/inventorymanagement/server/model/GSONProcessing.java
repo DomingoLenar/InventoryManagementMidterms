@@ -8,41 +8,46 @@ import com.google.gson.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class GSONProcessing {
-    public static synchronized boolean changePassword(String userName, String newPassword, String oldPassword) {
+    public static synchronized boolean changePassword(User toChange, String newPassword) {
         try {
             String filePath = "com/example/inventorymanagement/data/users.json";
             JsonParser jsonParser = new JsonParser();
-            JsonElement rootElement = jsonParser.parse(new FileReader(filePath));
-            JsonObject rootObject = rootElement.getAsJsonObject();
-            JsonArray userList = rootObject.getAsJsonArray("users");
+            try (FileReader reader = new FileReader(filePath)) {
+                JsonElement rootElement = jsonParser.parse(reader);
+                JsonObject rootObject = rootElement.getAsJsonObject();
+                JsonArray userList = rootObject.getAsJsonArray("users");
 
-            for (JsonElement userElement : userList) {
-                JsonObject userObject = userElement.getAsJsonObject();
-                String name = userObject.get("username").getAsString();
-                if (name.equals(userName)) {
-                    String password = userObject.get("password").getAsString();
-                    if (password.equals(oldPassword)) {
+                for (JsonElement userElement : userList) {
+                    JsonObject userObject = userElement.getAsJsonObject();
+                    String name = userObject.get("username").getAsString();
+                    if (name.equals(toChange.getUsername())) {
+                        String password = userObject.get("password").getAsString();
+                        if (password.equals(newPassword)) {
+                            throw new IllegalArgumentException("The new password cannot be the same as the current password");
+                        }
                         userObject.addProperty("password", newPassword);
                         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                        FileWriter writer = new FileWriter(filePath);
-                        gson.toJson(rootElement, writer);
-                        writer.close();
+                        try (FileWriter writer = new FileWriter(filePath)) {
+                            gson.toJson(rootElement, writer);
+                        }
                         return true;
                     }
                 }
+                return false; // User not found
             }
-            return false;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle the error appropriately
             return false;
         }
     }
 
-    public static synchronized boolean changeUserRole(String userName, String newRole) {
+
+    public static synchronized boolean changeUserRole(User toChange, String newRole) {
         try {
             String filePath = "InventoryManagement/src/server/res/users.json";
             JsonParser jsonParser = new JsonParser();
@@ -53,7 +58,7 @@ public class GSONProcessing {
             for (JsonElement userElement : userList) {
                 JsonObject userObject = userElement.getAsJsonObject();
                 String name = userObject.get("username").getAsString();
-                if (name.equals(userName)) {
+                if (name.equals(toChange.getUsername())) {
                     String role = userObject.get("role").getAsString();
                     if (!role.equals(newRole)) {
                         userObject.addProperty("role", newRole);
