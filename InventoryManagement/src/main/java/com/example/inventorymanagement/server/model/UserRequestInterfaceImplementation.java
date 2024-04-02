@@ -9,22 +9,36 @@ import com.example.inventorymanagement.util.exceptions.UserExistenceException;
 import com.example.inventorymanagement.util.objects.User;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedHashMap;
 
 // #TODO: Implement GSONProcessing methods, add real logic
-public class UserRequestInterfaceImplementation implements UserRequestInterface {
-    LinkedHashMap<User, ClientCallback> clientCallbacks = new LinkedHashMap<>();
+public class UserRequestInterfaceImplementation extends UnicastRemoteObject implements UserRequestInterface {
+    LinkedHashMap<String, ClientCallback> clientCallbacks = new LinkedHashMap<>();
+
+    public UserRequestInterfaceImplementation() throws RemoteException {
+    }
 
     @Override
-    public void login(ClientCallback clientCallback, User toLogin) throws RemoteException, AlreadyLoggedInException {
-        if(clientCallbacks.containsKey(toLogin)){
-            throw new AlreadyLoggedInException("User is already logged in");
-        }else{
-            //Use gson processor to validate login of user if valid then:
-            User localUserData = new User(null,null,null); // Use gson processor to acquire this
-            clientCallbacks.putFirst(toLogin,clientCallback);
-            clientCallback.objectCall(localUserData);
+    public User login(ClientCallback clientCallback) throws RemoteException, AlreadyLoggedInException, UserExistenceException {
+        User toLogin = clientCallback.getUser();
+        if(clientCallbacks.containsKey(toLogin.username)){
+            throw new UserExistenceException("User already exist!");
+        } else if (clientCallbacks.containsValue(clientCallback)){
+            throw new AlreadyLoggedInException("User already logged in!");
         }
+        else {
+            //Use gson processor to validate login of user if valid then:
+            User activeUser = GSONProcessing.authenticate(toLogin);
+            if (activeUser != null) {
+                clientCallbacks.put(activeUser.username, clientCallback);
+                return activeUser;
+//            clientCallbacks.putFirst(toLogin,clientCallback);
+            } else {
+                throw new UserExistenceException("User does not exist!");
+            }
+        }
+//            clientCallback.objectCall(localUserData);
 
     }
 
