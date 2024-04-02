@@ -14,11 +14,6 @@ import java.util.LinkedList;
 
 public class GSONProcessing {
 
-
-
-
-    public static synchronized boolean changePassword(String userName, String newPassword, String oldPassword) {
-
     public static User authenticate(User key) {
         String filePath = "InventoryManagement/src/main/resources/com/example/inventorymanagement/data/users.json";
 
