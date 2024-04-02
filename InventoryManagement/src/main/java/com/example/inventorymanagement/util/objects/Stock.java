@@ -28,6 +28,15 @@ public class Stock implements Serializable {
         this.date = date;
     }
 
+    public Stock(){
+        this.batchNo = null;
+        this.qty = -1;
+        this.price = -1;
+        this.cost = -1;
+        this.supplier = null;
+        this.date = null;
+    }
+
     public String getBatchNo() {
         return batchNo;
     }

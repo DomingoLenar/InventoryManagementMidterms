@@ -35,7 +35,7 @@ public class Item implements Serializable {
      * @param stock     Object of stock
      */
     public void addStocks(String batchNo, Stock stock){
-//        this.stocks.putLast(batchNo, stock);
+        stocks.put(batchNo, stock);
     }
 
     /**
