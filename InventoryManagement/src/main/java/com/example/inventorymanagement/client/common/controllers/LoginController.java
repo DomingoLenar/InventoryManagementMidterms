@@ -15,24 +15,13 @@ public class LoginController {
     @FXML
     private TextField passwordField;
 
-    @FXML
-    public BorderPane getBorderPaneLogin() {
-        return borderPaneLogin;
+    private MainController mainController;
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 
-    @FXML
-    public Button getLoginButtonLogin() {
-        return loginButtonLogin;
-    }
-
-    @FXML
-    public TextField getUsernameField() { return usernameField; }
-
-    @FXML
-    public TextField getPasswordField() { return passwordField; }
-
-    @FXML
-    private void initialize() {
+    public void initialize() {
         addHoverEffect(loginButtonLogin);
     }
 

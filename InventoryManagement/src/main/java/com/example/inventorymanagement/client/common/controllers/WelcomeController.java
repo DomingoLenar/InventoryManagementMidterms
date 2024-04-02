@@ -1,25 +1,17 @@
 package com.example.inventorymanagement.client.common.controllers;
 
-import com.example.inventorymanagement.client.common.controllers.MainController;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
 
 public class WelcomeController {
     @FXML
-    private BorderPane borderPaneWelcome;
-    @FXML
     private Button loginButtonWelcome;
 
-    public BorderPane getBorderPaneWelcome() {
-        return borderPaneWelcome;
-    }
+    private MainController mainController;
 
-    public Button getLoginButtonWelcome() {
-        return loginButtonWelcome;
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 
     @FXML
@@ -34,8 +26,8 @@ public class WelcomeController {
 
     @FXML
     private void handleLoginButtonAction(ActionEvent event) {
-        Node source = (Node) event.getSource();
-        source.getScene().getWindow().hide();
-        MainController.getInstance().showLogin();
+        if (mainController != null) {
+            mainController.showLoginPanel();
+        }
     }
 }
