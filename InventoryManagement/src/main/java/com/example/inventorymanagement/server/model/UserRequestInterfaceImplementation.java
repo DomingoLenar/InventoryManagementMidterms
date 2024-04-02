@@ -89,11 +89,11 @@ public class UserRequestInterfaceImplementation implements UserRequestInterface 
     }
 
     @Override
-    public void changeUserRole(ClientCallback clientCallback, User requestBy, User toChange) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
+    public void changeUserRole(ClientCallback clientCallback, User requestBy, User toChange, String newRole) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
 
         if(clientCallback.getUser().getRole().equals("admin")) {
 
-            boolean success = GSONProcessing.changeUserRole(toChange, toChange.getRole());
+            boolean success = GSONProcessing.changeUserRole(toChange, newRole);
             clientCallback.objectCall(success);
 
         }else{
