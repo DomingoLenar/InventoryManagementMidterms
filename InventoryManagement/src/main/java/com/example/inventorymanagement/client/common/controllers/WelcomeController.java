@@ -1,30 +1,20 @@
 package com.example.inventorymanagement.client.common.controllers;
 
-import com.example.inventorymanagement.client.common.controllers.MainController;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
 
 public class WelcomeController {
-    @FXML
-    private BorderPane borderPaneWelcome;
-    @FXML
-    private Button loginButtonWelcome;
+    public Button nextButton;
+    private MainController mainController;
 
-    public BorderPane getBorderPaneWelcome() {
-        return borderPaneWelcome;
-    }
-
-    public Button getLoginButtonWelcome() {
-        return loginButtonWelcome;
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 
     @FXML
     private void initialize() {
-        addHoverEffect(loginButtonWelcome);
+        addHoverEffect(nextButton);
     }
 
     private void addHoverEffect(Button button) {
@@ -33,9 +23,8 @@ public class WelcomeController {
     }
 
     @FXML
-    private void handleLoginButtonAction(ActionEvent event) {
-        Node source = (Node) event.getSource();
-        source.getScene().getWindow().hide();
-        MainController.getInstance().showLogin();
+    private void nextButton(ActionEvent event) {
+        mainController.loadLoginView();
     }
+
 }
