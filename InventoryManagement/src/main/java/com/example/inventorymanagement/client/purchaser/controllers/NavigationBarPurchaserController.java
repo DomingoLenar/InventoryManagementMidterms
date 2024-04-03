@@ -1,13 +1,15 @@
 package com.example.inventorymanagement.client.purchaser.controllers;
 
+import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 
-public class NavigationBarPurchaserController {
+public class NavigationBarPurchaserController implements ControllerInterface {
     @FXML
     private BorderPane borderPaneNavigationBarPurchaser;
     @FXML
@@ -21,6 +23,16 @@ public class NavigationBarPurchaserController {
     // Setter for main BorderPane
     public void setMainBorderPane(BorderPane mainBorderPane) {
         this.mainBorderPane = mainBorderPane;
+    }
+
+    @Override
+    public void fetchAndUpdate() throws RemoteException {
+        // No implementation needed in this controller
+    }
+
+    @Override
+    public String getCurrentPanel() throws RemoteException {
+        return "NavigationBarPurchaser"; // Return the name of this panel
     }
 
     @FXML

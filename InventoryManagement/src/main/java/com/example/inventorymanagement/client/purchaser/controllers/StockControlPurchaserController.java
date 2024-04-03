@@ -1,12 +1,15 @@
 package com.example.inventorymanagement.client.purchaser.controllers;
 
+import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
-public class StockControlPurchaserController {
+import java.rmi.RemoteException;
+
+public class StockControlPurchaserController implements ControllerInterface {
     @FXML
     private BorderPane borderPaneStockControlPurchaser;
     @FXML
@@ -17,6 +20,16 @@ public class StockControlPurchaserController {
     private TextField searchFieldPurchaser;
     @FXML
     private TableView stockControlPurchaserTable;
+
+    @Override
+    public void fetchAndUpdate() throws RemoteException {
+        // No implementation needed in this controller
+    }
+
+    @Override
+    public String getCurrentPanel() throws RemoteException {
+        return "StockControlPurchaser"; // Return the name of this panel
+    }
 
     @FXML
     public BorderPane getBorderPaneStockControlPurchaser() {
