@@ -48,7 +48,8 @@ public class LoginController {
         User user = new User(username, password, null);
         try {
             mainController.setClientCallback(new ClientCallbackImpl(user));
-            User currentUser = mainController.getUserService().login(mainController.getClientCallback());
+            mainController.getUserService().login(mainController.getClientCallback());
+            User currentUser = mainController.getClientCallback().getUser();
             String role = currentUser.role;
 
             Node source = (Node) actionEvent.getSource();

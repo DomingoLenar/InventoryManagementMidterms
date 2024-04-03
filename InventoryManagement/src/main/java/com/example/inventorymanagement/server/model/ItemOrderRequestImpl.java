@@ -14,12 +14,13 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
-public class ItemOrderRequestImpl implements ItemOrderRequestInterface {
+public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrderRequestInterface {
 
     public ItemOrderRequestImpl() throws RemoteException{
 
@@ -31,12 +32,17 @@ public class ItemOrderRequestImpl implements ItemOrderRequestInterface {
         checkIfValidPerm(clientCallback.getUser());
         checkIfLoggedIn(clientCallback);
 
-        return false;
+        return GSONProcessing.addItemOrder("sales",salesInvoice);
+
     }
 
     @Override
     public boolean createPurchaseOrder(ClientCallback clientCallback, ItemOrder purchaseOrder) throws RemoteException, OutOfRoleException, NotLoggedInException {
-        return false;
+
+        checkIfLoggedIn(clientCallback);
+        checkIfLoggedIn(clientCallback);
+
+        return GSONProcessing.addItemOrder("purchase",purchaseOrder);
     }
 
     @Override
