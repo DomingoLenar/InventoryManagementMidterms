@@ -108,7 +108,7 @@ public class GSONProcessing {
         try {
             String filePath;
             if (orderType.equalsIgnoreCase("purchase")) {
-                filePath = "com/example/inventorymanagement/data/purchaseorder.json";
+                filePath = "com/example/inventorymanagement/data/purchaseorders.json";
             } else if (orderType.equalsIgnoreCase("sales")) {
                 filePath = "com/example/inventorymanagement/data/salesorder.json";
             } else {
@@ -135,11 +135,62 @@ public class GSONProcessing {
             writer.close();
 
             return true;
-        } catch (IOException | JsonSyntaxException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
     }//end of method
+
+    /**
+     * Removes an ItemOrder from the respective JSON file.
+     *
+     * @param orderType type of order to remove (purchase/sales).
+     * @param orderID ID of order to be removed.
+     * @return true if ItemOrder is successfully removed, false otherwise.
+     */
+    public static boolean removeItemOrder(String orderType, String orderID) {
+        try {
+            String filePath;
+            if (orderType.equalsIgnoreCase("purchase")) {
+                filePath = "com/example/inventorymanagement/data/purchaseorders.json";
+            } else if (orderType.equalsIgnoreCase("sales")) {
+                filePath = "com/example/inventorymanagement/data/salesorder.json";
+            } else {
+                throw new IllegalArgumentException("Invalid order type: " + orderType);
+            }
+
+            JsonParser jsonParser = new JsonParser();
+            JsonElement rootElement = jsonParser.parse(new FileReader(filePath));
+            JsonObject rootObject = rootElement.getAsJsonObject();
+
+            JsonArray orderJsonArray;
+            if (orderType.equalsIgnoreCase("purchase")) {
+                orderJsonArray = rootObject.getAsJsonArray("purchaseOrders");
+            } else {
+                orderJsonArray = rootObject.getAsJsonArray("salesOrders");
+            }
+
+            for (JsonElement jsonElement : orderJsonArray) {
+                JsonObject orderObject = jsonElement.getAsJsonObject();
+                String id = orderObject.get("orderID").getAsString();
+                if (id.equals(orderID)) {
+                    orderJsonArray.remove(jsonElement);
+
+                    FileWriter writer = new FileWriter(filePath);
+                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                    gson.toJson(rootElement, writer);
+                    writer.close();
+
+                    return true;
+                }
+            }
+
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 
     public static boolean changePassword(String userName, String newPassword, String oldPassword) {
