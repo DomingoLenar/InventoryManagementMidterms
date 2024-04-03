@@ -42,6 +42,7 @@ public class NavigationBarSalesController {
     private void initialize() {
         // Handle button clicks
         stockControlButtonSales.setOnAction(event -> loadStockControlPanel());
+        profileButtonSales.setOnAction(event -> loadProfileManagementPanel());
 
         addHoverEffect(stockControlButtonSales);
         addHoverEffect(salesInvoiceButtonSales);
@@ -58,6 +59,15 @@ public class NavigationBarSalesController {
         try {
             BorderPane stockControlPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlSales-view.fxml"));
             mainBorderPane.setRight(stockControlPanel);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadProfileManagementPanel() {
+        try {
+            BorderPane profileManagementPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagement-view.fxml"));
+            mainBorderPane.setRight(profileManagementPanel);
         } catch (IOException e) {
             e.printStackTrace();
         }
