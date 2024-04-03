@@ -40,8 +40,13 @@ public class ItemOrderRequestImpl implements ItemOrderRequestInterface {
     }
 
     @Override
-    public void fetchSalesInvoices(ClientCallback clientCallback) throws RemoteException, OutOfRoleException, NotLoggedInException {
+    public LinkedList<ItemOrder> fetchSalesInvoices(ClientCallback clientCallback) throws RemoteException, OutOfRoleException, NotLoggedInException {
 
+        checkIfValidPerm(clientCallback.getUser());
+        checkIfLoggedIn(clientCallback);
+
+        LinkedList<ItemOrder> salesInvoices = GSONProcessing.fetchListOfItemOrder("sales");
+        return salesInvoices;
     }
 
     @Override
