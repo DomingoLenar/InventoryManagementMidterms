@@ -54,3 +54,24 @@ public class ItemOrderRequestImpl implements ItemOrderRequestInterface {
 
     }
 }
+
+    private void checkIfLoggedIn(ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
+        try {
+            Registry reg = LocateRegistry.getRegistry(2018);
+            UserRequestInterfaceImplementation userServant = (UserRequestInterfaceImplementation) reg.lookup("user");
+
+            if(!(userServant.clientCallbacks.contains(clientCallback))){
+                throw new NotLoggedInException("Not logged in");
+            }
+        }catch(NotBoundException e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+    private static String getCurrentDate(){
+        LocalDate localDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String currentDate = localDate.format(formatter);
+        return currentDate;
+    }
+
+}
