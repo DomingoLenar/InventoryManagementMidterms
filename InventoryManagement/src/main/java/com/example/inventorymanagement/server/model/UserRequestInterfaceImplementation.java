@@ -9,11 +9,12 @@ import com.example.inventorymanagement.util.exceptions.UserExistenceException;
 import com.example.inventorymanagement.util.objects.User;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 // #TODO: Implement GSONProcessing methods, add real logic
-public class UserRequestInterfaceImplementation implements UserRequestInterface {
+public class UserRequestInterfaceImplementation extends UnicastRemoteObject implements UserRequestInterface {
     LinkedList<ClientCallback> clientCallbacks = new LinkedList<>();
 
     public UserRequestInterfaceImplementation() throws RemoteException{

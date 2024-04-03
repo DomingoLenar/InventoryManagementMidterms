@@ -14,12 +14,13 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
-public class ItemOrderRequestImpl implements ItemOrderRequestInterface {
+public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrderRequestInterface {
 
     public ItemOrderRequestImpl() throws RemoteException{
 
