@@ -16,8 +16,12 @@ public class ItemOrderRequestImpl implements ItemOrderRequestInterface {
     }
 
     @Override
-    public void createSalesInvoice(ClientCallback clientCallback, ItemOrder salesInvoice) throws RemoteException, OutOfRoleException, NotLoggedInException {
+    public boolean createSalesInvoice(ClientCallback clientCallback, ItemOrder salesInvoice) throws RemoteException, OutOfRoleException, NotLoggedInException {
 
+        checkIfValidPerm(clientCallback.getUser());
+        checkIfLoggedIn(clientCallback);
+
+        return false;
     }
 
     @Override
