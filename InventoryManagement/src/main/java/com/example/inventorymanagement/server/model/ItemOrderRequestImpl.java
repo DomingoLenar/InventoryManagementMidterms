@@ -31,12 +31,17 @@ public class ItemOrderRequestImpl implements ItemOrderRequestInterface {
         checkIfValidPerm(clientCallback.getUser());
         checkIfLoggedIn(clientCallback);
 
-        return false;
+        return GSONProcessing.addItemOrder("sales",salesInvoice);
+
     }
 
     @Override
     public boolean createPurchaseOrder(ClientCallback clientCallback, ItemOrder purchaseOrder) throws RemoteException, OutOfRoleException, NotLoggedInException {
-        return false;
+
+        checkIfLoggedIn(clientCallback);
+        checkIfLoggedIn(clientCallback);
+
+        return GSONProcessing.addItemOrder("purchase",purchaseOrder);
     }
 
     @Override
