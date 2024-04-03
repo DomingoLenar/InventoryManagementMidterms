@@ -50,8 +50,35 @@ public class ItemOrderRequestImpl implements ItemOrderRequestInterface {
     }
 
     @Override
-    public void fetchCostToday(ClientCallback clientCallback) throws RemoteException, OutOfRoleException, NotLoggedInException {
+    public float fetchCostToday(ClientCallback clientCallback) throws RemoteException, OutOfRoleException, NotLoggedInException {
+        checkIfValidPerm(clientCallback.getUser());
+        checkIfLoggedIn(clientCallback);
 
+        float cost = 0;
+        LinkedList<ItemOrder> rawSalesList = GSONProcessing.fetchListOfItemOrder("sales");
+
+        String currentDate = getCurrentDate();
+
+        for(ItemOrder itemOrder : rawSalesList){
+
+            if(itemOrder.getDate().equals(currentDate)) {
+
+                LinkedList<OrderDetail> orderDetails = itemOrder.getOrderDetails();
+                float cCost = (float) orderDetails.stream()
+                        .mapToDouble(orderDetail -> {
+
+                            String batchNo = orderDetail.getBatchNo();
+                            String[] disseminatedBatch = batchNo.split("_");
+                            float unitCost = Float.parseFloat(disseminatedBatch[2]);
+
+                            return (orderDetail.getQty()*unitCost);
+
+                        }).sum();
+                cost += cCost;
+            }
+        }
+
+        return cost;
     }
 
     @Override
