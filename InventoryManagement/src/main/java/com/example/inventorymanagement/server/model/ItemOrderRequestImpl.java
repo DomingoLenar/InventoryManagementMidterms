@@ -25,8 +25,8 @@ public class ItemOrderRequestImpl implements ItemOrderRequestInterface {
     }
 
     @Override
-    public void createPurchaseOrder(ClientCallback clientCallback, ItemOrder purchaseOrder) throws RemoteException, OutOfRoleException, NotLoggedInException {
-
+    public boolean createPurchaseOrder(ClientCallback clientCallback, ItemOrder purchaseOrder) throws RemoteException, OutOfRoleException, NotLoggedInException {
+        return false;
     }
 
     @Override
@@ -45,12 +45,14 @@ public class ItemOrderRequestImpl implements ItemOrderRequestInterface {
     }
 
     @Override
-    public void fetchMonthlyRevenue(ClientCallback clientCallback) throws RemoteException, OutOfRoleException, NotLoggedInException {
-
+    public LinkedHashMap<Integer, Float> fetchMonthlyRevenue(ClientCallback clientCallback) throws RemoteException, OutOfRoleException, NotLoggedInException {
+        return null;
     }
 
     @Override
-    public void fetchMonthlyCost(ClientCallback clientCallback) throws RemoteException, OutOfRoleException, NotLoggedInException {
+    public LinkedHashMap<Integer, Float> fetchMonthlyCost(ClientCallback clientCallback) throws RemoteException, OutOfRoleException, NotLoggedInException {
+        return null;
+    }
 
     // Checks if user invoking the request has valid permissions
     private void checkIfValidPerm(User user) throws OutOfRoleException{
