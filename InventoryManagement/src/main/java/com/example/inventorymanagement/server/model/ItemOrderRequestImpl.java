@@ -52,8 +52,13 @@ public class ItemOrderRequestImpl implements ItemOrderRequestInterface {
     @Override
     public void fetchMonthlyCost(ClientCallback clientCallback) throws RemoteException, OutOfRoleException, NotLoggedInException {
 
+    // Checks if user invoking the request has valid permissions
+    private void checkIfValidPerm(User user) throws OutOfRoleException{
+        String userRole = user.getRole();
+        if(!(userRole.equals("admin") || userRole.equals("sales"))){
+            throw new OutOfRoleException("Insufficient Permission");
+        }
     }
-}
 
     private void checkIfLoggedIn(ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
         try {
