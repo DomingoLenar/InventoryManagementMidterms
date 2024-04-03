@@ -5,10 +5,7 @@ import com.example.inventorymanagement.util.objects.User;
 import com.example.inventorymanagement.util.objects.ItemOrder;
 import com.google.gson.*;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -281,9 +278,12 @@ public class GSONProcessing {
      * @return  object of User or null if not found
      */
     public static synchronized User fetchUser(String username){
-        try{
-            String jsonFile = "com/example/inventorymanagement/data/users.json";
-            JsonElement rootElement = JsonParser.parseReader(new FileReader(jsonFile));
+        try(
+                InputStream inputStream = GSONProcessing.class.getResourceAsStream("/com/example/inventorymanagement/data/users.json");
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))
+                ){
+
+            JsonElement rootElement = JsonParser.parseReader(bufferedReader);
             JsonObject jsonObject = rootElement.getAsJsonObject();
             JsonArray jsonArray = jsonObject.getAsJsonArray("users");
             for(JsonElement jsonElement: jsonArray){
