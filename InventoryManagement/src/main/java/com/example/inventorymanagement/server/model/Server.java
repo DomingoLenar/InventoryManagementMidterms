@@ -11,6 +11,7 @@ public class Server {
     public void run() throws RemoteException {
         Registry reg = LocateRegistry.createRegistry(2018);
         reg.rebind("userRequest", new UserRequestInterfaceImplementation());
+        reg.rebind("itemOrder",new ItemOrderRequestImpl());
     }
 
     public static void main (String[]args){
