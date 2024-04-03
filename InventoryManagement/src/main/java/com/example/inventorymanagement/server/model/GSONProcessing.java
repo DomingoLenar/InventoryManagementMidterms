@@ -94,6 +94,7 @@ public class GSONProcessing {
         }
     }//end of method
 
+    // TODO: Update object of item as well inside the items.json
     /**
      * Adds a new purchase order or sales order to the respective JSON file.
      *
@@ -138,6 +139,8 @@ public class GSONProcessing {
         }
     }//end of method
 
+
+    // TODO: Update object of item as well inside the items.json
     /**
      * Removes an ItemOrder from the respective JSON file.
      *
