@@ -24,7 +24,9 @@ module com.example.inventorymanagement {
     exports com.example.inventorymanagement.client.sales.views;
     opens com.example.inventorymanagement.client.sales.views to javafx.fxml;
 
+    exports com.example.inventorymanagement.client;
 
+    exports com.example.inventorymanagement.util;
     exports com.example.inventorymanagement.util.requests;
     exports com.example.inventorymanagement.util.exceptions;
     exports com.example.inventorymanagement.util.objects;
