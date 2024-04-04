@@ -1,6 +1,8 @@
 package com.example.inventorymanagement.client.purchaser.controllers;
 
 import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
+import com.example.inventorymanagement.client.purchaser.models.StockControlPurchaserModel;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
@@ -20,6 +22,11 @@ public class StockControlPurchaserController implements ControllerInterface {
     private TextField searchFieldPurchaser;
     @FXML
     private TableView stockControlPurchaserTable;
+    private StockControlPurchaserModel model;
+
+    public StockControlPurchaserController(){
+        this.model = new StockControlPurchaserModel();
+    }
 
     @Override
     public void fetchAndUpdate() throws RemoteException {
@@ -50,11 +57,19 @@ public class StockControlPurchaserController implements ControllerInterface {
     @FXML
     public TableView getStockControlPurchaserTable() { return stockControlPurchaserTable; }
 
+
     @FXML
     private void initialize() {
         addHoverEffect(lowStocksButtonPurchaser);
         addHoverEffect(addItemButtonPurchaser);
+
+        addItemButtonPurchaser.setOnAction(this::handleAddItem);
     }
+
+    private void handleAddItem(ActionEvent event) {
+        model.handleAddItem();
+    }
+
 
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
