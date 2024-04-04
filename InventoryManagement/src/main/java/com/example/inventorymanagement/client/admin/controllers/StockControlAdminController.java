@@ -69,10 +69,14 @@ public class StockControlAdminController implements ControllerInterface {
         addHoverEffect(addListingButtonAdmin);
 
         addItemButtonAdmin.setOnAction(this::handleAddItem);
+        salesInvoiceButtonAdmin.setOnAction(this::handleSalesInvoice);
     }
 
     private void handleAddItem (ActionEvent event){
         model.handleAddItem();
+    }
+    private void handleSalesInvoice (ActionEvent event){
+        model.handleSalesInvoice();
     }
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
