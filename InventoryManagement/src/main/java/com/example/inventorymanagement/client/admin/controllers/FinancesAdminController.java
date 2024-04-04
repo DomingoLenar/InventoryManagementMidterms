@@ -211,8 +211,7 @@ public class FinancesAdminController {
     }
 
         public class ClockController {
-            @FXML
-            private Circle clockFace;
+
             @FXML
             private Line hourHand;
             @FXML
