@@ -1,14 +1,10 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class StockControlAdminController {
     @FXML
@@ -48,30 +44,11 @@ public class StockControlAdminController {
     public TableView getStockControlAdminTable() { return stockControlAdminTable; }
 
     @FXML
-    void handleAddItem (){
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/addItem-view.fxml"));
-            Parent root = fxmlLoader.load();
-
-            Stage stage = new Stage();
-            stage.setTitle("Add Item");
-            stage.setScene(new Scene(root));
-
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @FXML
     private void initialize() {
         addHoverEffect(lowStocksButtonAdmin);
         addHoverEffect(salesInvoiceButtonAdmin);
         addHoverEffect(addItemButtonAdmin);
         addHoverEffect(addListingButtonAdmin);
-
-        addItemButtonAdmin.setOnAction(event -> handleAddItem());
     }
 
     private void addHoverEffect(Button button) {
