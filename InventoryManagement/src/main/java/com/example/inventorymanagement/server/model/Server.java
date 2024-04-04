@@ -7,12 +7,17 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class Server {
-    public static void main(String[] args){
+
+    public void run() throws RemoteException {
+        Registry reg = LocateRegistry.createRegistry(2018);
+        reg.rebind("userRequest", new UserRequestInterfaceImplementation());
+        reg.rebind("itemOrder",new ItemOrderRequestImpl());
+    }
+
+    public static void main (String[]args){
         try {
-            UserRequestInterface userService = new UserRequestInterfaceImplementation();
-            Registry reg = LocateRegistry.createRegistry(1099);
-            reg.rebind("user", userService);
-            System.out.println("Server is running...");
+            Server server = new Server();
+            server.run();
         } catch (Exception e) {
             e.printStackTrace();
         }
