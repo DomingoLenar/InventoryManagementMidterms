@@ -11,10 +11,10 @@
    <content>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="550.0" style="-fx-background-color: linear-gradient(to bottom, #e8b0b0, #FFFFFF);">
          <children>
-            <TextField layoutX="32.0" layoutY="224.0" prefHeight="30.0" prefWidth="120.0" />
+            <TextField layoutX="32.0" layoutY="224.0" prefHeight="30.0" prefWidth="120.0" promptText="0.00" />
             <TextField layoutX="32.0" layoutY="137.0" prefHeight="38.0" prefWidth="456.0" />
-            <TextField layoutX="398.0" layoutY="224.0" prefHeight="30.0" prefWidth="90.0" />
-            <TextField layoutX="165.0" layoutY="224.0" prefHeight="30.0" prefWidth="120.0" />
+            <TextField layoutX="398.0" layoutY="224.0" prefHeight="30.0" prefWidth="90.0" promptText="0" />
+            <TextField layoutX="165.0" layoutY="224.0" prefHeight="30.0" prefWidth="120.0" promptText="0.00" />
             <Label alignment="CENTER" layoutX="225.0" layoutY="48.0" text="Add Item" textAlignment="CENTER">
                <font>
                   <Font name="Share Tech Mono" size="30.0" />
