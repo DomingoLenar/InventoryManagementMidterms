@@ -19,7 +19,7 @@ public class ChangePasswordModel {
        try {
            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
-           UserRequestInterface userRequest = (UserRequestInterface) registry.lookup("UserRequestService");
+           UserRequestInterface userRequest = (UserRequestInterface) registry.lookup("user");
 
            ClientCallback cB = new ClientCallbackImpl(requestBy);
 
