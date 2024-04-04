@@ -27,7 +27,8 @@ public class StockControlAdminController implements ControllerInterface {
     private TextField searchFieldAdmin;
     @FXML
     private TableView stockControlAdminTable;
-    private StockControlAdminModel model;
+    private StockControlAdminModel model = new StockControlAdminModel();
+
     @Override
     public void fetchAndUpdate() throws RemoteException {
         // No implementation needed in this controller
@@ -59,7 +60,6 @@ public class StockControlAdminController implements ControllerInterface {
     public TableView getStockControlAdminTable() { return stockControlAdminTable; }
 
     public StockControlAdminController() {
-        this.model = new StockControlAdminModel();
     }
     @FXML
     private void initialize() {

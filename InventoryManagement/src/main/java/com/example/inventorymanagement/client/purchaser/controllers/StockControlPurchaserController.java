@@ -22,10 +22,9 @@ public class StockControlPurchaserController implements ControllerInterface {
     private TextField searchFieldPurchaser;
     @FXML
     private TableView stockControlPurchaserTable;
-    private StockControlPurchaserModel model;
+    private StockControlPurchaserModel model = new StockControlPurchaserModel();
 
     public StockControlPurchaserController(){
-        this.model = new StockControlPurchaserModel();
     }
 
     @Override
