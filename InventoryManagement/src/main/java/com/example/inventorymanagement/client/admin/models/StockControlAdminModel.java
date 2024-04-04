@@ -11,7 +11,11 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 
 public class StockControlAdminModel {
+    private static final String PANEL_NAME = "StockControlAdmin";
 
+    public String getPanelName() {
+        return PANEL_NAME;
+    }
 
     /**
      * Handle Action Event when clicking AddItemButton

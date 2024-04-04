@@ -36,8 +36,9 @@ public class StockControlAdminController implements ControllerInterface {
 
     @Override
     public String getCurrentPanel() throws RemoteException {
-        return "StockControlAdmin"; // Return the name of this panel
+        return model.getPanelName(); // Return the name of this panel
     }
+
     @FXML
     public BorderPane getBorderPaneStockControlAdmin() { return borderPaneStockControlAdmin;}
 
