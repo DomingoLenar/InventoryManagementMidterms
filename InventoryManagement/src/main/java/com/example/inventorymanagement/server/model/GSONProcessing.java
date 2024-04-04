@@ -6,6 +6,7 @@ import com.example.inventorymanagement.util.objects.ItemOrder;
 import com.google.gson.*;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -194,44 +195,48 @@ public class GSONProcessing {
 
 
     public static synchronized boolean changePassword(User toChange, String newPassword) {
-        try {
-            String filePath = "com/example/inventorymanagement/data/users.json";
-            JsonParser jsonParser = new JsonParser();
-            try (FileReader reader = new FileReader(filePath)) {
-                JsonElement rootElement = jsonParser.parse(reader);
-                JsonObject rootObject = rootElement.getAsJsonObject();
-                JsonArray userList = rootObject.getAsJsonArray("users");
+        String filePath = "/com/example/inventorymanagement/data/users.json";
+        try (
+                InputStream inputStream = GSONProcessing.class.getResourceAsStream(filePath);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
+        ) {
+            JsonElement rootElement = JsonParser.parseReader(bufferedReader);
+            JsonObject rootObject = rootElement.getAsJsonObject();
+            JsonArray userList = rootObject.getAsJsonArray("users");
 
-                for (JsonElement userElement : userList) {
-                    JsonObject userObject = userElement.getAsJsonObject();
-                    String name = userObject.get("username").getAsString();
-                    if (name.equals(toChange.getUsername())) {
-                        String password = userObject.get("password").getAsString();
-                        if (password.equals(newPassword)) {
-                            throw new IllegalArgumentException("The new password cannot be the same as the current password");
-                        }
-                        userObject.addProperty("password", newPassword);
-                        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                        try (FileWriter writer = new FileWriter(filePath)) {
-                            gson.toJson(rootElement, writer);
-                        }
-                        return true;
+            for (JsonElement userElement : userList) {
+                JsonObject userObject = userElement.getAsJsonObject();
+                String name = userObject.get("username").getAsString();
+                if (name.equals(toChange.getUsername())) {
+                    String currentPassword = userObject.get("password").getAsString();
+                    if (currentPassword.equals(newPassword)) {
+                        throw new IllegalArgumentException("The new password cannot be the same as the current password");
                     }
+                    userObject.addProperty("password", newPassword);
+
+
+                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                    try (Writer writer = new FileWriter(filePath)) {
+                        gson.toJson(rootElement, writer);
+                    }
+                    return true;
                 }
-                return false; // User not found
             }
+            return false; // User not found
         } catch (IOException e) {
-            e.printStackTrace(); // Handle the error appropriately
+            e.printStackTrace();
             return false;
         }
     }
 
 
     public static synchronized boolean changeUserRole(User toChange, String newRole) {
-        try {
-            String filePath = "InventoryManagement/src/server/res/users.json";
-            JsonParser jsonParser = new JsonParser();
-            JsonElement rootElement = jsonParser.parse(new FileReader(filePath));
+        String filePath = "/com/example/inventorymanagement/data/users.json";
+        try (
+                InputStream inputStream = GSONProcessing.class.getResourceAsStream(filePath);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
+        ) {
+            JsonElement rootElement = JsonParser.parseReader(bufferedReader);
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray userList = rootObject.getAsJsonArray("users");
 
@@ -242,16 +247,17 @@ public class GSONProcessing {
                     String role = userObject.get("role").getAsString();
                     if (!role.equals(newRole)) {
                         userObject.addProperty("role", newRole);
+
                         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                        FileWriter writer = new FileWriter(filePath);
-                        gson.toJson(rootElement, writer);
-                        writer.close();
+                        try (Writer writer = new FileWriter(filePath)) {
+                            gson.toJson(rootElement, writer);
+                        }
                         return true;
                     }
                 }
             }
             return false;
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
