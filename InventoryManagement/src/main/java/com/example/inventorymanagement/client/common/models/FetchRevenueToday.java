@@ -14,7 +14,7 @@ import java.rmi.registry.Registry;
 
 public class FetchRevenueToday {
 
-    public void process (User requestBy){
+    public float process (User requestBy){
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
@@ -22,7 +22,7 @@ public class FetchRevenueToday {
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 
-            IORequest.fetchRevenueToday(cB);
+            return IORequest.fetchRevenueToday(cB);
 
 
         } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {
