@@ -1,10 +1,12 @@
 package com.example.inventorymanagement.client.model;
 
-import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
+
 import com.example.inventorymanagement.util.ClientCallback;
+import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.objects.User;
 
 import java.io.Serializable;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -46,19 +48,21 @@ public class ClientCallbackImpl extends UnicastRemoteObject implements ClientCal
         return this.user;
     }
 
-    public void setCurrentPanel(ControllerInterface currentController){
-        this.currentController = currentController;
-    }
 
     @Override
-    public String getCurrentPanelOfController() throws RemoteException {
-        return currentController.getCurrentPanel();
+    public String getObjectsUsedByPanel() throws RemoteException {
+        return currentController.getObjectsUsed();
     }
+
 
     @Override
     public void updateUICall() throws RemoteException{
         currentController.fetchAndUpdate();
     }
 
+    @Override
+    public void setCurrentPanel(ControllerInterface controller) throws RemoteException {
+        currentController = controller;
+    }
 
 }
