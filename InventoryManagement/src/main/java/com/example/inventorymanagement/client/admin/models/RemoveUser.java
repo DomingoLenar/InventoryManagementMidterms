@@ -10,7 +10,7 @@ import java.rmi.registry.Registry;
 
 public class RemoveUser {
 
-    public void process (User requestBy , User toRemove){
+    public boolean process (User requestBy , User toRemove){
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
@@ -18,7 +18,7 @@ public class RemoveUser {
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 
-            userRequest.removeUser(cB,requestBy,toRemove);
+            return userRequest.removeUser(cB,requestBy,toRemove);
 
         } catch (Exception e){
             e.printStackTrace();
