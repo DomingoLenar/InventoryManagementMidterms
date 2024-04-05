@@ -8,7 +8,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class SalesInvoiceAdminPanel extends Application {
+public class CreateSalesInvoiceAdminPanel extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
