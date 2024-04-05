@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
 import java.rmi.RemoteException;
+import java.util.concurrent.ConcurrentMap;
 
 public class StockControlAdminController implements ControllerInterface {
     @FXML
@@ -49,7 +50,7 @@ public class StockControlAdminController implements ControllerInterface {
     public Button getLowStocksButton() { return lowStocksButtonAdmin; }
 
     @FXML
-    public Button getSalesInvoiceButton() { return salesInvoiceButtonAdmin; }
+    public Button getsalesInvoiceButtonAdmin() { return salesInvoiceButtonAdmin; }
 
     @FXML
     public Button getAddListingButton() { return addListingButtonAdmin;}
