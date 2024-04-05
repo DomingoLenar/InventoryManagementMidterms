@@ -21,7 +21,7 @@ public class FetchListOfItemsModel {
     public LinkedList<Item> process (User requestBy){
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-            ItemRequestInterface ItemRequest = (ItemRequestInterface) registry.lookup("user");
+            ItemRequestInterface ItemRequest = (ItemRequestInterface) registry.lookup("item");
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 

@@ -14,7 +14,7 @@ public class RemoveUser {
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
-            UserRequestInterface userRequest = (UserRequestInterface) registry.lookup("user");
+            UserRequestInterface userRequest = (UserRequestInterface) registry.lookup("userRequest");
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 

@@ -21,7 +21,7 @@ public class CreatePurchaseOrderModel {
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
-            ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("user");
+            ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
             
