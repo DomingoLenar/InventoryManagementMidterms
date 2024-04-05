@@ -30,7 +30,6 @@ public class NavigationBarAdminController implements ControllerInterface {
     public void fetchAndUpdate() throws RemoteException {
         // No implementation needed in this controller
     }
-
     @Override
     public String getCurrentPanel() throws RemoteException {
         return "NavigationBarAdmin"; // Return the name of this panel
@@ -73,7 +72,7 @@ public class NavigationBarAdminController implements ControllerInterface {
         userManagementButtonAdmin.setOnAction(event -> loadUserManagementPanel());
         dashboardButtonAdmin.setOnAction(event -> loadDashboardAdminPanel());
         profileButtonAdmin.setOnAction(event -> loadProfileManagementPanel());
-
+        //salesInvoiceButtonAdmin.setOnAction(event -> loadSalesInvoicePanel);
 
         addHoverEffect(dashboardButtonAdmin);
         addHoverEffect(stockControlButtonAdmin);
@@ -81,6 +80,7 @@ public class NavigationBarAdminController implements ControllerInterface {
         addHoverEffect(salesInvoiceButtonAdmin);
         addHoverEffect(userManagementButtonAdmin);
         addHoverEffect(profileButtonAdmin);
+        addHoverEffect(salesInvoiceButtonAdmin);
     }
 
     private void loadProfileManagementPanel() {
