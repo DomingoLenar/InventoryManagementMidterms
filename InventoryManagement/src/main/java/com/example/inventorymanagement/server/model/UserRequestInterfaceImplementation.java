@@ -165,7 +165,7 @@ public class UserRequestInterfaceImplementation extends UnicastRemoteObject impl
         clientCallbacks.forEach(clientCallback -> {
             try {
                 LinkedList<String> objects = new LinkedList<>(Arrays.asList(clientCallback.getObjectsUsedByPanel().split(",")));
-                if(objects.contains("panel")){
+                if(objects.contains(panel)){
                     clientCallback.updateUICall();
                 }
             } catch (RemoteException e) {
