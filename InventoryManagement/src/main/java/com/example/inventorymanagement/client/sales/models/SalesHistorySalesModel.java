@@ -1,4 +1,4 @@
-package com.example.inventorymanagement.client.admin.models;
+package com.example.inventorymanagement.client.sales.models;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,10 +10,10 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
-public class StockControlAdminModel {
-    private static final String PANEL_NAME = "StockControlAdmin";
+public class SalesHistorySalesModel {
+    private static final String PANEL_NAME = "SalesHistorySales";
 
-    public String getPanelName() {
+    public static String getPanelName() {
         return PANEL_NAME;
     }
     //TODO: Backend-Logic implementation

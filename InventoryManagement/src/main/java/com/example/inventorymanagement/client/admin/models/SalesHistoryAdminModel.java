@@ -10,11 +10,12 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
-public class StockControlAdminModel {
-    private static final String PANEL_NAME = "StockControlAdmin";
+public class SalesHistoryAdminModel {
+    private static final String PANEL_NAME = "SalesHistoryAdmin";
 
-    public String getPanelName() {
+    public static String getPanelName() {
         return PANEL_NAME;
     }
     //TODO: Backend-Logic implementation
+
 }

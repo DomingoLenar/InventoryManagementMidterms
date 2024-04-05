@@ -1,5 +1,7 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
+import com.example.inventorymanagement.client.admin.models.AddItemAdminModel;
+import com.example.inventorymanagement.client.admin.models.CreateSalesInvoiceModel;
 import com.example.inventorymanagement.client.admin.models.StockControlAdminModel;
 import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
 import javafx.event.ActionEvent;
@@ -27,7 +29,9 @@ public class StockControlAdminController implements ControllerInterface {
     private TextField searchFieldAdmin;
     @FXML
     private TableView stockControlAdminTable;
-    private StockControlAdminModel model = new StockControlAdminModel();
+    private StockControlAdminModel stockControlAdminModel = new StockControlAdminModel();
+    private AddItemAdminModel addItemAdminModel = new AddItemAdminModel();
+    private CreateSalesInvoiceModel salesInvoiceModel = new CreateSalesInvoiceModel();
 
     @Override
     public void fetchAndUpdate() throws RemoteException {
@@ -36,7 +40,7 @@ public class StockControlAdminController implements ControllerInterface {
 
     @Override
     public String getCurrentPanel() throws RemoteException {
-        return model.getPanelName(); // Return the name of this panel
+        return stockControlAdminModel.getPanelName(); // Return the name of this panel
     }
 
     @FXML
@@ -46,7 +50,7 @@ public class StockControlAdminController implements ControllerInterface {
     public Button getLowStocksButton() { return lowStocksButtonAdmin; }
 
     @FXML
-    public Button getSalesInvoiceButton() { return salesInvoiceButtonAdmin; }
+    public Button getsalesInvoiceButtonAdmin() { return salesInvoiceButtonAdmin; }
 
     @FXML
     public Button getAddListingButton() { return addListingButtonAdmin;}
@@ -74,10 +78,10 @@ public class StockControlAdminController implements ControllerInterface {
     }
 
     private void handleAddItem (ActionEvent event){
-        model.handleAddItem();
+        addItemAdminModel.handleAddItem();
     }
     private void handleSalesInvoice (ActionEvent event){
-        model.handleSalesInvoice();
+        salesInvoiceModel.handleSalesInvoice();
     }
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));

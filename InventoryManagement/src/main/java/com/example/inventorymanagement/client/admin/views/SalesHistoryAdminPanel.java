@@ -11,7 +11,7 @@ import com.example.inventorymanagement.client.admin.controllers.NavigationBarAdm
 
 import java.io.IOException;
 
-public class StockControlAdminPanel extends Application {
+public class SalesHistoryAdminPanel extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
@@ -24,11 +24,11 @@ public class StockControlAdminPanel extends Application {
         NavigationBarAdminController navBarAdminController = loader.getController();
 
         // Create the stock control panel
-        BorderPane stockControlPanelAdmin = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlAdmin-view.fxml"));
+        BorderPane salesHistoryAdminPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/salesHistory/salesHistoryAdmin-view.fxml"));
 
         BorderPane root = new BorderPane();
         root.setLeft(navigationBar);
-        root.setRight(stockControlPanelAdmin);
+        root.setRight(salesHistoryAdminPanel);
 
         Scene scene = new Scene(root, 1080, 650);
         stage.setScene(scene);

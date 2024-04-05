@@ -1,4 +1,4 @@
-package com.example.inventorymanagement.client.admin.views;
+package com.example.inventorymanagement.client.sales.views;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +11,7 @@ import com.example.inventorymanagement.client.admin.controllers.NavigationBarAdm
 
 import java.io.IOException;
 
-public class StockControlAdminPanel extends Application {
+public class SalesHistorySalesPanel extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
@@ -21,14 +21,14 @@ public class StockControlAdminPanel extends Application {
         BorderPane navigationBar = loader.load();
 
         // Get the controller
-        NavigationBarAdminController navBarAdminController = loader.getController();
+        NavigationBarAdminController navBarPurchaserController = loader.getController();
 
         // Create the stock control panel
-        BorderPane stockControlPanelAdmin = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlAdmin-view.fxml"));
+        BorderPane salesHistoryPurchaserPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/salesHistory/salesHistorySales-view.fxml"));
 
         BorderPane root = new BorderPane();
         root.setLeft(navigationBar);
-        root.setRight(stockControlPanelAdmin);
+        root.setRight(salesHistoryPurchaserPanel);
 
         Scene scene = new Scene(root, 1080, 650);
         stage.setScene(scene);
@@ -36,7 +36,7 @@ public class StockControlAdminPanel extends Application {
         stage.show();
 
         // Set the main BorderPane reference in the navigation bar controller
-        navBarAdminController.setMainBorderPane(root);
+        navBarPurchaserController.setMainBorderPane(root);
     }
 
     public static void main(String[] args) {
