@@ -14,7 +14,7 @@ public class ProfileManagementChangePassPanel extends Application {
 
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"),20);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(ProfileManagementChangePassPanel.class.getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagementChangePassCommon-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(ProfileManagementChangePassPanel.class.getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagementChangePass-view.fxml"));
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
 
         if (inputStream != null) {

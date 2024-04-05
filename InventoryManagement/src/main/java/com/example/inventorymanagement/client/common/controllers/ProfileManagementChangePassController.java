@@ -61,7 +61,7 @@ public class ProfileManagementChangePassController {
     }
 
     public String getCurrentPanel() throws RemoteException {
-        return "ProfileManagement"; // Return the name of this panel
+        return "ProfileManagementChangePass"; // Return the name of this panel
     }
 }
 
