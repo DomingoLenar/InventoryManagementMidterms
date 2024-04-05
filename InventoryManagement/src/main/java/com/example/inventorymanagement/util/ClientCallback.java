@@ -18,8 +18,11 @@ public interface ClientCallback extends Remote {
 
     public User getUser() throws RemoteException;
 
-    public String getCurrentPanelOfController() throws RemoteException;
 
     public void updateUICall() throws RemoteException;
+
+    public void setCurrentPanel(ControllerInterface controller)throws RemoteException;
+
+    public String getObjectsUsedByPanel() throws RemoteException;
 
 }
