@@ -1,5 +1,6 @@
 
 package com.example.inventorymanagement.client.admin.controllers;
+import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -8,9 +9,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
 
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.ResourceBundle;
 
-public class AddUserAdminController implements Initializable{
+public class AddUserAdminController implements Initializable, ControllerInterface {
         @FXML
         private ComboBox<String> roleComboBox;
 
@@ -28,6 +30,14 @@ public class AddUserAdminController implements Initializable{
         public TextField getPasswordField(){
             return passwordField;
         }
+    @Override
+    public void fetchAndUpdate() throws RemoteException {
+    }
+
+    @Override
+    public String getCurrentPanel() throws RemoteException {
+        return "AddUserAdmin"; // Return the name of this panel
+    }
 
         @Override
         public void initialize(URL location, ResourceBundle resources) {
