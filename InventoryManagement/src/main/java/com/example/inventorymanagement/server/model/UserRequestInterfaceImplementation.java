@@ -100,11 +100,11 @@ public class UserRequestInterfaceImplementation extends UnicastRemoteObject impl
     }
 
     @Override
-    public boolean changeUserRole(ClientCallback clientCallback, User requestBy, User toChange) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
+    public boolean changeUserRole(ClientCallback clientCallback, User requestBy, User toChange, String newRole) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
 
         if(clientCallback.getUser().getRole().equals("admin")) {
 
-            boolean success = GSONProcessing.changeUserRole(toChange.getUsername(), toChange.getRole());
+            boolean success = GSONProcessing.changeUserRole(toChange,newRole);
             clientCallback.objectCall(success);
             callUpdate("user");
             return success;
@@ -116,10 +116,12 @@ public class UserRequestInterfaceImplementation extends UnicastRemoteObject impl
 
     // This method returns boolean object
     @Override
-    public boolean changePassword(ClientCallback clientCallback, User requestBy, User toChange, String oldPassword) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
-        if(requestBy.getRole().equals("admin") || requestBy.equals(toChange)){
-            boolean status = GSONProcessing.changePassword(toChange.getUsername(),toChange.getPassword(), oldPassword);
+    public boolean changePassword(ClientCallback clientCallback, User requestBy, User toChange, String newPassword) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
+        if(clientCallback.getUser().getRole().equals("admin")){
+
+            boolean status = GSONProcessing.changePassword(toChange, newPassword);
             clientCallback.objectCall(status);
+
             return status;
         }else{
             throw new OutOfRoleException("You don't have permission to perform this operation");
