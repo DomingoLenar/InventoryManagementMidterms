@@ -34,5 +34,9 @@ public interface UserRequestInterface extends Remote{
     //Method for changing password
     public boolean changePassword(ClientCallback clientCallback, User requestBy, User toChange, String oldPassword) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException;
 
+    public boolean isLoggedIn(ClientCallback clientCallback) throws RemoteException, NotLoggedInException, OutOfRoleException;
+
+    public boolean updateCallback(User user, ClientCallback clientCallback) throws RemoteException, NotLoggedInException;
+
 
 }
