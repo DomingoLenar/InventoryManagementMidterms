@@ -7,10 +7,11 @@ import com.example.inventorymanagement.util.requests.UserRequestInterface;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.LinkedList;
 
 public class FetchActiveUsers {
 
-    public void process (User requestBy){
+    public LinkedList<User> process (User requestBy){
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
@@ -18,10 +19,11 @@ public class FetchActiveUsers {
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 
-            userRequest.getActiveUser(cB);
+          return userRequest.getActiveUser(cB);
 
         } catch (Exception e){
             e.printStackTrace();
+            return new LinkedList<>();
         }
     }
 }
