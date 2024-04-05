@@ -8,6 +8,7 @@ import com.example.inventorymanagement.util.objects.User;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
@@ -26,5 +27,7 @@ public interface ItemOrderRequestInterface {
     public LinkedHashMap<Integer, Float> fetchMonthlyRevenue(ClientCallback clientCallback) throws RemoteException, OutOfRoleException, NotLoggedInException;
 
     public LinkedHashMap<Integer, Float> fetchMonthlyCost(ClientCallback clientCallback) throws RemoteException, OutOfRoleException, NotLoggedInException;
+
+    public ArrayList<String> fetchSuppliers(ClientCallback cLientCallback) throws RemoteException, NotLoggedInException;
 
 }

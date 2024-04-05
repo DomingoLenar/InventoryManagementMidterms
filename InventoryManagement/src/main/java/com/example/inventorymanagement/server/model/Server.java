@@ -12,6 +12,8 @@ public class Server {
         Registry reg = LocateRegistry.createRegistry(2018);
         reg.rebind("userRequest", new UserRequestInterfaceImplementation());
         reg.rebind("itemOrder",new ItemOrderRequestImpl());
+        reg.rebind("item", new ItemRequestImpl());
+        System.out.println("Server has started");
     }
 
     public static void main (String[]args){

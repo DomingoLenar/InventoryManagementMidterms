@@ -17,6 +17,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
@@ -122,6 +123,12 @@ public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrd
     @Override
     public LinkedHashMap<Integer, Float> fetchMonthlyCost(ClientCallback clientCallback) throws RemoteException, OutOfRoleException, NotLoggedInException {
         return null;
+    }
+
+    @Override
+    public ArrayList<String> fetchSuppliers(ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
+        checkIfLoggedIn(clientCallback);
+        return GSONProcessing.fetchListOfSuppliers();
     }
 
     // Checks if user invoking the request has valid permissions
