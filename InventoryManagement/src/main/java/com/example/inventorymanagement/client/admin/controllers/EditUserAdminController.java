@@ -1,5 +1,6 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
+import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -9,9 +10,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.ResourceBundle;
 
-public class EditUserAdminController implements Initializable {
+public class EditUserAdminController implements Initializable, ControllerInterface {
 
     @FXML
     private BorderPane borderPaneEditUser;
@@ -42,6 +44,13 @@ public class EditUserAdminController implements Initializable {
 
     public ComboBox<String> getChangeRoleComboBox() {
         return changeRoleComboBox;
+    }
+    @Override
+    public void fetchAndUpdate() throws RemoteException {
+    }
+    @Override
+    public String getCurrentPanel() throws RemoteException {
+        return "EditUserAdmin"; // Return the name of this panel
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
