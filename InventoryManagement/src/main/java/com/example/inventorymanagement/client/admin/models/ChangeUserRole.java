@@ -16,7 +16,7 @@ import java.rmi.registry.Registry;
 
 public class ChangeUserRole {
 
-    public void process (User requestBy, User toChange, String newRole){
+    public boolean process (User requestBy, User toChange, String newRole){
 
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
@@ -25,7 +25,7 @@ public class ChangeUserRole {
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 
-            userRequest.changeUserRole(cB,requestBy,toChange, newRole);
+            return userRequest.changeUserRole(cB,requestBy,toChange, newRole);
 
         } catch (NotBoundException | RemoteException | UserExistenceException | OutOfRoleException |
                  NotLoggedInException e) {
