@@ -58,11 +58,11 @@ public class NavigationBarAdminController implements ControllerInterface {
     public Button getProfileButtonAdmin() { return profileButtonAdmin; }
 
     // Reference to the main BorderPane
-    private BorderPane mainBorderPane;
+    private BorderPane mainBorderPaneAdmin;
 
     // Setter for main BorderPane
     public void setMainBorderPane(BorderPane mainBorderPane) {
-        this.mainBorderPane = mainBorderPane;
+        this.mainBorderPaneAdmin = mainBorderPane;
     }
 
     @FXML
@@ -86,7 +86,7 @@ public class NavigationBarAdminController implements ControllerInterface {
     private void loadProfileManagementPanel() {
         try {
             BorderPane profileManagementPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagement-view.fxml"));
-            mainBorderPane.setRight(profileManagementPanel);
+            mainBorderPaneAdmin.setRight(profileManagementPanel);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -100,7 +100,7 @@ public class NavigationBarAdminController implements ControllerInterface {
         // Load Dashboard panel
         try {
             BorderPane dashboardAdminPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/dashboard/dashboardAdmin-view.fxml"));
-            mainBorderPane.setRight(dashboardAdminPanel);
+            mainBorderPaneAdmin.setRight(dashboardAdminPanel);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -109,7 +109,7 @@ public class NavigationBarAdminController implements ControllerInterface {
         // Load Stock Control panel
         try {
             BorderPane stockControlPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlAdmin-view.fxml"));
-            mainBorderPane.setRight(stockControlPanel);
+            mainBorderPaneAdmin.setRight(stockControlPanel);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -119,7 +119,7 @@ public class NavigationBarAdminController implements ControllerInterface {
         // Load Finances panel
         try {
             BorderPane financesPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/finances/financesAdmin-view.fxml"));
-            mainBorderPane.setRight(financesPanel);
+            mainBorderPaneAdmin.setRight(financesPanel);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -129,7 +129,7 @@ public class NavigationBarAdminController implements ControllerInterface {
         // Load User Management panel
         try {
             BorderPane financesPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/userManagement/userManagementAdmin-view.fxml"));
-            mainBorderPane.setRight(financesPanel);
+            mainBorderPaneAdmin.setRight(financesPanel);
         } catch (IOException e) {
             e.printStackTrace();
         }
