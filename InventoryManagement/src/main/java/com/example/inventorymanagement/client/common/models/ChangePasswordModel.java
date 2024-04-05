@@ -14,7 +14,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class ChangePasswordModel {
-   public void process (User requestBy, User toChange, String  newPassword)  {
+   public boolean process (User requestBy, User toChange, String  newPassword)  {
 
        try {
            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
@@ -23,7 +23,7 @@ public class ChangePasswordModel {
 
            ClientCallback cB = new ClientCallbackImpl(requestBy);
 
-           userRequest.changePassword(cB,requestBy,toChange, newPassword);
+          return userRequest.changePassword(cB,requestBy,toChange, newPassword);
 
        } catch (RemoteException | NotBoundException | NotLoggedInException | OutOfRoleException |
                 UserExistenceException e) {
