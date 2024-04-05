@@ -42,20 +42,21 @@ public class GSONProcessing {
      * @return true if item is added successfully, false if otherwise.
      */
     public static boolean addItem(Item newItem) {
+        String filePath = "com/example/inventorymanagement/data/items.json";
+
         try {
-            String filePath = "com/example/inventorymanagement/data/items.json";
-            JsonParser jsonParser = new JsonParser();
-            JsonElement rootElement = jsonParser.parse(new FileReader(filePath));
+            Gson gson = new Gson();
+
+            JsonElement rootElement = JsonParser.parseReader(new FileReader(filePath));
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray itemJsonArray = rootObject.getAsJsonArray("items");
 
-            Gson gson = new Gson();
             JsonElement newItemJson = gson.toJsonTree(newItem);
             itemJsonArray.add(newItemJson);
 
-            FileWriter writer = new FileWriter(filePath);
-            gson.toJson(rootElement, writer);
-            writer.close();
+            try (FileWriter writer = new FileWriter(filePath)) {
+                gson.toJson(rootElement, writer);
+            }
 
             return true;
         } catch (IOException e) {
