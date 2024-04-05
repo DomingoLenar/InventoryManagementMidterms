@@ -6,6 +6,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+
+import java.rmi.RemoteException;
+
 // todo: handle action event and submit it to rmi server
 public class ProfileManagementController {
     @FXML
@@ -35,6 +38,12 @@ public class ProfileManagementController {
     public Label getChangePasswordLabel() {
         return changePasswordLabel;
     }
+    public TextField getOldPasswordTextField(){
+        return oldPasswordTextField;
+    }
+    public TextField getNewPasswordTextField(){
+        return newPasswordTextField;
+    }
 
     public Label getEmailLabel() {
         return emailLabel;
@@ -47,4 +56,12 @@ public class ProfileManagementController {
     public Button getSaveButton() {
         return saveButton;
     }
+
+    public void fetchAndUpdate() throws RemoteException {
+    }
+
+    public String getCurrentPanel() throws RemoteException {
+        return "ProfileManagement"; // Return the name of this panel
+    }
 }
+
