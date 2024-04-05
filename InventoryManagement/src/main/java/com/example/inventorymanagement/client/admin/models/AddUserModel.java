@@ -15,7 +15,7 @@ import java.rmi.registry.Registry;
 
 public class AddUserModel {
 
-    public void process (User requestBy,User newUser){
+    public boolean process (User requestBy,User newUser){
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
@@ -23,7 +23,7 @@ public class AddUserModel {
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 
-            userRequest.addUser(cB, requestBy, newUser);
+             return userRequest.addUser(cB, requestBy, newUser);
 
         } catch (RemoteException | NotBoundException | NotLoggedInException | OutOfRoleException |
                  UserExistenceException e) {
