@@ -13,37 +13,37 @@
    <center>
       <AnchorPane prefHeight="58.0" prefWidth="653.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="ChangePasswordLabel" layoutX="168.0" layoutY="131.0" text="Change Password">
+            <Label fx:id="ChangePasswordLabel" layoutX="313.0" layoutY="241.0" text="Change Password">
                <font>
                   <Font name="Share Tech Mono" size="30.0" />
                </font>
             </Label>
-            <TextField fx:id="oldPasswordTextField" layoutX="171.0" layoutY="182.0" prefHeight="36.0" prefWidth="286.0" promptText="Old Password">
+            <TextField fx:id="oldPasswordTextField" layoutX="313.0" layoutY="301.0" prefHeight="36.0" prefWidth="286.0" promptText="Old Password">
                <font>
                   <Font name="Share Tech Mono" size="13.0" />
                </font>
             </TextField>
-            <TextField fx:id="NewPasswordTextField" layoutX="171.0" layoutY="244.0" prefHeight="37.0" prefWidth="287.0" promptText="New Password">
+            <TextField fx:id="NewPasswordTextField" layoutX="313.0" layoutY="362.0" prefHeight="37.0" prefWidth="287.0" promptText="New Password">
                <font>
                   <Font name="Share Tech Mono" size="13.0" />
                </font>
             </TextField>
-            <Label fx:id="usernameLabel" layoutX="168.0" layoutY="59.0" text="Marven Luis">
+            <Label fx:id="usernameLabel" layoutX="313.0" layoutY="175.0" text="Marven Luis">
                <font>
                   <Font name="Share Tech Mono" size="24.0" />
                </font>
             </Label>
-            <Label fx:id="emailLabel" layoutX="171.0" layoutY="89.0" text="marvensheesh@gmail.com">
+            <Label fx:id="emailLabel" layoutX="313.0" layoutY="211.0" text="marvensheesh@gmail.com">
                <font>
                   <Font name="Share Tech Mono" size="14.0" />
                </font>
             </Label>
-            <Button fx:id="saveButton" layoutX="450.0" layoutY="314.0" mnemonicParsing="false" style="-fx-background-color: #FFFFFF;" text="Save">
+            <Button fx:id="saveButton" layoutX="620.0" layoutY="414.0" mnemonicParsing="false" style="-fx-background-color: #FFFFFF;" text="Save">
                <font>
                   <Font name="Share Tech Mono" size="13.0" />
                </font>
             </Button>
-            <ImageView fx:id="personIconImage" fitHeight="72.0" fitWidth="66.0" layoutX="78.0" layoutY="53.0">
+            <ImageView fx:id="personIconImage" fitHeight="72.0" fitWidth="66.0" layoutX="220.0" layoutY="169.0">
                <image>
                   <Image url="@../../../../../../icons/personIcon.png" />
                </image>
