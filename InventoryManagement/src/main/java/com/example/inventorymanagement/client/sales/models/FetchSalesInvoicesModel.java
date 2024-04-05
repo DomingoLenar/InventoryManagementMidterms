@@ -12,10 +12,11 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.LinkedList;
 
 public class FetchSalesInvoicesModel {
 
-    public void process (User requestBy){
+    public LinkedList<ItemOrder> process (User requestBy){
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
@@ -23,7 +24,7 @@ public class FetchSalesInvoicesModel {
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 
-            IORequest.fetchSalesInvoices(cB);
+            return IORequest.fetchSalesInvoices(cB);
 
 
         } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {
