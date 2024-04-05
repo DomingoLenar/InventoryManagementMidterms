@@ -18,11 +18,11 @@ public class NavigationBarPurchaserController implements ControllerInterface {
     private Button profileButtonPurchaser;
 
     // Reference to the main BorderPane
-    private BorderPane mainBorderPane;
+    private BorderPane mainBorderPanePurchaser;
 
     // Setter for main BorderPane
     public void setMainBorderPane(BorderPane mainBorderPane) {
-        this.mainBorderPane = mainBorderPane;
+        this.mainBorderPanePurchaser = mainBorderPane;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class NavigationBarPurchaserController implements ControllerInterface {
         // Load Stock Control panel
         try {
             BorderPane stockControlPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlPurchaser-view.fxml"));
-            mainBorderPane.setRight(stockControlPanel);
+            mainBorderPanePurchaser.setRight(stockControlPanel);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -72,7 +72,7 @@ public class NavigationBarPurchaserController implements ControllerInterface {
     private void loadProfileManagementPanel() {
         try {
             BorderPane profileManagementPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagement-view.fxml"));
-            mainBorderPane.setRight(profileManagementPanel);
+            mainBorderPanePurchaser.setRight(profileManagementPanel);
         } catch (IOException e) {
             e.printStackTrace();
         }
