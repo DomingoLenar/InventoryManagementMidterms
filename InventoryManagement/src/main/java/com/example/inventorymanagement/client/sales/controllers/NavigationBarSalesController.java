@@ -15,16 +15,16 @@ public class NavigationBarSalesController implements ControllerInterface {
     @FXML
     private Button stockControlButtonSales;
     @FXML
-    private Button salesInvoiceButtonSales;
+    private Button salesHistoryButtonSales;
     @FXML
     private Button profileButtonSales;
 
     // Reference to the main BorderPane
-    private BorderPane mainBorderPane;
+    private BorderPane mainBorderPaneSales;
 
     // Setter for main BorderPane
     public void setMainBorderPane(BorderPane mainBorderPane) {
-        this.mainBorderPane = mainBorderPane;
+        this.mainBorderPaneSales = mainBorderPane;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class NavigationBarSalesController implements ControllerInterface {
     public Button getStockControlButtonSales() { return stockControlButtonSales; }
 
     @FXML
-    public Button getSalesInvoiceButtonSales() { return salesInvoiceButtonSales; }
+    public Button getSalesHistoryButtonSales() { return salesHistoryButtonSales; }
 
 
     @FXML
@@ -57,7 +57,7 @@ public class NavigationBarSalesController implements ControllerInterface {
         profileButtonSales.setOnAction(event -> loadProfileManagementPanel());
 
         addHoverEffect(stockControlButtonSales);
-        addHoverEffect(salesInvoiceButtonSales);
+        addHoverEffect(salesHistoryButtonSales);
         addHoverEffect(profileButtonSales);
     }
 
@@ -70,7 +70,7 @@ public class NavigationBarSalesController implements ControllerInterface {
         // Load Stock Control panel
         try {
             BorderPane stockControlPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlSales-view.fxml"));
-            mainBorderPane.setRight(stockControlPanel);
+            mainBorderPaneSales.setRight(stockControlPanel);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -79,7 +79,7 @@ public class NavigationBarSalesController implements ControllerInterface {
     private void loadProfileManagementPanel() {
         try {
             BorderPane profileManagementPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagement-view.fxml"));
-            mainBorderPane.setRight(profileManagementPanel);
+            mainBorderPaneSales.setRight(profileManagementPanel);
         } catch (IOException e) {
             e.printStackTrace();
         }
