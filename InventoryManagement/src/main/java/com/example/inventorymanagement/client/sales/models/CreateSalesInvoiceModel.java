@@ -16,7 +16,7 @@ import java.rmi.registry.Registry;
 
 public class CreateSalesInvoiceModel {
 
-    public void process (User requestBy, ItemOrder salesInvoice){
+    public boolean process (User requestBy, ItemOrder salesInvoice){
         try {
             Registry registry = LocateRegistry.getRegistry("locahost", 1099);
 
@@ -24,7 +24,7 @@ public class CreateSalesInvoiceModel {
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 
-            IORequest.createSalesInvoice(cB, salesInvoice);
+            return IORequest.createSalesInvoice(cB, salesInvoice);
 
         } catch (NotBoundException | RemoteException | OutOfRoleException | NotLoggedInException e) {
             throw new RuntimeException(e);
