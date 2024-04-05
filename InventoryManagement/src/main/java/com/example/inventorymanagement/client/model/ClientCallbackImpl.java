@@ -4,15 +4,18 @@ import com.example.inventorymanagement.client.common.controllers.ControllerInter
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.objects.User;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 // #TODO: Populate with actual logic, discuss with team what to do with ui call to remotely change ui elements
-public class ClientCallbackImpl implements ClientCallback {
+public class ClientCallbackImpl extends UnicastRemoteObject implements ClientCallback, Serializable {
     private Object returnedObject;
     private User user;
     private ControllerInterface currentController;
 
-    public ClientCallbackImpl(User user){
+    public ClientCallbackImpl(User user) throws RemoteException {
+        super();
         this.user = user;
     }
 
