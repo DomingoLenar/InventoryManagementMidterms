@@ -25,6 +25,7 @@ public class EditUserAdminController implements Initializable, ControllerInterfa
     private Button deleteUserButton;
     @FXML
     private ComboBox<String> changeRoleComboBox;
+    private Button saveButton;
 
     public BorderPane getBorderPaneEditUser() {
         return borderPaneEditUser;
@@ -45,6 +46,9 @@ public class EditUserAdminController implements Initializable, ControllerInterfa
     public ComboBox<String> getChangeRoleComboBox() {
         return changeRoleComboBox;
     }
+    public Button getSaveButton(){
+        return saveButton;
+    }
     @Override
     public void fetchAndUpdate() throws RemoteException {
     }
@@ -58,6 +62,14 @@ public class EditUserAdminController implements Initializable, ControllerInterfa
         changeRoleComboBox.setPromptText("Change Role...");
         Font font = new Font("Share Tech Mono", 15);
         changeRoleComboBox.setStyle("-fx-font-family: '" + font.getFamily() + "'; -fx-font-size: " + font.getSize() + "px;");
+    }
+    @FXML
+    private void initialize() {
+        addHoverEffect(saveButton);
+    }
+    private void addHoverEffect(Button button) {
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
 }
 
