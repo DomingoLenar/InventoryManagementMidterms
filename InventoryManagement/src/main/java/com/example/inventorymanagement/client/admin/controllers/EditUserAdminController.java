@@ -25,6 +25,7 @@ public class EditUserAdminController implements Initializable, ControllerInterfa
     private Button deleteUserButton;
     @FXML
     private ComboBox<String> changeRoleComboBox;
+    @FXML
     private Button saveButton;
 
     public BorderPane getBorderPaneEditUser() {
