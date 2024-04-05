@@ -1,33 +1,34 @@
-package com.example.inventorymanagement.client.admin.models;
+package com.example.inventorymanagement.client.common.models;
 
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
-import com.example.inventorymanagement.util.exceptions.UserExistenceException;
 import com.example.inventorymanagement.util.objects.User;
-import com.example.inventorymanagement.util.requests.UserRequestInterface;
+import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.LinkedHashMap;
 
-public class AddUserModel {
+public class FetchMonthlyRevenueModel {
 
-    public boolean process (User requestBy,User newUser){
+    public LinkedHashMap<Integer, Float> process (User requestBy){
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
-            UserRequestInterface userRequest = (UserRequestInterface) registry.lookup("userRequest");
+            ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 
-             return userRequest.addUser(cB, requestBy, newUser);
+             return IORequest.fetchMonthlyRevenue(cB);
 
-        } catch (RemoteException | NotBoundException | NotLoggedInException | OutOfRoleException |
-                 UserExistenceException e) {
+
+        } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {
             throw new RuntimeException(e);
         }
+
     }
 }

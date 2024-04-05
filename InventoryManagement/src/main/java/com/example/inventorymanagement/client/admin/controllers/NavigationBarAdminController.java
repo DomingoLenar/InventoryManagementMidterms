@@ -1,13 +1,16 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
+import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
+
 import javafx.fxml.FXMLLoader;
 
-public class NavigationBarAdminController {
+public class NavigationBarAdminController implements ControllerInterface {
     @FXML
     private BorderPane borderPaneNavigationBarAdmin;
     @FXML
@@ -22,6 +25,16 @@ public class NavigationBarAdminController {
     private Button userManagementButtonAdmin;
     @FXML
     private Button profileButtonAdmin;
+
+    @Override
+    public void fetchAndUpdate() throws RemoteException {
+        // No implementation needed in this controller
+    }
+
+    @Override
+    public String getCurrentPanel() throws RemoteException {
+        return "NavigationBarAdmin"; // Return the name of this panel
+    }
 
     @FXML
     public BorderPane getBorderPaneNavigationBarAdmin() { return borderPaneNavigationBarAdmin;}

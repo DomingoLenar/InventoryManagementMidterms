@@ -14,15 +14,15 @@ import java.rmi.registry.Registry;
 
 public class FetchCostTodayModel {
 
-    public void process (User requestBy){
+    public float process (User requestBy){
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
-            ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("user");
+            ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 
-            IORequest.fetchCostToday(cB);
+            return IORequest.fetchCostToday(cB);
 
 
         } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {
