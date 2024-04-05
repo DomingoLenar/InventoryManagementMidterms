@@ -66,6 +66,8 @@ public class EditUserAdminController implements Initializable, ControllerInterfa
     @FXML
     private void initialize() {
         addHoverEffect(saveButton);
+        addHoverEffect(changePasswordButton);
+        addHoverEffect(deleteUserButton);
     }
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
