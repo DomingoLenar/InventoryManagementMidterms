@@ -72,26 +72,30 @@ public class GSONProcessing {
      * @return true if the item was successfully removed, false if otherwise.
      */
     public static boolean removeItem(String itemName) {
+        String filePath = "com/example/inventorymanagement/data/items.json";
+
         try {
-            String filePath = "com/example/inventorymanagement/data/items.json";
-            JsonParser jsonParser = new JsonParser();
-            JsonElement rootElement = jsonParser.parse(new FileReader(filePath));
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+            JsonElement rootElement = JsonParser.parseReader(new FileReader(filePath));
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray itemJsonArray = rootObject.getAsJsonArray("items");
 
             for (JsonElement jsonElement : itemJsonArray) {
                 JsonObject itemObject = jsonElement.getAsJsonObject();
-                String name = itemObject.get("name").getAsString();
+                String name = itemObject.get("itemName").getAsString();
                 if (name.equals(itemName)) {
                     itemJsonArray.remove(jsonElement);
-                    FileWriter writer = new FileWriter(filePath);
-                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                    gson.toJson(rootElement, writer);
-                    writer.close();
+
+                    try (FileWriter writer = new FileWriter(filePath)) {
+                        gson.toJson(rootElement, writer);
+                    }
+
                     return true;
                 }
             }
-            return false; // Item not found
+
+            return false;
         } catch (IOException e) {
             e.printStackTrace();
             return false;
