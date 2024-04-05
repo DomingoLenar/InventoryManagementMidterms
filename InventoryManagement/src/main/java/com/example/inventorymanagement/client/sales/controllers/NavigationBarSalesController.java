@@ -78,7 +78,7 @@ public class NavigationBarSalesController implements ControllerInterface {
 
     private void loadProfileManagementPanel() {
         try {
-            BorderPane profileManagementPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagementChangePass-view.fxml"));
+            BorderPane profileManagementPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagement-view.fxml"));
             mainBorderPane.setRight(profileManagementPanel);
         } catch (IOException e) {
             e.printStackTrace();
