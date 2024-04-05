@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
 
 import java.net.URL;
 import java.rmi.RemoteException;
@@ -31,7 +32,7 @@ public class ProfileManagementAdminController implements Initializable, Controll
         // No implementation needed yet in this controller
     }
     public String getCurrentPanel() throws RemoteException {
-        return "ProfileManagement"; // Return the name of this panel
+        return "ProfileManagementAdmin"; // Return the name of this panel
     }
     public BorderPane getBorderPaneProfileManagement(){
         return borderPaneProfileManagement;
@@ -63,8 +64,9 @@ public class ProfileManagementAdminController implements Initializable, Controll
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void initialize(URL location, ResourceBundle resources) {
+        changeUserAccountComboBox.setPromptText("Change Role...");
+        Font font = new Font("Share Tech Mono", 15);
+        changeUserAccountComboBox.setStyle("-fx-font-family: '" + font.getFamily() + "'; -fx-font-size: " + font.getSize() + "px;");
     }
 }
