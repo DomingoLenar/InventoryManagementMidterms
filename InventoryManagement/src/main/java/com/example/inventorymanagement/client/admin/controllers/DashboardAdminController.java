@@ -1,5 +1,6 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
+import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,12 +11,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
-public class DashboardAdminController implements Initializable {
+public class DashboardAdminController implements Initializable, ControllerInterface {
     @FXML
     private BorderPane borderPaneAdminDashboard;
     @FXML
@@ -38,40 +40,6 @@ public class DashboardAdminController implements Initializable {
     private Label todayTransactionsLabel;
     @FXML
     private Label topProductsLabel;
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        // Set the current date
-        LocalDate currentDate = LocalDate.now();
-        dateLabel.setText(currentDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-
-        // Set the current day
-        String currentDay = currentDate.getDayOfWeek().toString();
-        dayLabel.setText(currentDay);
-
-        // Update time label every second
-        updateTimeLabel();
-    }
-
-    // Method to update the time label
-    private void updateTimeLabel() {
-        Thread updateTimeThread = new Thread(() -> {
-            while (true) {
-                LocalDateTime currentTime = LocalDateTime.now();
-                String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-                Platform.runLater(() -> timeLabel.setText(formattedTime));
-
-                try {
-                    // Sleep for 1 second
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        updateTimeThread.setDaemon(true);
-        updateTimeThread.start();
-    }
 
     public BorderPane getBorderPaneAdminDashboard() {
         return borderPaneAdminDashboard;
@@ -116,4 +84,45 @@ public class DashboardAdminController implements Initializable {
     public StackedBarChart getMonthRevChart() {
         return monthRevChart;
     }
+    @Override
+    public void fetchAndUpdate() throws RemoteException {
+    }
+    @Override
+    public String getCurrentPanel() throws RemoteException {
+        return "DashboardAdmin"; // Return the name of this panel
+    }
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // Set the current date
+        LocalDate currentDate = LocalDate.now();
+        dateLabel.setText(currentDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+
+        // Set the current day
+        String currentDay = currentDate.getDayOfWeek().toString();
+        dayLabel.setText(currentDay);
+
+        // Update time label every second
+        updateTimeLabel();
+    }
+
+    // Method to update the time label
+    private void updateTimeLabel() {
+        Thread updateTimeThread = new Thread(() -> {
+            while (true) {
+                LocalDateTime currentTime = LocalDateTime.now();
+                String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+                Platform.runLater(() -> timeLabel.setText(formattedTime));
+
+                try {
+                    // Sleep for 1 second
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        updateTimeThread.setDaemon(true);
+        updateTimeThread.start();
+    }
 }
+
