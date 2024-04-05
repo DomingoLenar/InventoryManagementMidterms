@@ -32,8 +32,10 @@ public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrd
 
         checkIfValidPerm(clientCallback.getUser());
         checkIfLoggedIn(clientCallback);
+        boolean success = GSONProcessing.addItemOrder("sales",salesInvoice);
+        callUpdate("itemorder");
 
-        return GSONProcessing.addItemOrder("sales",salesInvoice);
+        return success;
 
     }
 
@@ -42,8 +44,10 @@ public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrd
 
         checkIfLoggedIn(clientCallback);
         checkIfLoggedIn(clientCallback);
+        boolean success = GSONProcessing.addItemOrder("purchase",purchaseOrder);
+        callUpdate("itemorder");
 
-        return GSONProcessing.addItemOrder("purchase",purchaseOrder);
+        return success;
     }
 
     @Override
@@ -139,23 +143,31 @@ public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrd
         }
     }
 
-    private void checkIfLoggedIn(ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
-        try {
-            Registry reg = LocateRegistry.getRegistry(2018);
-            UserRequestInterfaceImplementation userServant = (UserRequestInterfaceImplementation) reg.lookup("user");
+    private void checkIfLoggedIn(ClientCallback clientCallback){
+        try{
+            Registry reg = LocateRegistry.getRegistry("localhost",2018);
+            UserRequestInterfaceImplementation userStub = (UserRequestInterfaceImplementation) reg.lookup("userRequest");
+            if (!(userStub.isLoggedIn(clientCallback))) throw new NotLoggedInException("Not Logged In");
+        }catch(Exception e){
 
-            if(!(userServant.clientCallbacks.contains(clientCallback))){
-                throw new NotLoggedInException("Not logged in");
-            }
-        }catch(NotBoundException e){
-            throw new RuntimeException(e.getMessage());
         }
     }
+
     private static String getCurrentDate(){
         LocalDate localDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String currentDate = localDate.format(formatter);
         return currentDate;
+    }
+
+    private void callUpdate(String panel){
+        try{
+            Registry reg = LocateRegistry.getRegistry("localhost",2018);
+            UserRequestInterfaceImplementation userStub = (UserRequestInterfaceImplementation) reg.lookup("userRequest");
+            userStub.callUpdate(panel);
+        }catch(Exception e){
+
+        }
     }
 
 }
