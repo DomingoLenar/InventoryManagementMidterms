@@ -21,6 +21,7 @@ public class AddUserAdminController implements Initializable, ControllerInterfac
 
         @FXML
         private TextField passwordField;
+        private Button saveButton;
         public ComboBox<String> getRoleComboBox() {
             return roleComboBox;
         }
@@ -30,6 +31,10 @@ public class AddUserAdminController implements Initializable, ControllerInterfac
         public TextField getPasswordField(){
             return passwordField;
         }
+        public Button getSaveButton(){
+            return saveButton;
+        }
+
     @Override
     public void fetchAndUpdate() throws RemoteException {
     }
@@ -46,6 +51,10 @@ public class AddUserAdminController implements Initializable, ControllerInterfac
             Font font = new Font("Share Tech Mono", 15);
             roleComboBox.setStyle("-fx-font-family: '" + font.getFamily() + "'; -fx-font-size: " + font.getSize() + "px;");
         }
+    @FXML
+    private void initialize() {
+        addHoverEffect(saveButton);
+    }
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
