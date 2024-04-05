@@ -24,11 +24,11 @@ public class StockControlPurchaserPanel extends Application {
         NavigationBarPurchaserController navBarController = loader.getController();
 
         // Create the stock control panel
-        BorderPane stockControlPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlPurchaser-view.fxml"));
+        BorderPane stockControlPurchaserPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlPurchaser-view.fxml"));
 
         BorderPane root = new BorderPane();
         root.setLeft(navigationBar);
-        root.setRight(stockControlPanel);
+        root.setRight(stockControlPurchaserPanel);
 
         Scene scene = new Scene(root, 1080, 650);
         stage.setScene(scene);
