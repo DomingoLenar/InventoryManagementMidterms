@@ -10,10 +10,9 @@
    <content>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="550.0" style="-fx-background-color: linear-gradient(to bottom, #e8b0b0, #f4f4f4);">
          <children>
-            <TextField layoutX="32.0" layoutY="224.0" prefHeight="30.0" prefWidth="120.0" promptText="0.00" />
-            <TextField layoutX="32.0" layoutY="137.0" prefHeight="38.0" prefWidth="456.0" />
-            <TextField layoutX="398.0" layoutY="224.0" prefHeight="30.0" prefWidth="90.0" promptText="0" />
-            <TextField layoutX="165.0" layoutY="224.0" prefHeight="30.0" prefWidth="120.0" promptText="0.00" />
+            <TextField fx:id="itemNameField" layoutX="32.0" layoutY="137.0" prefHeight="38.0" prefWidth="456.0" />
+            <TextField fx:id="itemQuantityField" layoutX="161.0" layoutY="224.0" prefHeight="30.0" prefWidth="90.0" promptText="0" />
+            <TextField fx:id="itemPriceField" layoutX="32.0" layoutY="224.0" prefHeight="30.0" prefWidth="120.0" promptText="0.00" />
             <Label alignment="CENTER" layoutX="225.0" layoutY="48.0" text="Add Item" textAlignment="CENTER">
                <font>
                   <Font name="Share Tech Mono" size="30.0" />
@@ -24,17 +23,12 @@
                   <Font name="Share Tech Mono" size="17.0" />
                </font>
             </Label>
-            <Label layoutX="32.0" layoutY="198.0" opacity="0.5" prefHeight="0.0" prefWidth="129.0" text="Cost">
+            <Label layoutX="32.0" layoutY="198.0" opacity="0.5" prefHeight="0.0" prefWidth="129.0" text="Price">
                <font>
                   <Font name="Share Tech Mono" size="17.0" />
                </font>
             </Label>
-            <Label layoutX="165.0" layoutY="198.0" opacity="0.5" prefHeight="0.0" prefWidth="129.0" text="Price">
-               <font>
-                  <Font name="Share Tech Mono" size="17.0" />
-               </font>
-            </Label>
-            <Label layoutX="398.0" layoutY="198.0" opacity="0.5" prefHeight="0.0" prefWidth="129.0" text="Quantity">
+            <Label layoutX="161.0" layoutY="198.0" opacity="0.5" prefHeight="0.0" prefWidth="129.0" text="Quantity">
                <font>
                   <Font name="Share Tech Mono" size="17.0" />
                </font>
