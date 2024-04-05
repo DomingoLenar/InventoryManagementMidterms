@@ -1,5 +1,6 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
+import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
@@ -8,7 +9,9 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
-public class UserManagementAdminController {
+import java.rmi.RemoteException;
+
+public class UserManagementAdminController implements ControllerInterface {
 
     @FXML
     private BorderPane borderPaneUserManagement;
@@ -32,6 +35,13 @@ public class UserManagementAdminController {
     }
     public TableView getUserManagementTableView(){
         return userManagementTableView;
+    }
+    @Override
+    public void fetchAndUpdate() throws RemoteException {
+    }
+    @Override
+    public String getCurrentPanel() throws RemoteException {
+        return "UserManagementAdmin"; // Return the name of this panel
     }
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
