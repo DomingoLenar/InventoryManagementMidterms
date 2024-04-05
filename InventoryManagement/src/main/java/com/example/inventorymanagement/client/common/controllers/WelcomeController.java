@@ -5,9 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
 public class WelcomeController {
-    @FXML
-    private Button loginButtonWelcome;
-
+    public Button nextButton;
     private MainController mainController;
 
     public void setMainController(MainController mainController) {
@@ -16,7 +14,7 @@ public class WelcomeController {
 
     @FXML
     private void initialize() {
-        addHoverEffect(loginButtonWelcome);
+        addHoverEffect(nextButton);
     }
 
     private void addHoverEffect(Button button) {
@@ -25,9 +23,8 @@ public class WelcomeController {
     }
 
     @FXML
-    private void handleLoginButtonAction(ActionEvent event) {
-        if (mainController != null) {
-            mainController.showLoginPanel();
-        }
+    private void nextButton(ActionEvent event) {
+        mainController.loadLoginView();
     }
+
 }

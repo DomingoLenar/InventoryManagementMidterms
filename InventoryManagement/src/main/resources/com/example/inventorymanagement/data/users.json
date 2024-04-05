@@ -1,16 +1,22 @@
 {
   "users": [
     {
-      "username": "",
-      "password": "",
-      "role":"",
-      "isActive": ""
+      "username": "testadmin",
+      "password": "admintest",
+      "role":"admin",
+      "isActive": "false"
     },
     {
-      "username": "",
-      "password": "",
-      "role":"",
-      "isActive": ""
+      "username": "testsales",
+      "password": "salestest",
+      "role":"sales",
+      "isActive": "false"
+    },
+    {
+      "username": "testpurchase",
+      "password": "purchasetest",
+      "role":"purchaser",
+      "isActive": "false"
     }
   ]
 }
