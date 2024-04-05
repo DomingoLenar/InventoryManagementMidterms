@@ -21,14 +21,14 @@ public class StockControlAdminPanel extends Application {
         BorderPane navigationBar = loader.load();
 
         // Get the controller
-        NavigationBarAdminController navBarController = loader.getController();
+        NavigationBarAdminController navBarAdminController = loader.getController();
 
         // Create the stock control panel
-        BorderPane stockControlPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlAdmin-view.fxml"));
+        BorderPane stockControlPanelAdmin = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlAdmin-view.fxml"));
 
         BorderPane root = new BorderPane();
         root.setLeft(navigationBar);
-        root.setRight(stockControlPanel);
+        root.setRight(stockControlPanelAdmin);
 
         Scene scene = new Scene(root, 1080, 650);
         stage.setScene(scene);
@@ -36,7 +36,7 @@ public class StockControlAdminPanel extends Application {
         stage.show();
 
         // Set the main BorderPane reference in the navigation bar controller
-        navBarController.setMainBorderPane(root);
+        navBarAdminController.setMainBorderPane(root);
     }
 
     public static void main(String[] args) {
