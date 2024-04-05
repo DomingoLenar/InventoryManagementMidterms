@@ -15,6 +15,7 @@ import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class DashboardAdminController implements Initializable, ControllerInterface {
@@ -110,7 +111,7 @@ public class DashboardAdminController implements Initializable, ControllerInterf
         Thread updateTimeThread = new Thread(() -> {
             while (true) {
                 LocalDateTime currentTime = LocalDateTime.now();
-                String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+                String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("hh:mm:ss a", Locale.forLanguageTag("fil-PH")));
                 Platform.runLater(() -> timeLabel.setText(formattedTime));
 
                 try {
@@ -124,5 +125,6 @@ public class DashboardAdminController implements Initializable, ControllerInterf
         updateTimeThread.setDaemon(true);
         updateTimeThread.start();
     }
+
 }
 
