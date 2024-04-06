@@ -1,6 +1,6 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
-import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
+import com.example.inventorymanagement.util.ControllerInterface;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -20,7 +20,7 @@ public class NavigationBarAdminController implements ControllerInterface {
     @FXML
     private Button financesButtonAdmin;
     @FXML
-    private Button salesInvoiceButtonAdmin;
+    private Button salesHistoryButtonAdmin;
     @FXML
     private Button userManagementButtonAdmin;
     @FXML
@@ -30,9 +30,10 @@ public class NavigationBarAdminController implements ControllerInterface {
     public void fetchAndUpdate() throws RemoteException {
         // No implementation needed in this controller
     }
+
     @Override
-    public String getCurrentPanel() throws RemoteException {
-        return "NavigationBarAdmin"; // Return the name of this panel
+    public String getObjectsUsed() throws RemoteException {
+        return null;
     }
 
     @FXML
@@ -48,7 +49,7 @@ public class NavigationBarAdminController implements ControllerInterface {
     public Button getFinancesButtonAdmin() { return financesButtonAdmin;}
 
     @FXML
-    public Button getSalesInvoiceButtonAdmin() { return salesInvoiceButtonAdmin;}
+    public Button getsalesHistoryButtonAdmin() { return salesHistoryButtonAdmin;}
 
     @FXML
     public Button getUserManagementButtonAdmin() { return userManagementButtonAdmin; }
@@ -72,15 +73,19 @@ public class NavigationBarAdminController implements ControllerInterface {
         userManagementButtonAdmin.setOnAction(event -> loadUserManagementPanel());
         dashboardButtonAdmin.setOnAction(event -> loadDashboardAdminPanel());
         profileButtonAdmin.setOnAction(event -> loadProfileManagementPanel());
-        //salesInvoiceButtonAdmin.setOnAction(event -> loadSalesInvoicePanel);
+        salesHistoryButtonAdmin.setOnAction(event -> loadSalesHistoryButtonAdmin());
 
         addHoverEffect(dashboardButtonAdmin);
         addHoverEffect(stockControlButtonAdmin);
         addHoverEffect(financesButtonAdmin);
-        addHoverEffect(salesInvoiceButtonAdmin);
+        addHoverEffect(salesHistoryButtonAdmin);
         addHoverEffect(userManagementButtonAdmin);
         addHoverEffect(profileButtonAdmin);
-        addHoverEffect(salesInvoiceButtonAdmin);
+    }
+
+    private void addHoverEffect(Button button) {
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #967373;"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
 
     private void loadProfileManagementPanel() {
@@ -92,9 +97,13 @@ public class NavigationBarAdminController implements ControllerInterface {
         }
     }
 
-    private void addHoverEffect(Button button) {
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #967373;"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
+    private void loadSalesHistoryButtonAdmin() {
+        try {
+            BorderPane salesHistoryPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/salesHistory/salesHistoryAdmin-view.fxml"));
+            mainBorderPane.setRight(salesHistoryPanel);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     private void loadDashboardAdminPanel() {
         // Load Dashboard panel
