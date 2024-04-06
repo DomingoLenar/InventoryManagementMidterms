@@ -98,7 +98,8 @@ public class DashboardAdminController implements Initializable, ControllerInterf
     public void initialize(URL location, ResourceBundle resources) {
         // Set the current date
         LocalDate currentDate = LocalDate.now();
-        dateLabel.setText(currentDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        String formattedDate = currentDate.format(DateTimeFormatter.ofPattern("MM/dd/yy"));
+        dateLabel.setText(formattedDate);
 
         // Set the current day
         String currentDay = currentDate.getDayOfWeek().toString();
@@ -108,13 +109,19 @@ public class DashboardAdminController implements Initializable, ControllerInterf
         updateTimeLabel();
     }
 
+
     // Method to update the time label
     private void updateTimeLabel() {
         Thread updateTimeThread = new Thread(() -> {
             while (true) {
                 LocalDateTime currentTime = LocalDateTime.now();
                 String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("hh:mm:ss a", Locale.forLanguageTag("fil-PH")));
-                Platform.runLater(() -> timeLabel.setText(formattedTime));
+                System.out.println("Formatted Time: " + formattedTime);
+
+                Platform.runLater(() -> {
+                    timeLabel.setText(formattedTime);
+                    System.out.println("Time updated: " + formattedTime); // Debug print statement
+                });
 
                 try {
                     // Sleep for 1 second
@@ -127,6 +134,7 @@ public class DashboardAdminController implements Initializable, ControllerInterf
         updateTimeThread.setDaemon(true);
         updateTimeThread.start();
     }
+
 
 }
 
