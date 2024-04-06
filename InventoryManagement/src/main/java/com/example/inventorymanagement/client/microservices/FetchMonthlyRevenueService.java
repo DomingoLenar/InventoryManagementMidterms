@@ -15,7 +15,7 @@ import java.util.LinkedHashMap;
 
 public class FetchMonthlyRevenueService {
 
-    public LinkedHashMap<Integer, Float> process (Registry registry, ClientCallback cB ){
+    public static LinkedHashMap<Integer, Float> process (Registry registry, ClientCallback cB ) throws NotLoggedInException, OutOfRoleException{
         try {
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
@@ -23,7 +23,7 @@ public class FetchMonthlyRevenueService {
             return IORequest.fetchMonthlyRevenue(cB);
 
 
-        } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {
+        } catch (RemoteException | NotBoundException e) {
             throw new RuntimeException(e);
         }
 
