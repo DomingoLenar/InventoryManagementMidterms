@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-public class FetchRevenueToday {
+public class FetchCostTodayService {
 
     public float process (User requestBy){
         try {
@@ -22,7 +22,7 @@ public class FetchRevenueToday {
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 
-            return IORequest.fetchRevenueToday(cB);
+            return IORequest.fetchCostToday(cB);
 
 
         } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {

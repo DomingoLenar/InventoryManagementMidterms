@@ -4,27 +4,33 @@ import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
-import com.example.inventorymanagement.util.objects.Item;
+import com.example.inventorymanagement.util.objects.ItemOrder;
 import com.example.inventorymanagement.util.objects.User;
-import com.example.inventorymanagement.util.requests.ItemRequestInterface;
+import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.LinkedList;
 
-public class RemoveItemListing {
-    public boolean process (User requestBy, Item item){
+public class FetchSalesInvoicesService {
+
+    public LinkedList<ItemOrder> process (User requestBy){
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-            ItemRequestInterface ItemRequest = (ItemRequestInterface) registry.lookup("item");
+
+            ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 
-            return ItemRequest.removeItemListing(cB,item);
+            return IORequest.fetchSalesInvoices(cB);
 
-        } catch (NotBoundException | RemoteException | NotLoggedInException | OutOfRoleException e) {
+
+        } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {
             throw new RuntimeException(e);
         }
+
     }
+
 }

@@ -9,7 +9,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.LinkedList;
 
-public class FetchActiveUsers {
+public class FetchActiveUsersService {
 
     public LinkedList<User> process (User requestBy){
         try {

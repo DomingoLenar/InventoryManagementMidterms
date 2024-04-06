@@ -4,7 +4,6 @@ import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
-import com.example.inventorymanagement.util.objects.ItemOrder;
 import com.example.inventorymanagement.util.objects.User;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 
@@ -12,11 +11,11 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
 
-public class FetchSalesInvoices {
+public class FetchMonthlyRevenueService {
 
-    public LinkedList<ItemOrder> process (User requestBy){
+    public LinkedHashMap<Integer, Float> process (User requestBy){
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
@@ -24,7 +23,7 @@ public class FetchSalesInvoices {
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 
-            return IORequest.fetchSalesInvoices(cB);
+             return IORequest.fetchMonthlyRevenue(cB);
 
 
         } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {
@@ -32,5 +31,4 @@ public class FetchSalesInvoices {
         }
 
     }
-
 }
