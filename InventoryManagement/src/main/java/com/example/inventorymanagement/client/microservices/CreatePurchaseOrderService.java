@@ -15,16 +15,12 @@ import java.rmi.registry.Registry;
 
 public class CreatePurchaseOrderService {
     
-    public boolean process (User requestBy, ItemOrder purchaseOrder){
+    public boolean process (Registry registry, ClientCallback cB , ItemOrder purchaseOrder){
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
 
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
-            
             return IORequest.createPurchaseOrder(cB, purchaseOrder);
-            
             
         } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {
             throw new RuntimeException(e);
