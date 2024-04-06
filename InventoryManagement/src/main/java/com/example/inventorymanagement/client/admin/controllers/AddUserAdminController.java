@@ -1,6 +1,6 @@
 
 package com.example.inventorymanagement.client.admin.controllers;
-import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
+import com.example.inventorymanagement.util.ControllerInterface;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -40,11 +40,11 @@ public class AddUserAdminController implements Initializable, ControllerInterfac
     }
 
     @Override
-    public String getCurrentPanel() throws RemoteException {
-        return "AddUserAdmin"; // Return the name of this panel
+    public String getObjectsUsed() throws RemoteException {
+        return null;
     }
 
-        @Override
+    @Override
         public void initialize(URL location, ResourceBundle resources) {
             roleComboBox.getItems().addAll("Sales Person", "Purchaser");
             roleComboBox.setPromptText("Set Role As...");
