@@ -8,30 +8,21 @@ import com.example.inventorymanagement.util.exceptions.UserExistenceException;
 import com.example.inventorymanagement.util.objects.User;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
 
-import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-public class ChangeUserRole {
+public class AddUserService {
 
-    public boolean process (User requestBy, User toChange, String newRole){
-
+    public boolean process (Registry registry, ClientCallback cB,User newUser) throws UserExistenceException, OutOfRoleException, NotLoggedInException {
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-
             UserRequestInterface userRequest = (UserRequestInterface) registry.lookup("userRequest");
 
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
+            return userRequest.addUser(cB, newUser);
 
-            return userRequest.changeUserRole(cB,requestBy,toChange, newRole);
-
-        } catch (NotBoundException | RemoteException | UserExistenceException | OutOfRoleException |
-                 NotLoggedInException e) {
+        } catch (RemoteException | NotBoundException e) {
             throw new RuntimeException(e);
         }
-
     }
-
 }

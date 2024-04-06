@@ -11,23 +11,21 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.ArrayList;
 
-public class FetchSuppliersModel {
+public class FetchCostTodayService {
 
-    public ArrayList<String> process (User requestBy){
+    public float process (Registry registry, ClientCallback cB ) throws OutOfRoleException, NotLoggedInException {
         try {
-            Registry registry = LocateRegistry.getRegistry("locahost", 1099);
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
 
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
+            return IORequest.fetchCostToday(cB);
 
-            return IORequest.fetchSuppliers(cB);
 
-        } catch (NotBoundException | RemoteException | NotLoggedInException e) {
+        } catch (RemoteException | NotBoundException e) {
             throw new RuntimeException(e);
         }
+
     }
 
 }

@@ -13,20 +13,17 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.LinkedHashMap;
 
-public class FetchMonthlyRevenueModel {
+public class FetchMonthlyRevenueService {
 
-    public LinkedHashMap<Integer, Float> process (User requestBy){
+    public static LinkedHashMap<Integer, Float> process (Registry registry, ClientCallback cB ) throws NotLoggedInException, OutOfRoleException{
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
 
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
-
-             return IORequest.fetchMonthlyRevenue(cB);
+            return IORequest.fetchMonthlyRevenue(cB);
 
 
-        } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {
+        } catch (RemoteException | NotBoundException e) {
             throw new RuntimeException(e);
         }
 

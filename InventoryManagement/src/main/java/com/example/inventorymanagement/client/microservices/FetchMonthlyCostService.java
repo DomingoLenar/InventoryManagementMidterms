@@ -11,21 +11,18 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.LinkedHashMap;
 
-public class FetchCostTodayModel {
+public class FetchMonthlyCostService {
 
-    public float process (User requestBy){
+    public LinkedHashMap<Integer, Float> process (Registry registry, ClientCallback cB) throws OutOfRoleException, NotLoggedInException {
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
 
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
+            return  IORequest.fetchMonthlyCost(cB);
 
-            return IORequest.fetchCostToday(cB);
-
-
-        } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {
+        } catch (RemoteException | NotBoundException e) {
             throw new RuntimeException(e);
         }
 

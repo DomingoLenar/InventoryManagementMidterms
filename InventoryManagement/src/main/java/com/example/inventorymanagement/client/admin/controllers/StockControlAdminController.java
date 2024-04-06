@@ -3,15 +3,22 @@ package com.example.inventorymanagement.client.admin.controllers;
 import com.example.inventorymanagement.client.admin.models.AddItemAdminModel;
 import com.example.inventorymanagement.client.admin.models.CreateSalesInvoiceAdminModel;
 import com.example.inventorymanagement.client.admin.models.StockControlAdminModel;
+import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
+import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
+import com.example.inventorymanagement.util.objects.Item;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
+import java.util.LinkedList;
 
 public class StockControlAdminController implements ControllerInterface {
     @FXML
@@ -28,9 +35,10 @@ public class StockControlAdminController implements ControllerInterface {
     private TextField searchFieldAdmin;
     @FXML
     private TableView stockControlAdminTable;
-    private StockControlAdminModel stockControlAdminModel = new StockControlAdminModel();
-    private AddItemAdminModel addItemAdminModel = new AddItemAdminModel();
-    private CreateSalesInvoiceAdminModel salesInvoiceModel = new CreateSalesInvoiceAdminModel();
+    private StockControlAdminModel stockControlAdminModel;
+
+    private ClientCallback clientCallback;
+    private Registry registry;
 
     @Override
     public void fetchAndUpdate() throws RemoteException {
@@ -63,7 +71,12 @@ public class StockControlAdminController implements ControllerInterface {
     @FXML
     public TableView getStockControlAdminTable() { return stockControlAdminTable; }
 
-    public StockControlAdminController() {
+    public StockControlAdminController(ClientCallback clientCallback, Registry registry) {
+        this.clientCallback = clientCallback;
+        this.registry = registry;
+
+        stockControlAdminModel = new StockControlAdminModel(registry,clientCallback);
+
     }
     @FXML
     private void initialize() {
@@ -72,16 +85,67 @@ public class StockControlAdminController implements ControllerInterface {
         addHoverEffect(addItemButtonAdmin);
         addHoverEffect(addListingButtonAdmin);
 
-        addItemButtonAdmin.setOnAction(this::handleAddItem);
-//        salesInvoiceButtonAdmin.setOnAction(this::handleSalesInvoice);
+        try {
+            addItemButtonAdmin.setOnAction(event -> handleAddItem());
+            LinkedList<Item> items = stockControlAdminModel.fetchItems();
+            populateTableView(items);
+        } catch (NotLoggedInException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void handleAddItem (ActionEvent event){
-        addItemAdminModel.handleAddItem();
+    private void populateTableView(LinkedList<Item> items) {
+        stockControlAdminTable.getItems().clear();
+        stockControlAdminTable.getItems().addAll(items);
     }
-//    private void handleSalesInvoice (ActionEvent event){
-//        salesInvoiceModel.handleSalesInvoice();
-//    }
+    /**
+     * Handle Action Event when clicking AddItemButton
+     */
+    @FXML
+    public void handleAddItem() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/addItem-view.fxml"));
+            Parent root = fxmlLoader.load();
+
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setTitle("Add Item");
+
+            DialogPane dialogPane = new DialogPane();
+            dialogPane.setContent(root);
+            dialog.setDialogPane(dialogPane);
+
+            dialog.initStyle(StageStyle.UNDECORATED);
+
+            ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+
+            Button okButton = (Button) dialog.getDialogPane().lookupButton(okButtonType);
+            okButton.setOnAction(event -> {
+                //TODO: Logic from AddItemModel for adding items using GSONProcessing
+            });
+
+            Button cancelButton = new Button("Cancel");
+            cancelButton.setOnAction(event -> dialog.close());
+
+            dialog.getDialogPane().getChildren().addAll(okButton, cancelButton);
+
+            dialog.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
+    private void handleSalesInvoice (ActionEvent event) {
+
+    }
+
+    private void handleAddListing (ActionEvent event) {
+
+    }
+
+    private void handleLowStocks (ActionEvent event) {
+
+    }
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));

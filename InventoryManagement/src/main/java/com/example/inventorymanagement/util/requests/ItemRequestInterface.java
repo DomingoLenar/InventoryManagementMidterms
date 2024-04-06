@@ -17,5 +17,7 @@ public interface ItemRequestInterface extends Remote {
 
     public boolean removeItemListing(ClientCallback clientCallback, Item item) throws RemoteException, NotLoggedInException,OutOfRoleException;
 
+    public LinkedList<Item> fetchLowestStock(ClientCallback clientCallback) throws RemoteException, NotLoggedInException;
+
 
 }

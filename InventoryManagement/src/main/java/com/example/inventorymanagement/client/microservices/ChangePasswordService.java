@@ -13,21 +13,18 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-public class AddUserModel {
+public class ChangePasswordService {
+   public boolean process (Registry registry, ClientCallback cB , User toChange, String  newPassword) throws UserExistenceException, OutOfRoleException, NotLoggedInException {
 
-    public boolean process (User requestBy,User newUser){
-        try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+       try {
 
-            UserRequestInterface userRequest = (UserRequestInterface) registry.lookup("userRequest");
+           UserRequestInterface userRequest = (UserRequestInterface) registry.lookup("userRequest");
 
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
+          return userRequest.changePassword(cB,toChange, newPassword);
 
-             return userRequest.addUser(cB, requestBy, newUser);
+       } catch (RemoteException | NotBoundException e) {
+           throw new RuntimeException(e);
+       }
 
-        } catch (RemoteException | NotBoundException | NotLoggedInException | OutOfRoleException |
-                 UserExistenceException e) {
-            throw new RuntimeException(e);
-        }
-    }
+   }
 }

@@ -14,20 +14,17 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.LinkedList;
 
-public class FetchSalesInvoicesModel {
+public class FetchSalesInvoicesService {
 
-    public LinkedList<ItemOrder> process (User requestBy){
+    public LinkedList<ItemOrder> process (Registry registry, ClientCallback cB) throws OutOfRoleException, NotLoggedInException {
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
-
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
 
             return IORequest.fetchSalesInvoices(cB);
 
 
-        } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {
+        } catch ( RemoteException | NotBoundException e) {
             throw new RuntimeException(e);
         }
 

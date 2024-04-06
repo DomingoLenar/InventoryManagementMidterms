@@ -2,25 +2,27 @@ package com.example.inventorymanagement.client.microservices;
 
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.util.ClientCallback;
+import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
+import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
+import com.example.inventorymanagement.util.exceptions.UserExistenceException;
 import com.example.inventorymanagement.util.objects.User;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
 
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-public class RemoveUser {
+public class RemoveUserService {
 
-    public boolean process (User requestBy , User toRemove){
+    public boolean process (Registry registry, ClientCallback cB , User toRemove) throws UserExistenceException, OutOfRoleException, NotLoggedInException {
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
             UserRequestInterface userRequest = (UserRequestInterface) registry.lookup("userRequest");
 
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
+            return userRequest.removeUser(cB,toRemove);
 
-            return userRequest.removeUser(cB,requestBy,toRemove);
-
-        } catch (Exception e){
+        } catch (NotBoundException | RemoteException e){
             e.printStackTrace();
             return false;
         }

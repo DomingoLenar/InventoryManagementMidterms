@@ -3,7 +3,6 @@ package com.example.inventorymanagement.client.microservices;
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
-import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
 import com.example.inventorymanagement.util.objects.Item;
 import com.example.inventorymanagement.util.objects.User;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
@@ -14,18 +13,19 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.LinkedList;
 
-public class RemoveItemListingModel {
-    public boolean process (User requestBy, Item item){
+public class FetchListOfItemsService {
+
+
+    public LinkedList<Item> process (Registry registry, ClientCallback cB ) throws NotLoggedInException{
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+
             ItemRequestInterface ItemRequest = (ItemRequestInterface) registry.lookup("item");
 
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
+            return ItemRequest.fetchLisOfItems(cB);
 
-            return ItemRequest.removeItemListing(cB,item);
-
-        } catch (NotBoundException | RemoteException | NotLoggedInException | OutOfRoleException e) {
+        } catch (NotBoundException | RemoteException e) {
             throw new RuntimeException(e);
         }
     }
 }
+
