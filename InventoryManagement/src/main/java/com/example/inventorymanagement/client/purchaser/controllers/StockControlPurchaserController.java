@@ -1,7 +1,7 @@
 package com.example.inventorymanagement.client.purchaser.controllers;
 
-import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
 import com.example.inventorymanagement.client.purchaser.models.StockControlPurchaserModel;
+import com.example.inventorymanagement.util.ControllerInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -33,8 +33,8 @@ public class StockControlPurchaserController implements ControllerInterface {
     }
 
     @Override
-    public String getCurrentPanel() throws RemoteException {
-        return "StockControlPurchaser"; // Return the name of this panel
+    public String getObjectsUsed() throws RemoteException {
+        return null;
     }
 
     @FXML
