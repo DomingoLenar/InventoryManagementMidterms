@@ -201,14 +201,14 @@ public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrd
     }
 
     // Checks if user invoking the request has valid permissions
-    private void checkIfValidPerm(User user) throws OutOfRoleException{
+    public void checkIfValidPerm(User user) throws OutOfRoleException{
         String userRole = user.getRole();
         if(!(userRole.equals("admin") || userRole.equals("sales"))){
             throw new OutOfRoleException("Insufficient Permission");
         }
     }
 
-    private void checkIfLoggedIn(ClientCallback clientCallback) throws NotLoggedInException {
+    public void checkIfLoggedIn(ClientCallback clientCallback) throws NotLoggedInException {
         try {
             Registry reg = LocateRegistry.getRegistry("localhost", 2018);
             UserRequestInterfaceImplementation userStub = (UserRequestInterfaceImplementation) reg.lookup("userRequest");
@@ -224,14 +224,14 @@ public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrd
         }
     }
 
-    private static String getCurrentDate(){
+    public static String getCurrentDate(){
         LocalDate localDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String currentDate = localDate.format(formatter);
         return currentDate;
     }
 
-    private void callUpdate(String panel){
+    public void callUpdate(String panel){
         try{
             Registry reg = LocateRegistry.getRegistry("localhost",2018);
             UserRequestInterfaceImplementation userStub = (UserRequestInterfaceImplementation) reg.lookup("userRequest");
