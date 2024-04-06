@@ -1,9 +1,11 @@
 package com.example.inventorymanagement.client.common.controllers;
 
 import com.example.inventorymanagement.client.admin.views.StockControlAdminPanel;
+import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.client.purchaser.views.StockControlPurchaserPanel;
 import com.example.inventorymanagement.client.sales.views.StockControlSalesPanel;
 import com.example.inventorymanagement.util.ClientCallback;
+import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -12,6 +14,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 /**
  * Purpose:
@@ -19,14 +22,14 @@ import java.io.IOException;
  * - Main entry point of communication on the server
  * - Temporarily display main menu for each client might modify in such a way...
  */
-public class MainController {
+public class MainController implements ControllerInterface {
     private Stage stage;
     private ClientCallback clientCallback;
     private UserRequestInterface userService;
 
-    public MainController(UserRequestInterface userService) {
+    public MainController(UserRequestInterface userService) throws RemoteException {
         this.userService = userService;
-        this.clientCallback = null;
+        this.clientCallback = new ClientCallbackImpl(null);
     }
 
     public ClientCallback getClientCallback() {
@@ -97,4 +100,13 @@ public class MainController {
         new StockControlSalesPanel().start(new Stage());
     }
 
+    @Override
+    public void fetchAndUpdate() throws RemoteException {
+        //invalid
+    }
+
+    @Override
+    public String getObjectsUsed() throws RemoteException {
+        return "users";
+    }
 }
