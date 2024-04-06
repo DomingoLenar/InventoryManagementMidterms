@@ -1,5 +1,6 @@
 package com.example.inventorymanagement.server.model;
 
+import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
 
 import java.rmi.RemoteException;
@@ -9,10 +10,13 @@ import java.rmi.registry.Registry;
 public class Server {
 
     public void run() throws RemoteException {
+        UserRequestInterfaceImplementation userStub  = new UserRequestInterfaceImplementation();
+        ItemOrderRequestImpl itemOrderStub = new ItemOrderRequestImpl();
+        ItemRequestInterface itemStub = new ItemRequestImpl();
         Registry reg = LocateRegistry.createRegistry(2018);
-        reg.rebind("userRequest", new UserRequestInterfaceImplementation());
-        reg.rebind("itemOrder",new ItemOrderRequestImpl());
-        reg.rebind("item", new ItemRequestImpl());
+        reg.rebind("userRequest", userStub);
+        reg.rebind("itemOrder",itemOrderStub);
+        reg.rebind("item", itemStub);
         System.out.println("Server has started");
     }
 
