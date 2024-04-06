@@ -1,9 +1,9 @@
 {
   "users": [
     {
-      "username": "testuser",
-      "password": "usertest",
-      "role":"admin",
+      "username": "testadmin",
+      "password": "admintest",
+      "role": "admin",
       "isActive": "false"
     },
     {
