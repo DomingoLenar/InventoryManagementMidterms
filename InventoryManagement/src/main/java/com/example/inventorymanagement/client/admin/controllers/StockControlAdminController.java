@@ -1,7 +1,7 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
 import com.example.inventorymanagement.client.admin.models.AddItemAdminModel;
-import com.example.inventorymanagement.client.admin.models.CreateSalesInvoiceModel;
+import com.example.inventorymanagement.client.admin.models.CreateSalesInvoiceAdminModel;
 import com.example.inventorymanagement.client.admin.models.StockControlAdminModel;
 import com.example.inventorymanagement.util.ControllerInterface;
 import javafx.event.ActionEvent;
@@ -12,7 +12,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
 import java.rmi.RemoteException;
-import java.util.concurrent.ConcurrentMap;
 
 public class StockControlAdminController implements ControllerInterface {
     @FXML
@@ -31,7 +30,7 @@ public class StockControlAdminController implements ControllerInterface {
     private TableView stockControlAdminTable;
     private StockControlAdminModel stockControlAdminModel = new StockControlAdminModel();
     private AddItemAdminModel addItemAdminModel = new AddItemAdminModel();
-    private CreateSalesInvoiceModel salesInvoiceModel = new CreateSalesInvoiceModel();
+    private CreateSalesInvoiceAdminModel salesInvoiceModel = new CreateSalesInvoiceAdminModel();
 
     @Override
     public void fetchAndUpdate() throws RemoteException {
@@ -74,15 +73,15 @@ public class StockControlAdminController implements ControllerInterface {
         addHoverEffect(addListingButtonAdmin);
 
         addItemButtonAdmin.setOnAction(this::handleAddItem);
-        salesInvoiceButtonAdmin.setOnAction(this::handleSalesInvoice);
+//        salesInvoiceButtonAdmin.setOnAction(this::handleSalesInvoice);
     }
 
     private void handleAddItem (ActionEvent event){
         addItemAdminModel.handleAddItem();
     }
-    private void handleSalesInvoice (ActionEvent event){
-        salesInvoiceModel.handleSalesInvoice();
-    }
+//    private void handleSalesInvoice (ActionEvent event){
+//        salesInvoiceModel.handleSalesInvoice();
+//    }
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
