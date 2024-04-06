@@ -11,8 +11,8 @@ import com.example.inventorymanagement.client.sales.controllers.NavigationBarSal
 
 import java.io.IOException;
 
-public class StockControlSalesPanel extends Application {
-    @Override
+public class StockControlSalesPanel {
+
     public void start(Stage stage) throws IOException {
 
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
@@ -37,9 +37,5 @@ public class StockControlSalesPanel extends Application {
 
         // Set the main BorderPane reference in the navigation bar controller
         navBarSalesController.setMainBorderPane(root);
-    }
-
-    public static void main(String[] args) {
-        launch();
     }
 }
