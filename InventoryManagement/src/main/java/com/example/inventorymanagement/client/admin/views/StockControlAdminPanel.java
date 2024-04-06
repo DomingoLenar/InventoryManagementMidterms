@@ -11,8 +11,8 @@ import com.example.inventorymanagement.client.admin.controllers.NavigationBarAdm
 
 import java.io.IOException;
 
-public class StockControlAdminPanel extends Application {
-    @Override
+public class StockControlAdminPanel {
+
     public void start(Stage stage) throws IOException {
 
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
@@ -37,9 +37,5 @@ public class StockControlAdminPanel extends Application {
 
         // Set the main BorderPane reference in the navigation bar controller
         navBarAdminController.setMainBorderPane(root);
-    }
-
-    public static void main(String[] args) {
-        launch();
     }
 }
