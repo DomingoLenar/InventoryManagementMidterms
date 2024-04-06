@@ -1,6 +1,6 @@
 package com.example.inventorymanagement.client.sales.controllers;
 
-import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
+import com.example.inventorymanagement.util.ControllerInterface;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -33,8 +33,8 @@ public class NavigationBarSalesController implements ControllerInterface {
     }
 
     @Override
-    public String getCurrentPanel() throws RemoteException {
-        return "NavigationBarSales"; // Return the name of this panel
+    public String getObjectsUsed() throws RemoteException {
+        return null;
     }
 
     @FXML
