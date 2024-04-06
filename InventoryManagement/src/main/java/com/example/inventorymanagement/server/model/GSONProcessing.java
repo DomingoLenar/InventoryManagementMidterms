@@ -40,20 +40,21 @@ public class GSONProcessing {
      * @return true if item is added successfully, false if otherwise.
      */
     public static boolean addItem(Item newItem) {
+        String filePath = "com/example/inventorymanagement/data/items.json";
+
         try {
-            String filePath = "com/example/inventorymanagement/data/items.json";
-            JsonParser jsonParser = new JsonParser();
-            JsonElement rootElement = jsonParser.parse(new FileReader(filePath));
+            Gson gson = new Gson();
+
+            JsonElement rootElement = JsonParser.parseReader(new FileReader(filePath));
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray itemJsonArray = rootObject.getAsJsonArray("items");
 
-            Gson gson = new Gson();
             JsonElement newItemJson = gson.toJsonTree(newItem);
             itemJsonArray.add(newItemJson);
 
-            FileWriter writer = new FileWriter(filePath);
-            gson.toJson(rootElement, writer);
-            writer.close();
+            try (FileWriter writer = new FileWriter(filePath)) {
+                gson.toJson(rootElement, writer);
+            }
 
             return true;
         } catch (IOException e) {
@@ -69,26 +70,30 @@ public class GSONProcessing {
      * @return true if the item was successfully removed, false if otherwise.
      */
     public static boolean removeItem(String itemName) {
+        String filePath = "com/example/inventorymanagement/data/items.json";
+
         try {
-            String filePath = "com/example/inventorymanagement/data/items.json";
-            JsonParser jsonParser = new JsonParser();
-            JsonElement rootElement = jsonParser.parse(new FileReader(filePath));
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+            JsonElement rootElement = JsonParser.parseReader(new FileReader(filePath));
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray itemJsonArray = rootObject.getAsJsonArray("items");
 
             for (JsonElement jsonElement : itemJsonArray) {
                 JsonObject itemObject = jsonElement.getAsJsonObject();
-                String name = itemObject.get("name").getAsString();
+                String name = itemObject.get("itemName").getAsString();
                 if (name.equals(itemName)) {
                     itemJsonArray.remove(jsonElement);
-                    FileWriter writer = new FileWriter(filePath);
-                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                    gson.toJson(rootElement, writer);
-                    writer.close();
+
+                    try (FileWriter writer = new FileWriter(filePath)) {
+                        gson.toJson(rootElement, writer);
+                    }
+
                     return true;
                 }
             }
-            return false; // Item not found
+
+            return false;
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -106,33 +111,34 @@ public class GSONProcessing {
     public static boolean addItemOrder(String orderType, ItemOrder newOrder) {
         try {
             String filePath;
-            if (orderType.equalsIgnoreCase("purchase")) {
-                filePath = "com/example/inventorymanagement/data/purchaseorders.json";
-            } else if (orderType.equalsIgnoreCase("sales")) {
-                filePath = "com/example/inventorymanagement/data/salesorder.json";
-            } else {
-                throw new IllegalArgumentException("Invalid order type: " + orderType);
+            String orderArrayName;
+            switch (orderType.toLowerCase()) {
+                case "purchase":
+                    filePath = "/com/example/inventorymanagement/data/purchaseorders.json";
+                    orderArrayName = "purchaseOrders";
+                    break;
+                case "sales":
+                    filePath = "/com/example/inventorymanagement/data/salesorder.json";
+                    orderArrayName = "salesOrders";
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid order type: " + orderType);
             }
-
-            JsonParser jsonParser = new JsonParser();
-            JsonElement rootElement = jsonParser.parse(new FileReader(filePath));
-            JsonObject rootObject = rootElement.getAsJsonObject();
-
-            JsonArray orderJsonArray;
-            if (orderType.equalsIgnoreCase("purchase")) {
-                orderJsonArray = rootObject.getAsJsonArray("purchaseOrders");
-            } else {
-                orderJsonArray = rootObject.getAsJsonArray("salesOrders");
-            }
-
             Gson gson = new Gson();
-            JsonElement newOrderJson = gson.toJsonTree(newOrder);
-            orderJsonArray.add(newOrderJson);
+            try (
+                    InputStream inputStream = GSONProcessing.class.getResourceAsStream(filePath);
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                    FileWriter writer = new FileWriter(filePath)
+            ) {
+                JsonElement rootElement = JsonParser.parseReader(bufferedReader);
+                JsonObject rootObject = rootElement.getAsJsonObject();
+                JsonArray orderJsonArray = rootObject.getAsJsonArray(orderArrayName);
 
-            FileWriter writer = new FileWriter(filePath);
-            gson.toJson(rootElement, writer);
-            writer.close();
+                JsonElement newOrderJson = gson.toJsonTree(newOrder);
+                orderJsonArray.add(newOrderJson);
 
+                gson.toJson(rootElement, writer);
+            }
             return true;
         } catch (IOException e) {
             e.printStackTrace();
