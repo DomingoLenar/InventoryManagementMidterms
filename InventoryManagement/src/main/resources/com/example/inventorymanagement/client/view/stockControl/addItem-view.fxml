@@ -34,8 +34,7 @@
                   <Font name="Share Tech Mono" size="17.0" />
                </font>
             </Label>
-            <Button fx:id="cancelButton" layoutX="448.0" layoutY="324.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Cancel" />
-            <Button fx:id="okButton" layoutX="358.0" layoutY="324.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Ok" />
+            <Button fx:id="okButton" layoutX="448.0" layoutY="324.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Ok" />
          </children>
       </Pane>
    </content>
