@@ -1,6 +1,6 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
-import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
+import com.example.inventorymanagement.util.ControllerInterface;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -31,9 +31,12 @@ public class ProfileManagementAdminController implements Initializable, Controll
     public void fetchAndUpdate() throws RemoteException {
         // No implementation needed yet in this controller
     }
-    public String getCurrentPanel() throws RemoteException {
-        return "ProfileManagementAdmin"; // Return the name of this panel
+
+    @Override
+    public String getObjectsUsed() throws RemoteException {
+        return null;
     }
+
     public BorderPane getBorderPaneProfileManagement(){
         return borderPaneProfileManagement;
     }
