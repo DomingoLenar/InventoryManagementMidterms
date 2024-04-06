@@ -14,13 +14,10 @@ import java.rmi.registry.Registry;
 
 public class FetchCostTodayService {
 
-    public float process (User requestBy){
+    public float process (Registry registry, ClientCallback cB ){
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
-
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
 
             return IORequest.fetchCostToday(cB);
 
