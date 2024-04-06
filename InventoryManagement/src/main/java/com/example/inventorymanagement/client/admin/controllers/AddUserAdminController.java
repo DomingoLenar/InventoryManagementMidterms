@@ -2,10 +2,18 @@ package com.example.inventorymanagement.client.admin.controllers;
 
 import com.example.inventorymanagement.client.admin.models.AddUserAdminModel;
 import com.example.inventorymanagement.client.admin.views.AddUserAdminPanel;
+import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.client.sales.models.StockControlSalesModel;
+import com.example.inventorymanagement.client.sales.views.StockControlSalesPanel;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.objects.User;
+import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
+import com.example.inventorymanagement.util.requests.ItemRequestInterface;
+import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -34,19 +42,40 @@ public class AddUserAdminController extends Application implements Initializable
     private Button saveButton;
 
     private AddUserAdminModel addUserAdminModel;
-    private AddUserAdminPanel addUserAdminPanel;
+    private AddUserAdminPanel addUserAdminPanel = new AddUserAdminPanel();
+    private MainController mainController;
+
     private ClientCallback clientCallback;
     private Registry registry;
+    public void start(Stage stage) throws Exception {
+        addUserAdminPanel.start(stage);
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        roleComboBox.getItems().addAll("Sales Person", "Purchaser");
-        roleComboBox.setPromptText("Set Role As...");
+        // Create a list of choices
+        ObservableList<String> choices = FXCollections.observableArrayList(
+                "Sales", "Purchaser"
+        );
+
+        // Set the choices to the ComboBox
+        roleComboBox.setItems(choices);
+
+        // Set font style for ComboBox
         Font font = new Font("Share Tech Mono", 15);
         roleComboBox.setStyle("-fx-font-family: '" + font.getFamily() + "'; -fx-font-size: " + font.getSize() + "px;");
+
+        // Add hover effect to the save button
         addHoverEffect(saveButton);
+
+        // Initialize the model and panel objects
         addUserAdminModel = new AddUserAdminModel(registry, clientCallback);
         addUserAdminPanel = new AddUserAdminPanel();
+    }
+
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 
     private void addHoverEffect(Button button) {
@@ -54,10 +83,7 @@ public class AddUserAdminController extends Application implements Initializable
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        addUserAdminPanel.start(stage);
-    }
+
 
     public void setClientCallback(ClientCallback clientCallback) {
         this.clientCallback = clientCallback;
@@ -87,6 +113,7 @@ public class AddUserAdminController extends Application implements Initializable
     public String getObjectsUsed() throws RemoteException {
         return "User";
     }
+
 
     @FXML
     private void handleSaveButtonClick() {
