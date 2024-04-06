@@ -100,7 +100,7 @@ public class UserRequestInterfaceImplementation extends UnicastRemoteObject impl
     }
 
     @Override
-    public boolean changeUserRole(ClientCallback clientCallback, User requestBy, User toChange, String newRole) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
+    public boolean changeUserRole(ClientCallback clientCallback, User toChange, String newRole) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
 
         if(clientCallback.getUser().getRole().equals("admin")) {
 
