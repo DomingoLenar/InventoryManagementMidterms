@@ -13,6 +13,7 @@ public class Server {
             Registry reg = LocateRegistry.createRegistry(1099);
             reg.rebind("user", userService);
             System.out.println("Server is running...");
+            String s = "lol";
         } catch (Exception e) {
             e.printStackTrace();
         }

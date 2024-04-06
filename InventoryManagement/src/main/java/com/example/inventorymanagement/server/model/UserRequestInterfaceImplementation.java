@@ -23,7 +23,7 @@ public class UserRequestInterfaceImplementation extends UnicastRemoteObject impl
     public User login(ClientCallback clientCallback) throws RemoteException, AlreadyLoggedInException, UserExistenceException {
         User toLogin = clientCallback.getUser();
         if(clientCallbacks.containsKey(toLogin.username)){
-            throw new UserExistenceException("User already exist!");
+            throw new UserExistenceException("User already exist!"); // handle creation of sales & purchaser by admin
         } else if (clientCallbacks.containsValue(clientCallback)){
             throw new AlreadyLoggedInException("User already logged in!");
         }
@@ -33,13 +33,10 @@ public class UserRequestInterfaceImplementation extends UnicastRemoteObject impl
             if (activeUser != null) {
                 clientCallbacks.put(activeUser.username, clientCallback);
                 return activeUser;
-//            clientCallbacks.putFirst(toLogin,clientCallback);
             } else {
                 throw new UserExistenceException("User does not exist!");
             }
         }
-//            clientCallback.objectCall(localUserData);
-
     }
 
     @Override

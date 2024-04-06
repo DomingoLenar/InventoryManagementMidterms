@@ -9,7 +9,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
 public class UserManagementAdminController {
-
     @FXML
     private BorderPane borderPaneUserManagement;
     @FXML

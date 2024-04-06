@@ -29,22 +29,6 @@ public class MainController {
         this.clientCallback = null;
     }
 
-    public ClientCallback getClientCallback() {
-        return clientCallback;
-    }
-
-    public void setClientCallback(ClientCallback clientCallback) {
-        this.clientCallback = clientCallback;
-    }
-
-    public UserRequestInterface getUserService() {
-        return userService;
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
     public void loadWelcomeView() { // load welcome/index view
         try {
             Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
@@ -97,4 +81,19 @@ public class MainController {
         new StockControlSalesPanel().start(new Stage());
     }
 
+    public ClientCallback getClientCallback() {
+        return clientCallback;
+    }
+
+    public void setClientCallback(ClientCallback clientCallback) {
+        this.clientCallback = clientCallback;
+    }
+
+    public UserRequestInterface getUserService() {
+        return userService;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 }

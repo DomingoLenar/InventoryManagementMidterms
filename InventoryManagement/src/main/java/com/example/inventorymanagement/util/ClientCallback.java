@@ -15,5 +15,4 @@ public interface ClientCallback extends Remote {
     // method to get the current user of the callback/session
     User getUser() throws RemoteException;
 
-
 }

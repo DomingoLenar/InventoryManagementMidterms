@@ -7,14 +7,8 @@ import com.example.inventorymanagement.util.objects.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.DialogEvent;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -74,6 +68,5 @@ public class LoginController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        // todo: handle the exception using javafx components
     }
 }
