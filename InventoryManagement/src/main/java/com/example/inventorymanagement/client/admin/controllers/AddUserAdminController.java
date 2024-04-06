@@ -122,7 +122,7 @@ public class AddUserAdminController extends Application implements Initializable
             String password = passwordField.getText();
             String role = roleComboBox.getValue();
             User newUser = new User(username, password, role);
-            boolean success = addUserAdminModel.addUser(newUser);
+            boolean success = addUserAdminModel.addUserService(newUser);
             if (success) {
                 throw new RuntimeException("User added successfully.");
             } else {
