@@ -90,6 +90,6 @@ public class LoginController implements ControllerInterface {
 
     @Override
     public String getObjectsUsed() throws RemoteException {
-        return "users";
+        return "user";
     }
 }

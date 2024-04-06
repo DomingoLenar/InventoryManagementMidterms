@@ -107,6 +107,6 @@ public class MainController implements ControllerInterface {
 
     @Override
     public String getObjectsUsed() throws RemoteException {
-        return "users";
+        return "user";
     }
 }
