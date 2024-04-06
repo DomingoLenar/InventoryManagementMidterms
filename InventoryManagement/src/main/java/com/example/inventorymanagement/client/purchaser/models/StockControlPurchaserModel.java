@@ -1,51 +1,47 @@
 package com.example.inventorymanagement.client.purchaser.models;
 
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import com.example.inventorymanagement.client.microservices.CreateItemListingService;
+import com.example.inventorymanagement.client.microservices.FetchListOfItemsService;
+import com.example.inventorymanagement.client.microservices.FetchLowestStockService;
+import com.example.inventorymanagement.util.ClientCallback;
+import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
+import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
+import com.example.inventorymanagement.util.objects.Item;
 
-import java.io.IOException;
+import java.rmi.registry.Registry;
+import java.util.LinkedList;
 
 public class StockControlPurchaserModel {
+    private FetchListOfItemsService fetchListOfItems;
+    private Registry registry;
+    private ClientCallback callback;
+    private Item item;
 
-    /**
-     * Handle Action Event when clicking AddItemButton
-     */
-    @FXML
-    public void handleAddItem() {
+
+    public StockControlPurchaserModel(Registry registry, ClientCallback clientCallback) {
+        this.fetchListOfItems = new FetchListOfItemsService();
+        this.registry = registry;
+        this.callback = clientCallback;
+
+    }
+    public LinkedList<Item> fetchItems () throws NotLoggedInException {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/addItem-view.fxml"));
-            Parent root = fxmlLoader.load();
 
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setTitle("Add Item");
-
-            DialogPane dialogPane = new DialogPane();
-            dialogPane.setContent(root);
-            dialog.setDialogPane(dialogPane);
-
-            dialog.initStyle(StageStyle.UNDECORATED);
-
-            ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-            dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
-
-            Button okButton = (Button) dialog.getDialogPane().lookupButton(okButtonType);
-            okButton.setOnAction(event -> {
-                //TODO: Logic from AddItemModel for adding items using GSONProcessing
-            });
-
-            Button cancelButton = new Button("Cancel");
-            cancelButton.setOnAction(event -> dialog.close());
-
-            dialog.getDialogPane().getChildren().addAll(okButton, cancelButton);
-
-            dialog.showAndWait();
-        } catch (IOException e) {
+            // Fetch items using FetchListOfItemsService
+            return fetchListOfItems.process(registry, callback);
+        } catch (RuntimeException e) {
+            // Handle exceptions appropriately
             e.printStackTrace();
+            return new LinkedList<>(); // Or throw an exception
         }
     }
+
+    public LinkedList<Item> fetchLowestStock() throws NotLoggedInException {
+        return FetchLowestStockService.process(registry, callback);
+    }
+
+    public boolean createItemListing(Item item) throws NotLoggedInException, OutOfRoleException {
+        return CreateItemListingService.process(registry, callback, item);
+    }
 }
+
