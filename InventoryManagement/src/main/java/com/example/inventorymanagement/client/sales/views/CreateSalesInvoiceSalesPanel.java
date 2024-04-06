@@ -25,6 +25,7 @@ public class CreateSalesInvoiceSalesPanel{
         Scene sceneLogin = new Scene(fxmlLoader.load(), 600, 400);
         stage.setTitle("Stock Pilot");
         stage.setScene(sceneLogin);
+        stage.setResizable(false);
         stage.show();
 
         stage.setResizable(false);
