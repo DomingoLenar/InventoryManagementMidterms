@@ -99,7 +99,7 @@ public class StockControlSalesController extends Application implements Controll
     }
 
     public StockControlSalesController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry) {
-        StockControlSalesModel stockControlSalesModel = new StockControlSalesModel(registry, clientCallback); // use this on events of saleshistorysalesview
+        StockControlSalesModel stockControlSalesModel = new StockControlSalesModel(registry, clientCallback); // use this on events of stockControlSalesView
     }
 
     @Override
