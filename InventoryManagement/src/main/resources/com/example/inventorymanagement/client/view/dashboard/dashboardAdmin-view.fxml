@@ -94,12 +94,12 @@
                </font>
             </Label>
             <StackedBarChart fx:id="monthRevChart" layoutX="338.0" layoutY="14.0" prefHeight="254.0" prefWidth="358.0" title="Month's Revenue">
-              <xAxis>
-                <CategoryAxis side="BOTTOM" />
-              </xAxis>
-              <yAxis>
-                <NumberAxis side="LEFT" />
-              </yAxis>
+               <xAxis>
+                  <CategoryAxis side="BOTTOM" />
+               </xAxis>
+               <yAxis>
+                  <NumberAxis side="LEFT" />
+               </yAxis>
             </StackedBarChart>
             <Button fx:id="dateButton" layoutX="697.0" layoutY="42.0" mnemonicParsing="false" prefHeight="96.0" prefWidth="141.0" style="-fx-background-color: EFD1D1;" />
             <Button layoutX="697.0" layoutY="159.0" mnemonicParsing="false" prefHeight="96.0" prefWidth="141.0" style="-fx-background-color: EAB3B3;" />
@@ -108,12 +108,12 @@
                   <Font name="Share Tech Mono" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="timeLabel" layoutX="728.0" layoutY="106.0">
+            <Label fx:id="timeLabel" layoutX="725.0" layoutY="106.0">
                <font>
                   <Font name="Share Tech Mono" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="dayLabel" layoutX="731.0" layoutY="78.0">
+            <Label fx:id="dayLabel" layoutX="731.0" layoutY="80.0">
                <font>
                   <Font name="Share Tech Mono" size="18.0" />
                </font>
