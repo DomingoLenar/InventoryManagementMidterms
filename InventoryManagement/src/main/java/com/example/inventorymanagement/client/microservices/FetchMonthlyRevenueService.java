@@ -15,7 +15,7 @@ import java.util.LinkedHashMap;
 
 public class FetchMonthlyRevenueService {
 
-    public LinkedHashMap<Integer, Float> process (Registry registry, ClientCallback cB ){
+    public static LinkedHashMap<Integer, Float> process (Registry registry, ClientCallback cB ) throws NotLoggedInException, OutOfRoleException{
         try {
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
