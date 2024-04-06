@@ -24,20 +24,34 @@ public class ItemRequestImpl implements ItemRequestInterface {
     @Override
     public boolean createItemListing(ClientCallback clientCallback, Item item) throws RemoteException, NotLoggedInException, OutOfRoleException {
         checkIfLoggedIn(clientCallback);
-        return GSONProcessing.addItem(item);
+        boolean success = GSONProcessing.addItem(item);
+        callUpdate("item");
+        return success;
     }
 
     @Override
     public boolean removeItemListing(ClientCallback clientCallback, Item item) throws RemoteException, NotLoggedInException, OutOfRoleException {
         checkIfLoggedIn(clientCallback);
-        return GSONProcessing.removeItem(item.getItemName());
+        boolean success = GSONProcessing.removeItem(item.getItemName());
+        callUpdate("item");
+        return success;
     }
 
     private void checkIfLoggedIn(ClientCallback clientCallback){
         try{
             Registry reg = LocateRegistry.getRegistry("localhost",2018);
             UserRequestInterfaceImplementation userStub = (UserRequestInterfaceImplementation) reg.lookup("userRequest");
-            if (!(userStub.clientCallbacks.contains(clientCallback))) throw new NotLoggedInException("Not Logged In");
+            if (!(userStub.isLoggedIn(clientCallback))) throw new NotLoggedInException("Not Logged In");
+        }catch(Exception e){
+
+        }
+    }
+
+    private void callUpdate(String panel){
+        try{
+            Registry reg = LocateRegistry.getRegistry("localhost",2018);
+            UserRequestInterfaceImplementation userStub = (UserRequestInterfaceImplementation) reg.lookup("userRequest");
+            userStub.callUpdate(panel);
         }catch(Exception e){
 
         }
