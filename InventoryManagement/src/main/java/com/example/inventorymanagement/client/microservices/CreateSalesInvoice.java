@@ -4,6 +4,7 @@ import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
+import com.example.inventorymanagement.util.objects.ItemOrder;
 import com.example.inventorymanagement.util.objects.User;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 
@@ -12,23 +13,20 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-public class FetchCostTodayModel {
+public class CreateSalesInvoice {
 
-    public float process (User requestBy){
+    public boolean process (User requestBy, ItemOrder salesInvoice){
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+            Registry registry = LocateRegistry.getRegistry("locahost", 1099);
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 
-            return IORequest.fetchCostToday(cB);
+            return IORequest.createSalesInvoice(cB, salesInvoice);
 
-
-        } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {
+        } catch (NotBoundException | RemoteException | OutOfRoleException | NotLoggedInException e) {
             throw new RuntimeException(e);
         }
-
     }
-
 }

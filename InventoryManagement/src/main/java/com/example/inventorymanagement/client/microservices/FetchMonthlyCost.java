@@ -13,7 +13,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.LinkedHashMap;
 
-public class FetchMonthlyRevenueModel {
+public class FetchMonthlyCost {
 
     public LinkedHashMap<Integer, Float> process (User requestBy){
         try {
@@ -23,7 +23,7 @@ public class FetchMonthlyRevenueModel {
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 
-             return IORequest.fetchMonthlyRevenue(cB);
+            return  IORequest.fetchMonthlyCost(cB);
 
 
         } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {
@@ -31,4 +31,5 @@ public class FetchMonthlyRevenueModel {
         }
 
     }
+
 }
