@@ -16,14 +16,14 @@ import java.util.LinkedList;
 public class FetchListOfItemsService {
 
 
-    public LinkedList<Item> process (Registry registry, ClientCallback cB ){
+    public LinkedList<Item> process (Registry registry, ClientCallback cB ) throws NotLoggedInException{
         try {
 
             ItemRequestInterface ItemRequest = (ItemRequestInterface) registry.lookup("item");
 
             return ItemRequest.fetchLisOfItems(cB);
 
-        } catch (NotBoundException | RemoteException | NotLoggedInException e) {
+        } catch (NotBoundException | RemoteException e) {
             throw new RuntimeException(e);
         }
     }
