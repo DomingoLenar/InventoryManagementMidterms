@@ -14,13 +14,10 @@ import java.util.ArrayList;
 
 public class FetchSuppliersService {
 
-    public ArrayList<String> process (User requestBy){
+    public ArrayList<String> process (Registry registry, ClientCallback cB ){
         try {
-            Registry registry = LocateRegistry.getRegistry("locahost", 1099);
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
-
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
 
             return IORequest.fetchSuppliers(cB);
 
