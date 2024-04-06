@@ -10,6 +10,7 @@ import com.example.inventorymanagement.util.objects.User;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
 
+import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -183,6 +184,22 @@ public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrd
         return GSONProcessing.fetchListOfSuppliers();
     }
 
+    @Override
+    public LinkedList<ItemOrder> fetchTransactionsToday(ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
+        checkIfLoggedIn(clientCallback);
+
+        LinkedList<ItemOrder> transactionsToday = new LinkedList<>();
+        LinkedList<ItemOrder> sales = GSONProcessing.fetchListOfItemOrder("sales");
+
+        String dateToday = getCurrentDate();
+
+        sales.forEach(itemOrder -> {
+            if(itemOrder.getDate().equals(dateToday)) transactionsToday.add(itemOrder);
+        });
+
+        return transactionsToday;
+    }
+
     // Checks if user invoking the request has valid permissions
     private void checkIfValidPerm(User user) throws OutOfRoleException{
         String userRole = user.getRole();
@@ -191,13 +208,19 @@ public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrd
         }
     }
 
-    private void checkIfLoggedIn(ClientCallback clientCallback){
-        try{
-            Registry reg = LocateRegistry.getRegistry("localhost",2018);
+    private void checkIfLoggedIn(ClientCallback clientCallback) throws NotLoggedInException {
+        try {
+            Registry reg = LocateRegistry.getRegistry("localhost", 2018);
             UserRequestInterfaceImplementation userStub = (UserRequestInterfaceImplementation) reg.lookup("userRequest");
             if (!(userStub.isLoggedIn(clientCallback))) throw new NotLoggedInException("Not Logged In");
-        }catch(Exception e){
-
+        } catch (AccessException e) {
+            throw new RuntimeException(e);
+        } catch (NotBoundException e) {
+            throw new RuntimeException(e);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        } catch (OutOfRoleException e) {
+            throw new RuntimeException(e);
         }
     }
 
