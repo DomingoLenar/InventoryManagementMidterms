@@ -27,9 +27,9 @@ public class NavigationBarSalesPanel extends Application {
             System.err.println("Failed to load image: logo.png");
         }
 
-        Scene sceneStockControlSalesPanel = new Scene(fxmlLoader.load(), 230, 650);
+        Scene sceneNavigationBarSalesPanel = new Scene(fxmlLoader.load(), 230, 650);
         stage.setTitle("Stock Pilot");
-        stage.setScene(sceneStockControlSalesPanel);
+        stage.setScene(sceneNavigationBarSalesPanel);
         stage.show();
 
         stage.setResizable(false);

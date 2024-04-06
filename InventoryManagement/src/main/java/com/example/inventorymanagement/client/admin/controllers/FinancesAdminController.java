@@ -1,5 +1,6 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
+import com.example.inventorymanagement.util.ControllerInterface;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.StackedBarChart;
@@ -15,9 +16,11 @@ import javafx.scene.shape.Line;
 import javafx.fxml.FXML;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+
+import java.rmi.RemoteException;
 import java.time.LocalTime;
 
-public class FinancesAdminController {
+public class FinancesAdminController implements ControllerInterface {
     @FXML
     private BorderPane borderPaneFinancesAdmin;
     @FXML
@@ -204,6 +207,14 @@ public class FinancesAdminController {
     public Label getDateTodayLabel() {
         return dateTodayLabel;
     }
+    @Override
+    public void fetchAndUpdate() throws RemoteException {
+    }
+
+    @Override
+    public String getObjectsUsed() throws RemoteException {
+        return null;
+    }
 
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
@@ -211,8 +222,7 @@ public class FinancesAdminController {
     }
 
         public class ClockController {
-            @FXML
-            private Circle clockFace;
+
             @FXML
             private Line hourHand;
             @FXML

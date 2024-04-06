@@ -13,8 +13,8 @@ import java.rmi.registry.Registry;
 public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Registry registry = LocateRegistry.getRegistry("localhost");
-        UserRequestInterface userService = (UserRequestInterface) registry.lookup("user");
+        Registry registry = LocateRegistry.getRegistry("localhost", 2018);
+        UserRequestInterface userService = (UserRequestInterface) registry.lookup("userRequest");
         MainController mainController = new MainController(userService);
         mainController.setStage(primaryStage);
         mainController.loadWelcomeView();

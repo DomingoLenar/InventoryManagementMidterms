@@ -1,6 +1,7 @@
 package com.example.inventorymanagement.util.objects;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class User implements Serializable {
     public String username;
@@ -43,5 +44,23 @@ public class User implements Serializable {
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        User otherUser = (User) obj;
+        return username.equals(otherUser.username) && password.equals(otherUser.password) && role.equals(otherUser.role);
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, password, role);
     }
 }

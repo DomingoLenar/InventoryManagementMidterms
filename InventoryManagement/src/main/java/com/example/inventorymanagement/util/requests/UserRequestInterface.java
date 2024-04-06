@@ -9,6 +9,7 @@ import com.example.inventorymanagement.util.objects.User;
 
 import java.rmi.*;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 public interface UserRequestInterface extends Remote{
 
@@ -19,19 +20,23 @@ public interface UserRequestInterface extends Remote{
     public void logout(ClientCallback clientCallback) throws RemoteException, NotLoggedInException;
 
     //Method to return LinkedList of users active
-    public void getActiveUser(ClientCallback clientCallback) throws OutOfRoleException, NotLoggedInException, RemoteException;
+    public LinkedList<User> getActiveUser(ClientCallback clientCallback) throws OutOfRoleException, NotLoggedInException, RemoteException;
 
     //Method to add user
-    public void addUser(ClientCallback clientCallback, User requestBy, User toAdd) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException;
+    public boolean addUser(ClientCallback clientCallback, User toAdd) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException;
 
     //Method to remove user
-    public void removeUser(ClientCallback clientCallback, User requestBy, User toRemove) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException;
+    public boolean removeUser(ClientCallback clientCallback, User toRemove) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException;
 
     //Method for changing the role of a user
-    public void changeUserRole(ClientCallback clientCallback, User requestBy, User toChange) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException;
+    public boolean changeUserRole(ClientCallback clientCallback, User toChange, String newRole) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException;
 
     //Method for changing password
-    public void changePassword(ClientCallback clientCallback, User requestBy, User toChange, String oldPassword) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException;
+    public boolean changePassword(ClientCallback clientCallback, User toChange, String newPassword) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException;
+
+    public boolean isLoggedIn(ClientCallback clientCallback) throws RemoteException, NotLoggedInException, OutOfRoleException;
+
+    public boolean updateCallback(User user, ClientCallback clientCallback) throws RemoteException, NotLoggedInException;
 
 
 }
