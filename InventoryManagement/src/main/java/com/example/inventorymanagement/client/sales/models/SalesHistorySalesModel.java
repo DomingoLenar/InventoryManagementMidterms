@@ -1,20 +1,36 @@
 package com.example.inventorymanagement.client.sales.models;
 
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import com.example.inventorymanagement.client.microservices.FetchListOfItemsService;
+import com.example.inventorymanagement.util.ClientCallback;
+import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
+import com.example.inventorymanagement.util.objects.Item;
 
-import java.io.IOException;
+import java.rmi.registry.Registry;
+import java.util.LinkedList;
 
 public class SalesHistorySalesModel {
-    private static final String PANEL_NAME = "SalesHistorySales";
+    private FetchListOfItemsService fetchLisOfItems;
+    private Registry registry;
+    private ClientCallback callback;
 
-    public static String getPanelName() {
-        return PANEL_NAME;
+
+    public SalesHistorySalesModel(Registry registry, ClientCallback clientCallback) {
+        this.fetchLisOfItems = new FetchListOfItemsService();
+        this.registry = registry;
+        this.callback = clientCallback;
+
     }
-    //TODO: Backend-Logic implementation
+    public LinkedList<Item> fetchItems () throws NotLoggedInException {
+        try {
+
+            // Fetch items using FetchListOfItemsService
+            return fetchLisOfItems.process(registry, callback);
+        } catch (RuntimeException e) {
+            // Handle exceptions appropriately
+            e.printStackTrace();
+            return new LinkedList<>(); // Or throw an exception
+        }
+    }
+
 }
+
