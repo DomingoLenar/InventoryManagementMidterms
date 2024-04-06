@@ -1,59 +1,138 @@
 {
   "items": [
     {
-      "itemName": "",
-      "itemId": "",
-      "totalQty": "",
+      "itemName": "FreshWholeChicken",
+      "itemId": 1,
+      "totalQty": 100,
       "stocks": [
         {
           "actualbatchno": {
-            "batchNo": "",
-            "qty": "",
-            "price": "",
-            "cost": "",
-            "supplier": "",
-            "date": ""
+            "batchNo": "FeatherFarms_2023-12-29_200.00",
+            "qty": 50,
+            "price": 299.75,
+            "cost": 200.00,
+            "supplier": "FeatherFarms",
+            "date": "2023-12-29"
           }
         },
         {
           "actualbatchno": {
-            "batchNo": "",
-            "qty": "",
-            "price": "",
-            "cost": "",
-            "supplier": "",
-            "date": ""
+            "batchNo": "FeatherFarms_2024-01-03_200.00",
+            "qty": 50,
+            "price": 299.75,
+            "cost": 200.00,
+            "supplier": "FeatherFarms",
+            "date": "2023-01-03"
           }
         }
-
       ]
     },
     {
-      "itemName": "",
-      "itemId": "",
-      "totalQty": "",
+      "itemName": "PrinterPaper",
+      "itemId": 2,
+      "totalQty": 200,
       "stocks": [
         {
           "actualbatchno": {
-            "batchNo": "",
-            "qty": "",
-            "price": "",
-            "cost": "",
-            "supplier": "",
-            "date": ""
+            "batchNo": "OfficeEase_2023-12-29_500",
+            "qty": 100,
+            "price": 525.00,
+            "cost": 500.00,
+            "supplier": "OfficeEase",
+            "date": "2023-12-29"
           }
         },
         {
           "actualbatchno": {
-            "batchNo": "",
-            "qty": "",
-            "price": "",
-            "cost": "",
-            "supplier": "",
-            "date": ""
+            "batchNo": "OfficeEase_2024-01-03_505.00",
+            "qty": 50,
+            "price": 527.50,
+            "cost": 505.00,
+            "supplier": "OfficeEase",
+            "date": "2024-01-03"
+          }
+        },
+        {
+          "actualbatchno": {
+            "batchNo": "OfficeEase_2024-01-04_506.00",
+            "qty": 50,
+            "price": 528.00,
+            "cost": 506.00,
+            "supplier": "OfficeEase",
+            "date": "2024-01-04"
           }
         }
-
+      ]
+    },
+    {
+      "itemName": "ChocolateMuffins",
+      "itemId": 3,
+      "totalQty": 150,
+      "stocks": [
+        {
+          "actualbatchno": {
+            "batchNo": "SweetTreats_2024-02-11_7.00",
+            "qty": 100,
+            "price": 7.70,
+            "cost": 7.00,
+            "supplier": "SweetTreats",
+            "date": "2024-02-11"
+          }
+        },
+        {
+          "actualbatchno": {
+            "batchNo": "SweetTreats_2024-02-12_7.20",
+            "qty": 50,
+            "price": 7.90,
+            "cost": 7.20,
+            "supplier": "SweetTreats",
+            "date": "2024-02-12"
+          }
+        }
+      ]
+    },
+    {
+      "itemName": "SteelBeams",
+      "itemId": 4,
+      "totalQty": 200,
+      "stocks": [
+        {
+          "actualbatchno": {
+            "batchNo": "SteelCraft_2024-02-12_250.00",
+            "qty": 200,
+            "price": 275.00,
+            "cost": 250.00,
+            "supplier": "SteelCraft",
+            "date": "2024-02-12"
+          }
+        }
+      ]
+    },
+    {
+      "itemName": "SlicedHam",
+      "itemId": 5,
+      "totalQty": 120,
+      "stocks": [
+        {
+          "actualbatchno": {
+            "batchNo": "ComMeats_2024-03-16_6.00",
+            "qty": 60,
+            "price": 6.65,
+            "cost": 6.00,
+            "supplier": "ComMeats",
+            "date": "2024-03-26"
+          }
+        },
+        {
+          "actualbatchno": {
+            "batchNo": "ComMeats_2024-03-23_60",
+            "qty": 60,
+            "price": 6.75,
+            "cost": 6.10,
+            "supplier": "ComMeats",
+            "date": "2024-03-23"
+          }
+        }
       ]
     }
   ]
