@@ -195,10 +195,9 @@ public class GSONProcessing {
 
 
     public static synchronized boolean changePassword(User toChange, String newPassword) {
-        String filePath = "/com/example/inventorymanagement/data/users.json";
+        File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/users.json");
         try (
-                InputStream inputStream = GSONProcessing.class.getResourceAsStream(filePath);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
         ) {
             JsonElement rootElement = JsonParser.parseReader(bufferedReader);
             JsonObject rootObject = rootElement.getAsJsonObject();
@@ -209,14 +208,15 @@ public class GSONProcessing {
                 String name = userObject.get("username").getAsString();
                 if (name.equals(toChange.getUsername())) {
                     String currentPassword = userObject.get("password").getAsString();
+                    userObject.remove("password");
                     if (currentPassword.equals(newPassword)) {
-                        throw new IllegalArgumentException("The new password cannot be the same as the current password");
+                        return false;
                     }
                     userObject.addProperty("password", newPassword);
 
 
                     Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                    try (Writer writer = new FileWriter(filePath)) {
+                    try (Writer writer = new FileWriter(file)) {
                         gson.toJson(rootElement, writer);
                     }
                     return true;
@@ -231,10 +231,9 @@ public class GSONProcessing {
 
 
     public static synchronized boolean changeUserRole(User toChange, String newRole) {
-        String filePath = "/com/example/inventorymanagement/data/users.json";
+        File file =new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/users.json");
         try (
-                InputStream inputStream = GSONProcessing.class.getResourceAsStream(filePath);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file))
         ) {
             JsonElement rootElement = JsonParser.parseReader(bufferedReader);
             JsonObject rootObject = rootElement.getAsJsonObject();
@@ -246,10 +245,11 @@ public class GSONProcessing {
                 if (name.equals(toChange.getUsername())) {
                     String role = userObject.get("role").getAsString();
                     if (!role.equals(newRole)) {
+                        userObject.remove("role");
                         userObject.addProperty("role", newRole);
 
                         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                        try (Writer writer = new FileWriter(filePath)) {
+                        try (Writer writer = new FileWriter(file)) {
                             gson.toJson(rootElement, writer);
                         }
                         return true;
@@ -293,9 +293,9 @@ public class GSONProcessing {
      * @return  object of User or null if not found
      */
     public static synchronized User fetchUser(String username){
+        File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/users.json");
         try(
-                InputStream inputStream = GSONProcessing.class.getResourceAsStream("/com/example/inventorymanagement/data/users.json");
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file))
                 ){
 
             JsonElement rootElement = JsonParser.parseReader(bufferedReader);
@@ -324,9 +324,11 @@ public class GSONProcessing {
      */
     public static synchronized LinkedList<ItemOrder> fetchListOfItemOrder(String type){
         LinkedList<ItemOrder> listOfItemOrder = new LinkedList<>();
-        try{
-            String jsonFile = "com/example/inventorymanagement/data/"+type+"order.json";
-            JsonElement rootElement = JsonParser.parseReader(new FileReader(jsonFile));
+        try(
+                InputStream inputStream = GSONProcessing.class.getResourceAsStream("/com/example/inventorymanagement/data/users.json");
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))
+                ){
+            JsonElement rootElement = JsonParser.parseReader(bufferedReader);
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray jsonArray = rootObject.getAsJsonArray(type+"Orders");
             for(JsonElement jsonElement: jsonArray){
@@ -361,21 +363,29 @@ public class GSONProcessing {
     }
 
     public static synchronized boolean addUser(User newUser){
-        Gson gson = new Gson();
-        try{
-            String jsonFile = "com/example/inventorymanagement/data/users.json";
-            JsonElement rootElement = JsonParser.parseReader(new FileReader(jsonFile));
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/users.json");
+        try(
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+                ){
+            JsonElement rootElement = JsonParser.parseReader(bufferedReader);
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray userJsonArray = rootObject.getAsJsonArray("users");
 
             String jsonString = gson.toJson(newUser);
             JsonElement userElement = JsonParser.parseString(jsonString);
+            JsonObject userObject = userElement.getAsJsonObject();
+            userObject.addProperty("isActive","false");
             userJsonArray.add(userElement);
-
+            try(FileWriter writer = new FileWriter(file)) {
+                gson.toJson(rootElement, writer);
+            }
             return true;
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
             return false;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
