@@ -169,6 +169,7 @@ public class UserRequestInterfaceImplementation extends UnicastRemoteObject impl
                     clientCallback.updateUICall();
                 }
             } catch (RemoteException e) {
+                System.out.println(e);
                 throw new RuntimeException(e);
             }
         });
