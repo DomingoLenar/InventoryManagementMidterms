@@ -1,4 +1,4 @@
-package com.example.inventorymanagement.client.admin.models;
+package com.example.inventorymanagement.client.microservices;
 
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.util.ClientCallback;
@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-public class FetchCostTodayModel {
+public class FetchRevenueToday {
 
     public float process (User requestBy){
         try {
@@ -22,7 +22,7 @@ public class FetchCostTodayModel {
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 
-            return IORequest.fetchCostToday(cB);
+            return IORequest.fetchRevenueToday(cB);
 
 
         } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {

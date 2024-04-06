@@ -1,35 +1,35 @@
-package com.example.inventorymanagement.client.admin.models;
+package com.example.inventorymanagement.client.microservices;
 
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
+import com.example.inventorymanagement.util.objects.Item;
 import com.example.inventorymanagement.util.objects.User;
-import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
+import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 
+import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.LinkedHashMap;
 
-public class FetchMonthlyCostModel {
+public class CreateItemListing {
 
-    public LinkedHashMap<Integer, Float> process (User requestBy){
+    public boolean process (User requestBy, Item item){
         try {
+
+
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
-            ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
+            ItemRequestInterface ItemRequest = (ItemRequestInterface) registry.lookup("item");
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 
-            return  IORequest.fetchMonthlyCost(cB);
+            return ItemRequest.createItemListing(cB,item);
 
-
-        } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {
+        } catch (NotBoundException | RemoteException | NotLoggedInException | OutOfRoleException e) {
             throw new RuntimeException(e);
         }
-
     }
-
 }

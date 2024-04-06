@@ -1,4 +1,4 @@
-package com.example.inventorymanagement.client.admin.models;
+package com.example.inventorymanagement.client.microservices;
 
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.util.ClientCallback;
