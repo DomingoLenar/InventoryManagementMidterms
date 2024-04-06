@@ -16,13 +16,10 @@ import java.util.LinkedList;
 
 public class FetchSalesInvoicesService {
 
-    public LinkedList<ItemOrder> process (User requestBy){
+    public LinkedList<ItemOrder> process (Registry registry, ClientCallback cB){
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
-
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
 
             return IORequest.fetchSalesInvoices(cB);
 
