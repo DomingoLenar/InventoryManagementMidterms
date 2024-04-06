@@ -31,7 +31,7 @@
    <bottom>
       <AnchorPane prefHeight="62.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="addItemButtonAdmin" layoutX="755.0" layoutY="17.0" mnemonicParsing="false" style="-fx-background-color: EAD7D7;" text="Add Item">
+            <Button fx:id="addItemButtonAdmin" layoutX="755.0" layoutY="17.0" mnemonicParsing="false" style="-fx-background-color: EAD7D7;" text="Add Item" onAction="#handleAddItem">
                <font>
                   <Font name="Share Tech Mono" size="15.0" />
                </font>
