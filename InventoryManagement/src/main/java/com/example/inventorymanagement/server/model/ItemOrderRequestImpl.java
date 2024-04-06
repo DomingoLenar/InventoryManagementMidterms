@@ -32,8 +32,10 @@ public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrd
 
         checkIfValidPerm(clientCallback.getUser());
         checkIfLoggedIn(clientCallback);
+        boolean success = GSONProcessing.addItemOrder("sales",salesInvoice);
+        callUpdate("itemorder");
 
-        return GSONProcessing.addItemOrder("sales",salesInvoice);
+        return success;
 
     }
 
@@ -42,8 +44,10 @@ public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrd
 
         checkIfLoggedIn(clientCallback);
         checkIfLoggedIn(clientCallback);
+        boolean success = GSONProcessing.addItemOrder("purchase",purchaseOrder);
+        callUpdate("itemorder");
 
-        return GSONProcessing.addItemOrder("purchase",purchaseOrder);
+        return success;
     }
 
     @Override
@@ -117,12 +121,60 @@ public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrd
 
     @Override
     public LinkedHashMap<Integer, Float> fetchMonthlyRevenue(ClientCallback clientCallback) throws RemoteException, OutOfRoleException, NotLoggedInException {
-        return null;
+        LinkedHashMap<Integer, Float> revenues = new LinkedHashMap<>();
+
+        for (int i = 1; i <= 12; i++) {
+            revenues.put(i, 0f); // Float value 0
+        }
+
+        String currentYear = getCurrentDate().split("-")[0];
+
+
+        LinkedList<ItemOrder> orders = GSONProcessing.fetchListOfItemOrder("sales");
+        orders.stream().forEach(itemOrder -> {
+            LinkedList<OrderDetail> orderDetails = itemOrder.getOrderDetails();
+            float revenue = (float)orderDetails.stream().mapToDouble(orderDetail -> orderDetail.getQty()*orderDetail.getUnitPrice()).sum();
+            String[] orderDate = itemOrder.getDate().split("-");
+            int month = Integer.parseInt(orderDate[1]);
+
+            if(orderDate[0].equals(currentYear)){
+                float iValue = revenues.get(month);
+                iValue += revenue;
+                revenues.put(month, iValue);
+            }
+
+        });
+
+        return revenues;
     }
 
     @Override
     public LinkedHashMap<Integer, Float> fetchMonthlyCost(ClientCallback clientCallback) throws RemoteException, OutOfRoleException, NotLoggedInException {
-        return null;
+        LinkedHashMap<Integer, Float> revenues = new LinkedHashMap<>();
+
+        for (int i = 1; i <= 12; i++) {
+            revenues.put(i, 0f); // Float value 0
+        }
+
+        String currentYear = getCurrentDate().split("-")[0];
+
+
+        LinkedList<ItemOrder> orders = GSONProcessing.fetchListOfItemOrder("sales");
+        orders.stream().forEach(itemOrder -> {
+            LinkedList<OrderDetail> orderDetails = itemOrder.getOrderDetails();
+            float cost = (float)orderDetails.stream().mapToDouble(orderDetail -> orderDetail.getQty()*Float.parseFloat(orderDetail.getBatchNo().split("_")[2])).sum();
+            String[] orderDate = itemOrder.getDate().split("-");
+            int month = Integer.parseInt(orderDate[1]);
+
+            if(orderDate[0].equals(currentYear)){
+                float iValue = revenues.get(month);
+                iValue += cost;
+                revenues.put(month, iValue);
+            }
+
+        });
+
+        return revenues;
     }
 
     @Override
@@ -139,23 +191,31 @@ public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrd
         }
     }
 
-    private void checkIfLoggedIn(ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
-        try {
-            Registry reg = LocateRegistry.getRegistry(2018);
-            UserRequestInterfaceImplementation userServant = (UserRequestInterfaceImplementation) reg.lookup("user");
+    private void checkIfLoggedIn(ClientCallback clientCallback){
+        try{
+            Registry reg = LocateRegistry.getRegistry("localhost",2018);
+            UserRequestInterfaceImplementation userStub = (UserRequestInterfaceImplementation) reg.lookup("userRequest");
+            if (!(userStub.isLoggedIn(clientCallback))) throw new NotLoggedInException("Not Logged In");
+        }catch(Exception e){
 
-            if(!(userServant.clientCallbacks.contains(clientCallback))){
-                throw new NotLoggedInException("Not logged in");
-            }
-        }catch(NotBoundException e){
-            throw new RuntimeException(e.getMessage());
         }
     }
+
     private static String getCurrentDate(){
         LocalDate localDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String currentDate = localDate.format(formatter);
         return currentDate;
+    }
+
+    private void callUpdate(String panel){
+        try{
+            Registry reg = LocateRegistry.getRegistry("localhost",2018);
+            UserRequestInterfaceImplementation userStub = (UserRequestInterfaceImplementation) reg.lookup("userRequest");
+            userStub.callUpdate(panel);
+        }catch(Exception e){
+
+        }
     }
 
 }

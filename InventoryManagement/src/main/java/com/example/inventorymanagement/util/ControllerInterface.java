@@ -1,4 +1,4 @@
-package com.example.inventorymanagement.client.common.controllers;
+package com.example.inventorymanagement.util;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -10,5 +10,5 @@ public interface ControllerInterface extends Remote {
     public void fetchAndUpdate() throws RemoteException;
 
     // Method for getting what specific panel is currently on display
-    public String getCurrentPanel() throws RemoteException;
+    public String getObjectsUsed() throws RemoteException;
 }
