@@ -15,14 +15,14 @@ import java.rmi.registry.Registry;
 
 public class CreateSalesInvoiceService {
 
-    public boolean process (Registry registry, ClientCallback cB , ItemOrder salesInvoice){
+    public boolean process (Registry registry, ClientCallback cB , ItemOrder salesInvoice) throws OutOfRoleException, NotLoggedInException {
         try {
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
 
             return IORequest.createSalesInvoice(cB, salesInvoice);
 
-        } catch (NotBoundException | RemoteException | OutOfRoleException | NotLoggedInException e) {
+        } catch (NotBoundException | RemoteException e) {
             throw new RuntimeException(e);
         }
     }
