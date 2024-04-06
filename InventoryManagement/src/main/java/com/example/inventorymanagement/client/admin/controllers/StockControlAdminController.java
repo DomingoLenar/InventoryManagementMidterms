@@ -1,7 +1,5 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
-import com.example.inventorymanagement.client.admin.models.AddItemAdminModel;
-import com.example.inventorymanagement.client.admin.models.CreateSalesInvoiceAdminModel;
 import com.example.inventorymanagement.client.admin.models.StockControlAdminModel;
 import com.example.inventorymanagement.client.admin.views.StockControlAdminPanel;
 import com.example.inventorymanagement.util.ClientCallback;
