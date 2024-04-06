@@ -1,11 +1,14 @@
 package com.example.inventorymanagement.client.common.controllers;
 
+import com.example.inventorymanagement.client.admin.controllers.StockControlAdminController;
 import com.example.inventorymanagement.client.admin.views.StockControlAdminPanel;
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.client.purchaser.views.StockControlPurchaserPanel;
 import com.example.inventorymanagement.client.sales.views.StockControlSalesPanel;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
+import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
+import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,6 +18,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 
 /**
  * Purpose:
@@ -26,9 +30,15 @@ public class MainController implements ControllerInterface {
     private Stage stage;
     private ClientCallback clientCallback;
     private UserRequestInterface userService;
+    private ItemOrderRequestInterface iOService;
+    private ItemRequestInterface itemService;
+    private Registry registry;
 
-    public MainController(UserRequestInterface userService) throws RemoteException {
+    public MainController(UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry) throws RemoteException {
         this.userService = userService;
+        this.iOService = iOService;
+        this.itemService = itemService;
+        this.registry = registry;
         this.clientCallback = new ClientCallbackImpl(null);
     }
 
@@ -89,7 +99,9 @@ public class MainController implements ControllerInterface {
     }
 
     public void displayAdminMainMenu() throws IOException {
-        new StockControlAdminPanel().start(new Stage());
+        StockControlAdminController stockControlAdminController = new StockControlAdminController(clientCallback,registry);
+
+
     }
 
     public void displayPurchaserMainMenu() throws IOException {
