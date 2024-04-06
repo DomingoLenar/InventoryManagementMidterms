@@ -11,15 +11,12 @@ import java.util.LinkedList;
 
 public class FetchActiveUsersService {
 
-    public LinkedList<User> process (User requestBy){
+    public LinkedList<User> process (Registry registry, ClientCallback cB){
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
             UserRequestInterface userRequest = (UserRequestInterface) registry.lookup("userRequest");
 
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
-
-          return userRequest.getActiveUser(cB);
+            return userRequest.getActiveUser(cB);
 
         } catch (Exception e){
             e.printStackTrace();
