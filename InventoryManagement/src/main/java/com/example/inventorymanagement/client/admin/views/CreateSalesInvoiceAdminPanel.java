@@ -4,29 +4,34 @@ import com.example.inventorymanagement.client.admin.controllers.NavigationBarAdm
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.io.InputStream;
+
 public class CreateSalesInvoiceAdminPanel extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"),20);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/navigationBar/navigationBarAdmin-view.fxml"));
-        BorderPane navigationBar = loader.load();
+        FXMLLoader fxmlLoader = new FXMLLoader(CreateSalesInvoiceAdminPanel.class.getResource("/com/example/inventorymanagement/client/view/stockControl/createSalesInvoice-view.fxml"));
+        InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
 
-        // Get the controller
-        NavigationBarAdminController navBarController = loader.getController();
+        if (inputStream != null) {
+            Image image = new Image(inputStream);
+            stage.getIcons().add(image);
+        } else {
+            System.err.println("Failed to load image: logo.png");
+        }
 
-        // Create the stock control panel
-        BorderPane stockControlPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/createSalesInvoice-view.fxml"));
+        Scene sceneLogin = new Scene(fxmlLoader.load(), 600, 400);
+        stage.setTitle("Stock Pilot");
+        stage.setScene(sceneLogin);
+        stage.show();
 
-        BorderPane root = new BorderPane();
-        root.setLeft(navigationBar);
-        root.setRight(stockControlPanel);
-
-        navBarController.setMainBorderPane(root);
+        stage.setResizable(false);
     }
 
     public static void main(String[] args) {
