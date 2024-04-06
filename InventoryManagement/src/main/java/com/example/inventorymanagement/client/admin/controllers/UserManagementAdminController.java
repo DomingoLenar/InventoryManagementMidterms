@@ -1,6 +1,6 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
-import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
+import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.objects.User;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,10 +43,12 @@ public class UserManagementAdminController implements Initializable, ControllerI
     @Override
     public void fetchAndUpdate() throws RemoteException {
     }
+
     @Override
-    public String getCurrentPanel() throws RemoteException {
-        return "UserManagementAdmin"; // Return the name of this panel
+    public String getObjectsUsed() throws RemoteException {
+        return null;
     }
+
     @FXML
     private void initialize() {
         addHoverEffect(addUserButton);
