@@ -17,6 +17,14 @@
 
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
+
         <!--  Gson: Java to JSON conversion -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
