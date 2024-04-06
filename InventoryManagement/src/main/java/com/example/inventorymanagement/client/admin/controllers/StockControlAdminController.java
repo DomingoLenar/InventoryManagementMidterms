@@ -36,8 +36,6 @@ public class StockControlAdminController implements ControllerInterface {
     @FXML
     private TableView stockControlAdminTable;
     private StockControlAdminModel stockControlAdminModel;
-    private AddItemAdminModel addItemAdminModel = new AddItemAdminModel();
-    private CreateSalesInvoiceAdminModel salesInvoiceModel = new CreateSalesInvoiceAdminModel();
 
     private ClientCallback clientCallback;
     private Registry registry;
