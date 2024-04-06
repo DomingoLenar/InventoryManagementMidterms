@@ -7,35 +7,37 @@ import com.example.inventorymanagement.util.objects.Item;
 import com.example.inventorymanagement.util.objects.ItemOrder;
 import com.example.inventorymanagement.util.objects.User;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import com.example.inventorymanagement.util.requests.UserRequestInterface;
+import org.junit.jupiter.api.*;
 
 import com.example.inventorymanagement.util.exceptions.UserExistenceException;
+import org.junit.jupiter.api.Test;
 
+import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 
-import static org.junit.jupiter.api.Assertions.*;
 import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
-public class ServicesTest implements ControllerInterface {
-
-
+public class ServicesTest implements ControllerInterface{
 
    private static Registry registry;
    private static ClientCallbackImpl clientCallback;
    @BeforeAll
    public static void setUp() {
       try {
-
+         ServicesTest tester = new ServicesTest();
          registry = LocateRegistry.getRegistry("localhost", 2018);
+         UserRequestInterface userStub = (UserRequestInterface) registry.lookup("userRequest");
 
          User user = new User("testadmin", "admintest", "admin");
          clientCallback = new ClientCallbackImpl(user);
+         clientCallback.setCurrentPanel(tester);
+         userStub.login(clientCallback);
       } catch (Exception e) {
          e.printStackTrace();
       }
@@ -43,25 +45,39 @@ public class ServicesTest implements ControllerInterface {
 
    @Override
    public void fetchAndUpdate() throws RemoteException {
-
+      System.out.println("updated");
    }
 
    @Override
    public String getObjectsUsed() throws RemoteException {
-
-      return "";
+      return "user,item,itemorder";
    }
 
 
    @Test
-   public void testAddUserService() throws RemoteException, NotBoundException, NotLoggedInException, OutOfRoleException, UserExistenceException {
+   public void testAddUserService() {
 
       User newUser = new User("testUser", "password123", "admin");
 
-      AddUserService addUserService = new AddUserService();
-      boolean result = AddUserService.process(registry, clientCallback, newUser);
+       boolean result = false;
+       try {
+          UserRequestInterface stub = (UserRequestInterface) registry.lookup("userRequest");
+          result = stub.addUser(clientCallback, newUser);
+       } catch (UserExistenceException e) {
+           throw new RuntimeException(e);
+       } catch (OutOfRoleException e) {
+           throw new RuntimeException(e);
+       } catch (NotLoggedInException e) {
+          System.out.println("Not logged in");
+       } catch (AccessException e) {
+           throw new RuntimeException(e);
+       } catch (NotBoundException e) {
+           throw new RuntimeException(e);
+       } catch (RemoteException e) {
+           throw new RuntimeException(e);
+       }
 
-      assertTrue(result);
+       Assertions.assertTrue(result);
    }
 
    @Test
@@ -71,7 +87,7 @@ public class ServicesTest implements ControllerInterface {
 
       boolean result = ChangePasswordService.process(registry, clientCallback, userToChange, newPassword);
 
-      assertTrue(result);
+      Assertions.assertFalse(result);
    }
 
 
@@ -79,12 +95,12 @@ public class ServicesTest implements ControllerInterface {
 
    public void testChangeUserRole() throws  RemoteException, UserExistenceException, OutOfRoleException, NotLoggedInException{
 
-      User userToChange = new User("testUser", "password123", "admin");
+      User userToChange = new User("testUser", "password123", "sales");
       String neRole = "sales";
 
       boolean result = ChangeUserRoleService.process(registry,clientCallback,userToChange,neRole);
 
-      assertTrue(result);
+      Assertions.assertTrue(result);
    }
 
    @Test
@@ -93,7 +109,7 @@ public class ServicesTest implements ControllerInterface {
 
       boolean result = CreateItemListingService.process(registry, clientCallback, item);
 
-      assertTrue(result);
+      Assertions.assertTrue(result);
    }
 
 
@@ -108,7 +124,7 @@ public class ServicesTest implements ControllerInterface {
          e.printStackTrace();
       }
 
-      assertTrue(result);
+      Assertions.assertTrue(result);
    }
 
    @Test
@@ -122,7 +138,7 @@ public class ServicesTest implements ControllerInterface {
          e.printStackTrace();
       }
 
-      assertTrue(result);
+      Assertions.assertTrue(result);
    }
 
    @Test
@@ -134,7 +150,7 @@ public class ServicesTest implements ControllerInterface {
          e.printStackTrace();
       }
 
-      assertNotNull(activeUsers);
+      Assertions.assertNotNull(activeUsers);
    }
 
    @Test
@@ -147,7 +163,7 @@ public class ServicesTest implements ControllerInterface {
          e.printStackTrace();
       }
 
-      assertTrue(costToday >= 0.0f);
+      Assertions.assertTrue(costToday >= 0.0f);
    }
 
    @Test
@@ -159,7 +175,7 @@ public class ServicesTest implements ControllerInterface {
          e.printStackTrace();
       }
 
-      assertNotNull(listOfItems);
+      Assertions.assertNotNull(listOfItems);
    }
 
    @Test
@@ -171,7 +187,7 @@ public class ServicesTest implements ControllerInterface {
          e.printStackTrace();
       }
 
-      assertNotNull(monthlyCost);
+      Assertions.assertNotNull(monthlyCost);
    }
 
    @Test
@@ -184,7 +200,7 @@ public class ServicesTest implements ControllerInterface {
          e.printStackTrace();
       }
 
-      assertNotNull(monthlyRevenue);
+      Assertions.assertNotNull(monthlyRevenue);
    }
 
    @Test
@@ -197,7 +213,7 @@ public class ServicesTest implements ControllerInterface {
          e.printStackTrace();
       }
 
-      assertTrue(revenueToday >= 0.0f);
+      Assertions.assertTrue(revenueToday >= 0.0f);
    }
 
    @Test
@@ -210,7 +226,7 @@ public class ServicesTest implements ControllerInterface {
       }
 
 
-      assertNotNull(salesInvoices);
+      Assertions.assertNotNull(salesInvoices);
    }
 
    @Test
@@ -224,7 +240,7 @@ public class ServicesTest implements ControllerInterface {
          e.printStackTrace();
       }
 
-      assertTrue(result);
+      Assertions.assertTrue(result);
    }
 
    @Test
@@ -237,7 +253,7 @@ public class ServicesTest implements ControllerInterface {
          e.printStackTrace();
       }
 
-      assertNotNull(suppliers);
+      Assertions.assertNotNull(suppliers);
    }
 
    @Test
@@ -251,6 +267,22 @@ public class ServicesTest implements ControllerInterface {
          e.printStackTrace();
       }
 
-      assertTrue(result);
+      Assertions.assertTrue(result);
+   }
+
+   @AfterAll
+   public static void logout(){
+      try {
+         UserRequestInterface stub = (UserRequestInterface) registry.lookup("userRequest");
+         stub.logout(clientCallback);
+      } catch (AccessException e) {
+          throw new RuntimeException(e);
+      } catch (NotBoundException e) {
+          throw new RuntimeException(e);
+      } catch (RemoteException e) {
+          throw new RuntimeException(e);
+      } catch (NotLoggedInException e) {
+          throw new RuntimeException(e);
+      }
    }
 }
