@@ -30,4 +30,6 @@ public interface ItemOrderRequestInterface {
 
     public ArrayList<String> fetchSuppliers(ClientCallback cLientCallback) throws RemoteException, NotLoggedInException;
 
+    public LinkedList<ItemOrder> fetchTransactionsToday(ClientCallback clientCallback) throws RemoteException, NotLoggedInException;
+
 }
