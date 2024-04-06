@@ -1,6 +1,6 @@
 package com.example.inventorymanagement.client.purchaser.controllers;
 
-import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
+import com.example.inventorymanagement.util.ControllerInterface;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -31,8 +31,8 @@ public class NavigationBarPurchaserController implements ControllerInterface {
     }
 
     @Override
-    public String getCurrentPanel() throws RemoteException {
-        return "NavigationBarPurchaser"; // Return the name of this panel
+    public String getObjectsUsed() throws RemoteException {
+        return null;
     }
 
     @FXML
