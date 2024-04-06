@@ -45,7 +45,7 @@ public class MainController implements ControllerInterface {
     }
 
     private void initControllers() {
-        StockControlAdminController stockControlAdminController = new StockControlAdminController();
+        StockControlAdminController stockControlAdminController = new StockControlAdminController(clientCallback, userService, iOService, itemService, registry);
         stockControlAdminController.setMainController(this);
     }
 
