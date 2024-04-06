@@ -39,10 +39,19 @@ public class StockControlAdminController implements ControllerInterface {
 
     private ClientCallback clientCallback;
     private Registry registry;
+    private StockControlAdminPanel stockControlAdminPanel;
+    public StockControlAdminController(){
+        stockControlAdminPanel = new StockControlAdminPanel();
+        try {
+            stockControlAdminPanel.start(new Stage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public void fetchAndUpdate() throws RemoteException {
-        // No implementation needed in this controller
+
     }
 
     @Override
