@@ -1,6 +1,5 @@
 package com.example.inventorymanagement.client.admin.views;
 
-import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -10,8 +9,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class AddUserAdminPanel extends Application {
-    @Override
+public class AddUserAdminPanel {
     public void start(Stage stage) throws IOException {
 
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"),20);
@@ -33,9 +31,6 @@ public class AddUserAdminPanel extends Application {
 
         stage.setResizable(false);
 
-    }
-    public static void main(String[] args) {
-        launch();
     }
 }
 
