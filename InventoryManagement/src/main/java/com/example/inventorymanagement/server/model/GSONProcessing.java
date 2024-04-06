@@ -111,33 +111,34 @@ public class GSONProcessing {
     public static boolean addItemOrder(String orderType, ItemOrder newOrder) {
         try {
             String filePath;
-            if (orderType.equalsIgnoreCase("purchase")) {
-                filePath = "com/example/inventorymanagement/data/purchaseorders.json";
-            } else if (orderType.equalsIgnoreCase("sales")) {
-                filePath = "com/example/inventorymanagement/data/salesorder.json";
-            } else {
-                throw new IllegalArgumentException("Invalid order type: " + orderType);
+            String orderArrayName;
+            switch (orderType.toLowerCase()) {
+                case "purchase":
+                    filePath = "/com/example/inventorymanagement/data/purchaseorders.json";
+                    orderArrayName = "purchaseOrders";
+                    break;
+                case "sales":
+                    filePath = "/com/example/inventorymanagement/data/salesorder.json";
+                    orderArrayName = "salesOrders";
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid order type: " + orderType);
             }
-
-            JsonParser jsonParser = new JsonParser();
-            JsonElement rootElement = jsonParser.parse(new FileReader(filePath));
-            JsonObject rootObject = rootElement.getAsJsonObject();
-
-            JsonArray orderJsonArray;
-            if (orderType.equalsIgnoreCase("purchase")) {
-                orderJsonArray = rootObject.getAsJsonArray("purchaseOrders");
-            } else {
-                orderJsonArray = rootObject.getAsJsonArray("salesOrders");
-            }
-
             Gson gson = new Gson();
-            JsonElement newOrderJson = gson.toJsonTree(newOrder);
-            orderJsonArray.add(newOrderJson);
+            try (
+                    InputStream inputStream = GSONProcessing.class.getResourceAsStream(filePath);
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                    FileWriter writer = new FileWriter(filePath)
+            ) {
+                JsonElement rootElement = JsonParser.parseReader(bufferedReader);
+                JsonObject rootObject = rootElement.getAsJsonObject();
+                JsonArray orderJsonArray = rootObject.getAsJsonArray(orderArrayName);
 
-            FileWriter writer = new FileWriter(filePath);
-            gson.toJson(rootElement, writer);
-            writer.close();
+                JsonElement newOrderJson = gson.toJsonTree(newOrder);
+                orderJsonArray.add(newOrderJson);
 
+                gson.toJson(rootElement, writer);
+            }
             return true;
         } catch (IOException e) {
             e.printStackTrace();
