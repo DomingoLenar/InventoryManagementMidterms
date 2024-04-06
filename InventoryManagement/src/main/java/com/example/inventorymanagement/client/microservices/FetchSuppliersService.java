@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class FetchSuppliersService {
 
-    public ArrayList<String> process (Registry registry, ClientCallback cB ) throws NotLoggedInException {
+    public static ArrayList<String> process (Registry registry, ClientCallback cB ) throws NotLoggedInException {
         try {
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");

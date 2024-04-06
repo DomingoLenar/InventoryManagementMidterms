@@ -14,7 +14,7 @@ import java.rmi.registry.Registry;
 
 public class FetchCostTodayService {
 
-    public float process (Registry registry, ClientCallback cB ) throws OutOfRoleException, NotLoggedInException {
+    public static float process (Registry registry, ClientCallback cB ) throws OutOfRoleException, NotLoggedInException {
         try {
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
