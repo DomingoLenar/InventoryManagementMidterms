@@ -37,13 +37,19 @@ public class ItemRequestImpl implements ItemRequestInterface {
         return success;
     }
 
-    private void checkIfLoggedIn(ClientCallback clientCallback){
+    private void checkIfLoggedIn(ClientCallback clientCallback) throws NotLoggedInException {
         try{
             Registry reg = LocateRegistry.getRegistry("localhost",2018);
             UserRequestInterfaceImplementation userStub = (UserRequestInterfaceImplementation) reg.lookup("userRequest");
             if (!(userStub.isLoggedIn(clientCallback))) throw new NotLoggedInException("Not Logged In");
-        }catch(Exception e){
-
+        } catch (AccessException e) {
+            throw new RuntimeException(e);
+        } catch (NotBoundException e) {
+            throw new RuntimeException(e);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        } catch (OutOfRoleException e) {
+            throw new RuntimeException(e);
         }
     }
 
