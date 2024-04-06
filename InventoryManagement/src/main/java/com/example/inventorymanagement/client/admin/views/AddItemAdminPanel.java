@@ -3,10 +3,13 @@ package com.example.inventorymanagement.client.admin.views;
 import com.example.inventorymanagement.client.admin.controllers.NavigationBarAdminController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.InputStream;
 
