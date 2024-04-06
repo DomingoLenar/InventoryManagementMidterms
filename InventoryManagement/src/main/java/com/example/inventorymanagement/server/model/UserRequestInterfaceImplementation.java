@@ -88,7 +88,7 @@ public class UserRequestInterfaceImplementation extends UnicastRemoteObject impl
     }
 
     @Override
-    public boolean removeUser(ClientCallback clientCallback, User requestBy, User toRemove) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
+    public boolean removeUser(ClientCallback clientCallback, User toRemove) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
         if(clientCallback.getUser().getRole().equals("admin")){
             boolean success = GSONProcessing.removeUser(toRemove);
             clientCallback.objectCall(success);

@@ -26,7 +26,7 @@ public interface UserRequestInterface extends Remote{
     public boolean addUser(ClientCallback clientCallback, User toAdd) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException;
 
     //Method to remove user
-    public boolean removeUser(ClientCallback clientCallback, User requestBy, User toRemove) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException;
+    public boolean removeUser(ClientCallback clientCallback, User toRemove) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException;
 
     //Method for changing the role of a user
     public boolean changeUserRole(ClientCallback clientCallback, User toChange, String newRole) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException;
