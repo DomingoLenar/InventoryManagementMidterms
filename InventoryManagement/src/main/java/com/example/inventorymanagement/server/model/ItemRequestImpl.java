@@ -50,7 +50,7 @@ public class ItemRequestImpl implements ItemRequestInterface {
         return success;
     }
 
-    private void checkIfLoggedIn(ClientCallback clientCallback) throws NotLoggedInException {
+    public void checkIfLoggedIn(ClientCallback clientCallback) throws NotLoggedInException {
         try{
             Registry reg = LocateRegistry.getRegistry("localhost",2018);
             UserRequestInterfaceImplementation userStub = (UserRequestInterfaceImplementation) reg.lookup("userRequest");
@@ -66,7 +66,7 @@ public class ItemRequestImpl implements ItemRequestInterface {
         }
     }
 
-    private void callUpdate(String panel){
+    public void callUpdate(String panel){
         try{
             Registry reg = LocateRegistry.getRegistry("localhost",2018);
             UserRequestInterfaceImplementation userStub = (UserRequestInterfaceImplementation) reg.lookup("userRequest");
