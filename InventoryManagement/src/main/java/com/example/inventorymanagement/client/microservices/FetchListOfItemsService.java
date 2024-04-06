@@ -16,12 +16,10 @@ import java.util.LinkedList;
 public class FetchListOfItemsService {
 
 
-    public LinkedList<Item> process (User requestBy){
+    public LinkedList<Item> process (Registry registry, ClientCallback cB ){
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-            ItemRequestInterface ItemRequest = (ItemRequestInterface) registry.lookup("item");
 
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
+            ItemRequestInterface ItemRequest = (ItemRequestInterface) registry.lookup("item");
 
             return ItemRequest.fetchLisOfItems(cB);
 
