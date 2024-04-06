@@ -28,9 +28,12 @@ public class StockControlAdminController implements ControllerInterface {
     private TextField searchFieldAdmin;
     @FXML
     private TableView stockControlAdminTable;
-    private StockControlAdminModel stockControlAdminModel = new StockControlAdminModel();
+    private StockControlAdminModel stockControlAdminModel;
     private AddItemAdminModel addItemAdminModel = new AddItemAdminModel();
     private CreateSalesInvoiceAdminModel salesInvoiceModel = new CreateSalesInvoiceAdminModel();
+
+    private ClientCallback clientCallback;
+    private Registry registry;
 
     @Override
     public void fetchAndUpdate() throws RemoteException {
@@ -63,7 +66,12 @@ public class StockControlAdminController implements ControllerInterface {
     @FXML
     public TableView getStockControlAdminTable() { return stockControlAdminTable; }
 
-    public StockControlAdminController() {
+    public StockControlAdminController(ClientCallback clientCallback, Registry registry) {
+        this.clientCallback = clientCallback;
+        this.registry = registry;
+
+        stockControlAdminModel = new StockControlAdminModel(registry,clientCallback);
+
     }
     @FXML
     private void initialize() {
