@@ -9,9 +9,12 @@ import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
 
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Comparator;
 import java.util.LinkedList;
 
 public class ItemRequestImpl implements ItemRequestInterface {
@@ -19,6 +22,16 @@ public class ItemRequestImpl implements ItemRequestInterface {
     public LinkedList<Item> fetchLisOfItems(ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
         checkIfLoggedIn(clientCallback);
         return GSONProcessing.fetchListOfItems();
+    }
+
+    public LinkedList<Item> fetchLowestStock(ClientCallback clientCallback) throws RemoteException, NotLoggedInException{
+        checkIfLoggedIn(clientCallback);
+        LinkedList<Item> items = GSONProcessing.fetchListOfItems();
+        return  items.stream()
+                .sorted(Comparator.comparingInt(Item::getTotalQty))
+                .limit(5)
+                .collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
+
     }
 
     @Override
