@@ -1,4 +1,4 @@
-package com.example.inventorymanagement.client.common.models;
+package com.example.inventorymanagement.client.admin.models;
 
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.util.ClientCallback;
@@ -11,11 +11,10 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.LinkedHashMap;
 
-public class FetchMonthlyRevenueModel {
+public class FetchCostTodayModel {
 
-    public LinkedHashMap<Integer, Float> process (User requestBy){
+    public float process (User requestBy){
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
@@ -23,7 +22,7 @@ public class FetchMonthlyRevenueModel {
 
             ClientCallback cB = new ClientCallbackImpl(requestBy);
 
-             return IORequest.fetchMonthlyRevenue(cB);
+            return IORequest.fetchCostToday(cB);
 
 
         } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {
@@ -31,4 +30,5 @@ public class FetchMonthlyRevenueModel {
         }
 
     }
+
 }
