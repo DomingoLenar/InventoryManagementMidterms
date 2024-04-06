@@ -1,6 +1,6 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
-import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
+import com.example.inventorymanagement.util.ControllerInterface;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.StackedBarChart;
@@ -210,9 +210,10 @@ public class FinancesAdminController implements ControllerInterface {
     @Override
     public void fetchAndUpdate() throws RemoteException {
     }
+
     @Override
-    public String getCurrentPanel() throws RemoteException {
-        return "FinancesAdmin"; // Return the name of this panel
+    public String getObjectsUsed() throws RemoteException {
+        return null;
     }
 
     private void addHoverEffect(Button button) {
