@@ -15,13 +15,10 @@ import java.rmi.registry.Registry;
 
 public class CreateSalesInvoiceService {
 
-    public boolean process (User requestBy, ItemOrder salesInvoice){
+    public boolean process (Registry registry, ClientCallback cB , ItemOrder salesInvoice){
         try {
-            Registry registry = LocateRegistry.getRegistry("locahost", 1099);
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
-
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
 
             return IORequest.createSalesInvoice(cB, salesInvoice);
 
