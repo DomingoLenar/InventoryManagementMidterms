@@ -11,8 +11,7 @@ import javafx.stage.Stage;
 
 import java.io.InputStream;
 
-public class CreateSalesInvoiceAdminPanel extends Application {
-    @Override
+public class CreateSalesInvoiceAdminPanel{
     public void start(Stage stage) throws Exception {
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"),20);
 
@@ -32,9 +31,5 @@ public class CreateSalesInvoiceAdminPanel extends Application {
         stage.show();
 
         stage.setResizable(false);
-    }
-
-    public static void main(String[] args) {
-        launch();
     }
 }
