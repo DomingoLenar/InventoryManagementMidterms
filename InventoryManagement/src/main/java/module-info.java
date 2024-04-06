@@ -2,6 +2,7 @@ module com.example.inventorymanagement {
     requires javafx.controls;
     requires javafx.fxml;
     requires com.google.gson;
+    requires java.rmi;
 
     // Controllers
     exports com.example.inventorymanagement.client.common.controllers;
@@ -22,4 +23,11 @@ module com.example.inventorymanagement {
     opens com.example.inventorymanagement.client.purchaser.views to javafx.fxml;
     exports com.example.inventorymanagement.client.sales.views;
     opens com.example.inventorymanagement.client.sales.views to javafx.fxml;
+
+    exports com.example.inventorymanagement.client;
+
+    exports com.example.inventorymanagement.util;
+    exports com.example.inventorymanagement.util.requests;
+    exports com.example.inventorymanagement.util.exceptions;
+    exports com.example.inventorymanagement.util.objects;
 }

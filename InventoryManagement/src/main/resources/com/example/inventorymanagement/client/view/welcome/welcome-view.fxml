@@ -29,7 +29,7 @@
                </font>
             </Label>
 
-            <Button fx:id="loginButtonWelcome" alignment="CENTER" contentDisplay="CENTER" layoutX="257.0" layoutY="116.0" mnemonicParsing="false" style="-fx-background-color: #FFFFFF;" text="Log-In" textFill="#ff7777" onAction="#handleLoginButtonAction">
+            <Button fx:id="nextButton" alignment="CENTER" contentDisplay="CENTER" layoutX="257.0" layoutY="116.0" mnemonicParsing="false" style="-fx-background-color: #FFFFFF;" text="Next" textFill="#ff7777" onAction="#nextButton">
                <font>
                   <Font name="Share Tech Mono" size="20.0" />
                </font>
