@@ -183,6 +183,22 @@ public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrd
         return GSONProcessing.fetchListOfSuppliers();
     }
 
+    @Override
+    public LinkedList<ItemOrder> fetchTransactionsToday(ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
+        checkIfLoggedIn(clientCallback);
+
+        LinkedList<ItemOrder> transactionsToday = new LinkedList<>();
+        LinkedList<ItemOrder> sales = GSONProcessing.fetchListOfItemOrder("sales");
+
+        String dateToday = getCurrentDate();
+
+        sales.forEach(itemOrder -> {
+            if(itemOrder.getDate().equals(dateToday)) transactionsToday.add(itemOrder);
+        });
+
+        return transactionsToday;
+    }
+
     // Checks if user invoking the request has valid permissions
     private void checkIfValidPerm(User user) throws OutOfRoleException{
         String userRole = user.getRole();
