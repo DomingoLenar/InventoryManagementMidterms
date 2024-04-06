@@ -23,7 +23,7 @@ public class FetchMonthlyRevenueService {
             return IORequest.fetchMonthlyRevenue(cB);
 
 
-        } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {
+        } catch (RemoteException | NotBoundException e) {
             throw new RuntimeException(e);
         }
 

@@ -22,7 +22,7 @@ public class FetchActiveUsersService {
 
             return userRequest.getActiveUser(cB);
 
-        } catch (Exception e){
+        } catch (RemoteException | NotBoundException e){
             e.printStackTrace();
             return new LinkedList<>();
         }
