@@ -10,9 +10,7 @@ import javafx.stage.Stage;
 
 import java.io.InputStream;
 
-public class AddItemAdminPanel extends Application {
-
-    @Override
+public class AddItemAdminPanel {
     public void start(Stage stage) throws Exception {
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"),20);
 
