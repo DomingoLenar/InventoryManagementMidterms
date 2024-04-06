@@ -2,15 +2,22 @@ package com.example.inventorymanagement.client.admin.controllers;
 
 import com.example.inventorymanagement.client.admin.models.CreateSalesInvoiceAdminModel;
 import com.example.inventorymanagement.client.admin.models.SalesHistoryAdminModel;
+import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
-import javafx.event.ActionEvent;
+import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
+import com.example.inventorymanagement.util.objects.Item;
+import com.example.inventorymanagement.util.objects.ItemOrder;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
+import java.util.LinkedList;
 
 public class SalesHistoryAdminController implements ControllerInterface {
     @FXML
@@ -20,13 +27,23 @@ public class SalesHistoryAdminController implements ControllerInterface {
     @FXML
     private TextField searchFieldAdmin;
     @FXML
-    private TableView stockControlAdminTable;
-    private SalesHistoryAdminModel salesHistoryAdminModel = new SalesHistoryAdminModel();
-    private CreateSalesInvoiceAdminModel createSalesInvoiceAdminModel = new CreateSalesInvoiceAdminModel();
+
+    private TableView salesHistoryAdminTable;
+
+    private SalesHistoryAdminModel salesHistoryAdminModel;
+
+    private ClientCallback clientCallback;
+    private Registry registry;
+    private ItemOrder salesInvoice;
 
     @Override
     public void fetchAndUpdate() throws RemoteException {
-        // No implementation needed in this controller
+        try {
+            LinkedList<Item> items = salesHistoryAdminModel.fetchItems();
+            populateTableView(items);
+        } catch (NotLoggedInException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -44,20 +61,37 @@ public class SalesHistoryAdminController implements ControllerInterface {
     public TextField getSearchFieldAdmin() { return searchFieldAdmin; }
 
     @FXML
-    public TableView getStockControlAdminTable() { return stockControlAdminTable; }
+    public TableView getSalesHistoryAdminTable() { return salesHistoryAdminTable; }
 
-    public SalesHistoryAdminController() {
+    public SalesHistoryAdminController(ClientCallback clientCallback, Registry registry, ItemOrder salesInvoice) {
+        try {
+        this.clientCallback = clientCallback;
+        this.registry = registry;
+        this.salesInvoice = salesInvoice;
+
+            salesHistoryAdminModel = new SalesHistoryAdminModel(registry, clientCallback);
+            clientCallback.setCurrentPanel(this);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
+
     @FXML
     private void initialize() {
         addHoverEffect(createSalesInvoiceAdminButton);
-
-    //    createSalesInvoiceAdminButton.setOnAction(this::handleSalesInvoice);
+        createSalesInvoiceAdminButton.setOnAction(event -> handleSalesInvoice());
     }
 
-    //private void handleSalesInvoice (ActionEvent event){
-    //    createSalesInvoiceAdminModel.handleSalesInvoice();
-    //}
+    private void populateTableView(LinkedList<Item> items) {
+        salesHistoryAdminTable.getItems().clear();
+        salesHistoryAdminTable.getItems().addAll(items);
+    }
+
+    @FXML
+    private void handleSalesInvoice() {
+
+    }
+
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
