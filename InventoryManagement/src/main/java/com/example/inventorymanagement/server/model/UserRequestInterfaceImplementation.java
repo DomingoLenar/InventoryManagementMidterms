@@ -116,7 +116,7 @@ public class UserRequestInterfaceImplementation extends UnicastRemoteObject impl
 
     // This method returns boolean object
     @Override
-    public boolean changePassword(ClientCallback clientCallback, User requestBy, User toChange, String newPassword) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
+    public boolean changePassword(ClientCallback clientCallback, User toChange, String newPassword) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException {
         if(clientCallback.getUser().getRole().equals("admin")){
 
             boolean status = GSONProcessing.changePassword(toChange, newPassword);

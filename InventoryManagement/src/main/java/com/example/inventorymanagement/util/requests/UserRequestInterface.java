@@ -32,7 +32,7 @@ public interface UserRequestInterface extends Remote{
     public boolean changeUserRole(ClientCallback clientCallback, User requestBy, User toChange, String newRole) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException;
 
     //Method for changing password
-    public boolean changePassword(ClientCallback clientCallback, User requestBy, User toChange, String newPassword) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException;
+    public boolean changePassword(ClientCallback clientCallback, User toChange, String newPassword) throws OutOfRoleException, NotLoggedInException, RemoteException, UserExistenceException;
 
     public boolean isLoggedIn(ClientCallback clientCallback) throws RemoteException, NotLoggedInException, OutOfRoleException;
 

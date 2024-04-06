@@ -14,16 +14,13 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class ChangePasswordService {
-   public boolean process (User requestBy, User toChange, String  newPassword)  {
+   public boolean process (Registry registry, ClientCallback cB , User toChange, String  newPassword)  {
 
        try {
-           Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
            UserRequestInterface userRequest = (UserRequestInterface) registry.lookup("userRequest");
 
-           ClientCallback cB = new ClientCallbackImpl(requestBy);
-
-          return userRequest.changePassword(cB,requestBy,toChange, newPassword);
+          return userRequest.changePassword(cB,toChange, newPassword);
 
        } catch (RemoteException | NotBoundException | NotLoggedInException | OutOfRoleException |
                 UserExistenceException e) {
