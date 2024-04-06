@@ -99,9 +99,7 @@ public class MainController implements ControllerInterface {
     }
 
     public void displayAdminMainMenu() throws IOException {
-        StockControlAdminController stockControlAdminController = new StockControlAdminController(clientCallback,registry);
-
-
+        new StockControlAdminPanel().start(new Stage());
     }
 
     public void displayPurchaserMainMenu() throws IOException {

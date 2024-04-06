@@ -11,8 +11,8 @@ import com.example.inventorymanagement.client.admin.controllers.NavigationBarAdm
 
 import java.io.IOException;
 
-public class StockControlAdminPanel {
-
+public class StockControlAdminPanel extends Application {
+    @Override
     public void start(Stage stage) throws IOException {
 
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
@@ -21,14 +21,14 @@ public class StockControlAdminPanel {
         BorderPane navigationBar = loader.load();
 
         // Get the controller
-        NavigationBarAdminController navBarAdminController = loader.getController();
+        NavigationBarAdminController navBarController = loader.getController();
 
         // Create the stock control panel
-        BorderPane stockControlPanelAdmin = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlAdmin-view.fxml"));
+        BorderPane stockControlPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlAdmin-view.fxml"));
 
         BorderPane root = new BorderPane();
         root.setLeft(navigationBar);
-        root.setRight(stockControlPanelAdmin);
+        root.setRight(stockControlPanel);
 
         Scene scene = new Scene(root, 1080, 650);
         stage.setScene(scene);
@@ -36,6 +36,10 @@ public class StockControlAdminPanel {
         stage.show();
 
         // Set the main BorderPane reference in the navigation bar controller
-        navBarAdminController.setMainBorderPane(root);
+        navBarController.setMainBorderPane(root);
+    }
+
+    public static void main(String[] args) {
+        launch();
     }
 }
