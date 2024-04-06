@@ -3,7 +3,7 @@ package com.example.inventorymanagement.client.admin.controllers;
 import com.example.inventorymanagement.client.admin.models.AddItemAdminModel;
 import com.example.inventorymanagement.client.admin.models.CreateSalesInvoiceModel;
 import com.example.inventorymanagement.client.admin.models.StockControlAdminModel;
-import com.example.inventorymanagement.client.common.controllers.ControllerInterface;
+import com.example.inventorymanagement.util.ControllerInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -39,8 +39,8 @@ public class StockControlAdminController implements ControllerInterface {
     }
 
     @Override
-    public String getCurrentPanel() throws RemoteException {
-        return stockControlAdminModel.getPanelName(); // Return the name of this panel
+    public String getObjectsUsed() throws RemoteException {
+        return null;
     }
 
     @FXML
