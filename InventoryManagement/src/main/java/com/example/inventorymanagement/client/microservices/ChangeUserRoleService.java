@@ -15,7 +15,7 @@ import java.rmi.registry.Registry;
 
 public class ChangeUserRoleService {
 
-    public boolean process (Registry registry, ClientCallback cB , User toChange, String newRole){
+    public static boolean process (Registry registry, ClientCallback cB , User toChange, String newRole) throws UserExistenceException, OutOfRoleException, NotLoggedInException {
 
         try {
 
@@ -23,8 +23,7 @@ public class ChangeUserRoleService {
 
             return userRequest.changeUserRole(cB,toChange, newRole);
 
-        } catch (NotBoundException | RemoteException | UserExistenceException | OutOfRoleException |
-                 NotLoggedInException e) {
+        } catch (NotBoundException | RemoteException e) {
             throw new RuntimeException(e);
         }
 

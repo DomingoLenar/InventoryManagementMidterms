@@ -14,14 +14,14 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class RemoveItemListingService {
-    public boolean process (Registry registry, ClientCallback cB , Item item){
+    public static boolean process (Registry registry, ClientCallback cB , Item item) throws NotLoggedInException, OutOfRoleException {
         try {
 
             ItemRequestInterface ItemRequest = (ItemRequestInterface) registry.lookup("item");
 
             return ItemRequest.removeItemListing(cB,item);
 
-        } catch (NotBoundException | RemoteException | NotLoggedInException | OutOfRoleException e) {
+        } catch (NotBoundException | RemoteException  e) {
             throw new RuntimeException(e);
         }
     }

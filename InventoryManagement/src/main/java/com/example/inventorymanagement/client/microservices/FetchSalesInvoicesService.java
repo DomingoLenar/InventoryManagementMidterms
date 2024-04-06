@@ -16,7 +16,7 @@ import java.util.LinkedList;
 
 public class FetchSalesInvoicesService {
 
-    public LinkedList<ItemOrder> process (Registry registry, ClientCallback cB){
+    public static LinkedList<ItemOrder> process (Registry registry, ClientCallback cB) throws OutOfRoleException, NotLoggedInException {
         try {
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
@@ -24,7 +24,7 @@ public class FetchSalesInvoicesService {
             return IORequest.fetchSalesInvoices(cB);
 
 
-        } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {
+        } catch ( RemoteException | NotBoundException e) {
             throw new RuntimeException(e);
         }
 

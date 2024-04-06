@@ -14,7 +14,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class ChangePasswordService {
-   public boolean process (Registry registry, ClientCallback cB , User toChange, String  newPassword)  {
+   public static boolean process(Registry registry, ClientCallback cB, User toChange, String newPassword) throws UserExistenceException, OutOfRoleException, NotLoggedInException {
 
        try {
 
@@ -22,8 +22,7 @@ public class ChangePasswordService {
 
           return userRequest.changePassword(cB,toChange, newPassword);
 
-       } catch (RemoteException | NotBoundException | NotLoggedInException | OutOfRoleException |
-                UserExistenceException e) {
+       } catch (RemoteException | NotBoundException e) {
            throw new RuntimeException(e);
        }
 

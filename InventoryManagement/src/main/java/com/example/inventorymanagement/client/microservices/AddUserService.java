@@ -15,14 +15,13 @@ import java.rmi.registry.Registry;
 
 public class AddUserService {
 
-    public boolean process (Registry registry, ClientCallback cB,User newUser){
+    public static boolean process(Registry registry, ClientCallback cB, User newUser) throws UserExistenceException, OutOfRoleException, NotLoggedInException {
         try {
             UserRequestInterface userRequest = (UserRequestInterface) registry.lookup("userRequest");
 
             return userRequest.addUser(cB, newUser);
 
-        } catch (RemoteException | NotBoundException | NotLoggedInException | OutOfRoleException |
-                 UserExistenceException e) {
+        } catch (RemoteException | NotBoundException e) {
             throw new RuntimeException(e);
         }
     }

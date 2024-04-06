@@ -15,14 +15,14 @@ import java.util.LinkedHashMap;
 
 public class FetchMonthlyCostService {
 
-    public LinkedHashMap<Integer, Float> process (Registry registry, ClientCallback cB){
+    public static LinkedHashMap<Integer, Float> process (Registry registry, ClientCallback cB) throws OutOfRoleException, NotLoggedInException {
         try {
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
 
             return  IORequest.fetchMonthlyCost(cB);
 
-        } catch (NotLoggedInException | OutOfRoleException | RemoteException | NotBoundException e) {
+        } catch (RemoteException | NotBoundException e) {
             throw new RuntimeException(e);
         }
 

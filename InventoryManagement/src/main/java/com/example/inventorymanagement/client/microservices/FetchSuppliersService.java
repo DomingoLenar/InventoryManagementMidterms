@@ -14,14 +14,14 @@ import java.util.ArrayList;
 
 public class FetchSuppliersService {
 
-    public ArrayList<String> process (Registry registry, ClientCallback cB ){
+    public static ArrayList<String> process (Registry registry, ClientCallback cB ) throws NotLoggedInException {
         try {
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");
 
             return IORequest.fetchSuppliers(cB);
 
-        } catch (NotBoundException | RemoteException | NotLoggedInException e) {
+        } catch (NotBoundException | RemoteException e) {
             throw new RuntimeException(e);
         }
     }

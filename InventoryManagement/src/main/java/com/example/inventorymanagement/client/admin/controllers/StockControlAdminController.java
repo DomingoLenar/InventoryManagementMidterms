@@ -3,6 +3,7 @@ package com.example.inventorymanagement.client.admin.controllers;
 import com.example.inventorymanagement.client.admin.models.AddItemAdminModel;
 import com.example.inventorymanagement.client.admin.models.CreateSalesInvoiceAdminModel;
 import com.example.inventorymanagement.client.admin.models.StockControlAdminModel;
+import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 
 public class StockControlAdminController implements ControllerInterface {
     @FXML
@@ -70,7 +72,7 @@ public class StockControlAdminController implements ControllerInterface {
         this.clientCallback = clientCallback;
         this.registry = registry;
 
-        stockControlAdminModel = new StockControlAdminModel(registry,clientCallback);
+       // stockControlAdminModel = new StockControlAdminModel(registry,clientCallback);
 
     }
     @FXML
