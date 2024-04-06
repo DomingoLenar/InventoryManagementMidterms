@@ -121,7 +121,31 @@ public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrd
 
     @Override
     public LinkedHashMap<Integer, Float> fetchMonthlyRevenue(ClientCallback clientCallback) throws RemoteException, OutOfRoleException, NotLoggedInException {
-        return null;
+        LinkedHashMap<Integer, Float> revenues = new LinkedHashMap<>();
+
+        for (int i = 1; i <= 12; i++) {
+            revenues.put(i, 0f); // Float value 0
+        }
+
+        String currentYear = getCurrentDate().split("-")[0];
+
+
+        LinkedList<ItemOrder> orders = GSONProcessing.fetchListOfItemOrder("sales");
+        orders.stream().forEach(itemOrder -> {
+            LinkedList<OrderDetail> orderDetails = itemOrder.getOrderDetails();
+            float revenue = (float)orderDetails.stream().mapToDouble(orderDetail -> orderDetail.getQty()*orderDetail.getUnitPrice()).sum();
+            String[] orderDate = itemOrder.getDate().split("-");
+            int month = Integer.parseInt(orderDate[1]);
+
+            if(orderDate[0].equals(currentYear)){
+                float iValue = revenues.get(month);
+                iValue += revenue;
+                revenues.put(month, iValue);
+            }
+
+        });
+
+        return revenues;
     }
 
     @Override
