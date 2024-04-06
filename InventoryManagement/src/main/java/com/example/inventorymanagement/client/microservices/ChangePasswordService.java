@@ -1,4 +1,4 @@
-package com.example.inventorymanagement.client.common.models;
+package com.example.inventorymanagement.client.microservices;
 
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.util.ClientCallback;
@@ -13,17 +13,14 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-public class ChangePasswordModel {
-   public boolean process (User requestBy, User toChange, String  newPassword)  {
+public class ChangePasswordService {
+   public boolean process (Registry registry, ClientCallback cB , User toChange, String  newPassword)  {
 
        try {
-           Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
            UserRequestInterface userRequest = (UserRequestInterface) registry.lookup("userRequest");
 
-           ClientCallback cB = new ClientCallbackImpl(requestBy);
-
-          return userRequest.changePassword(cB,requestBy,toChange, newPassword);
+          return userRequest.changePassword(cB,toChange, newPassword);
 
        } catch (RemoteException | NotBoundException | NotLoggedInException | OutOfRoleException |
                 UserExistenceException e) {

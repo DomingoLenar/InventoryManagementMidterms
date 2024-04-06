@@ -1,4 +1,4 @@
-package com.example.inventorymanagement.client.admin.models;
+package com.example.inventorymanagement.client.microservices;
 
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.util.ClientCallback;
@@ -8,24 +8,20 @@ import com.example.inventorymanagement.util.exceptions.UserExistenceException;
 import com.example.inventorymanagement.util.objects.User;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
 
-import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-public class ChangeUserRole {
+public class ChangeUserRoleService {
 
-    public boolean process (User requestBy, User toChange, String newRole){
+    public boolean process (Registry registry, ClientCallback cB , User toChange, String newRole){
 
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
             UserRequestInterface userRequest = (UserRequestInterface) registry.lookup("userRequest");
 
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
-
-            return userRequest.changeUserRole(cB,requestBy,toChange, newRole);
+            return userRequest.changeUserRole(cB,toChange, newRole);
 
         } catch (NotBoundException | RemoteException | UserExistenceException | OutOfRoleException |
                  NotLoggedInException e) {

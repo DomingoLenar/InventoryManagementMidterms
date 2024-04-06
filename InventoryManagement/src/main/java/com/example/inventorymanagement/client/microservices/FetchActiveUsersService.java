@@ -1,4 +1,4 @@
-package com.example.inventorymanagement.client.common.models;
+package com.example.inventorymanagement.client.microservices;
 
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.util.ClientCallback;
@@ -9,17 +9,14 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.LinkedList;
 
-public class FetchActiveUsers {
+public class FetchActiveUsersService {
 
-    public LinkedList<User> process (User requestBy){
+    public LinkedList<User> process (Registry registry, ClientCallback cB){
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
             UserRequestInterface userRequest = (UserRequestInterface) registry.lookup("userRequest");
 
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
-
-          return userRequest.getActiveUser(cB);
+            return userRequest.getActiveUser(cB);
 
         } catch (Exception e){
             e.printStackTrace();

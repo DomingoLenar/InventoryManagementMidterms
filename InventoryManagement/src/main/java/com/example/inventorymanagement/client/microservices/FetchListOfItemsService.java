@@ -1,35 +1,31 @@
-package com.example.inventorymanagement.client.sales.models;
+package com.example.inventorymanagement.client.microservices;
 
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
-import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
 import com.example.inventorymanagement.util.objects.Item;
 import com.example.inventorymanagement.util.objects.User;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 
-import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.LinkedList;
 
-public class CreateItemListing {
+public class FetchListOfItemsService {
 
-    public boolean process (User requestBy, Item item){
+
+    public LinkedList<Item> process (Registry registry, ClientCallback cB ) throws NotLoggedInException{
         try {
-
-
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
 
             ItemRequestInterface ItemRequest = (ItemRequestInterface) registry.lookup("item");
 
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
+            return ItemRequest.fetchLisOfItems(cB);
 
-            return ItemRequest.createItemListing(cB,item);
-
-        } catch (NotBoundException | RemoteException | NotLoggedInException | OutOfRoleException e) {
+        } catch (NotBoundException | RemoteException e) {
             throw new RuntimeException(e);
         }
     }
 }
+

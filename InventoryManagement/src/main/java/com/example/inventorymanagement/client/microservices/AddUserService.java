@@ -1,4 +1,4 @@
-package com.example.inventorymanagement.client.admin.models;
+package com.example.inventorymanagement.client.microservices;
 
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.util.ClientCallback;
@@ -13,17 +13,13 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-public class AddUserModel {
+public class AddUserService {
 
-    public boolean process (User requestBy,User newUser){
+    public boolean process (Registry registry, ClientCallback cB,User newUser){
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-
             UserRequestInterface userRequest = (UserRequestInterface) registry.lookup("userRequest");
 
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
-
-             return userRequest.addUser(cB, requestBy, newUser);
+            return userRequest.addUser(cB, newUser);
 
         } catch (RemoteException | NotBoundException | NotLoggedInException | OutOfRoleException |
                  UserExistenceException e) {
