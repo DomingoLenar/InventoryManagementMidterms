@@ -15,15 +15,10 @@ import java.rmi.registry.Registry;
 
 public class CreateItemListingService {
 
-    public boolean process (User requestBy, Item item){
+    public boolean process (Registry registry, ClientCallback cB , Item item){
         try {
 
-
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-
             ItemRequestInterface ItemRequest = (ItemRequestInterface) registry.lookup("item");
-
-            ClientCallback cB = new ClientCallbackImpl(requestBy);
 
             return ItemRequest.createItemListing(cB,item);
 
