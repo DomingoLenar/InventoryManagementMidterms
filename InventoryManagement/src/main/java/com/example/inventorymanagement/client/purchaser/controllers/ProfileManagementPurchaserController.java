@@ -47,9 +47,14 @@ public class ProfileManagementPurchaserController extends Application implements
     private Registry registry;
     private ProfileManagementPurchaserModel profileManagementPurchaserModel;
     private ProfileManagementPurchaserPanel profileManagementPurchaserPanel;
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
     public void fetchAndUpdate() throws RemoteException {
         // No implementation needed yet in this controller
     }
+
 
     @Override
     public String getObjectsUsed() throws RemoteException {
