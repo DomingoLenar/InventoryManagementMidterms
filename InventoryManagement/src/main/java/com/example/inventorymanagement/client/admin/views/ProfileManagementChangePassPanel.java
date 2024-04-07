@@ -1,4 +1,4 @@
-package com.example.inventorymanagement.client.common.views;
+package com.example.inventorymanagement.client.admin.views;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
