@@ -10,9 +10,7 @@ import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.StageStyle;
 
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 
@@ -32,6 +30,8 @@ public class StockControlAdminController implements ControllerInterface {
     @FXML
     private TableView stockControlAdminTable;
     private MainController mainController;
+    private ClientCallback clientCallback;
+    private Registry registry;
     public StockControlAdminController() {
 
     }
@@ -83,5 +83,15 @@ public class StockControlAdminController implements ControllerInterface {
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
+    }
+
+    @Override
+    public void fetchAndUpdate() throws RemoteException {
+
+    }
+
+    @Override
+    public String getObjectsUsed() throws RemoteException {
+        return null;
     }
 }

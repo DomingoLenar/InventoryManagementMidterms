@@ -4,6 +4,7 @@ import com.example.inventorymanagement.client.admin.controllers.StockControlAdmi
 import com.example.inventorymanagement.client.admin.views.StockControlAdminPanel;
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.client.purchaser.views.StockControlPurchaserPanel;
+import com.example.inventorymanagement.client.sales.controllers.StockControlSalesController;
 import com.example.inventorymanagement.client.sales.views.StockControlSalesPanel;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
@@ -113,8 +114,14 @@ public class MainController implements ControllerInterface {
         new StockControlPurchaserPanel().start(new Stage());
     }
 
-    public void displaySalesMainMenu() throws IOException{
-        new StockControlSalesPanel().start(new Stage());
+    public void displaySalesMainMenu() {
+        try {
+            StockControlSalesController salesController = new StockControlSalesController(clientCallback, userService, iOService, itemService, registry);
+            salesController.setMainController(this); // Set the MainController instance in StockControlSalesController
+            salesController.start(new Stage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override

@@ -351,7 +351,7 @@ public class GSONProcessing {
 
     public static synchronized LinkedList<Item> fetchListOfItems(){
         LinkedList<Item> itemList = new LinkedList<>();
-        File file = new File("src/main/resources/com/example/inventorymanagement/data/items.json");
+        File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/items.json");
         try(
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(file))
                 ){

@@ -14,7 +14,7 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ResourceBundle;
 
-public class AddListingAdminController extends Application implements Initializable, ControllerInterface {
+public class AddListingAdminController extends Application implements ControllerInterface {
     @FXML private TextField itemNameField;
     @FXML private Button okButton;
     private AddListingAdminPanel addItemAdminPanel = new AddListingAdminPanel();
@@ -37,11 +37,14 @@ public class AddListingAdminController extends Application implements Initializa
         return null;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
+    public void initialize() {
+        addHoverEffect(okButton);
     }
-
+    private void addHoverEffect(Button button) {
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
+    }
+    @Override
     public void start(Stage stage) throws Exception{
         addItemAdminPanel.start(stage);
     }
