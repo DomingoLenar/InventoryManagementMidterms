@@ -1,6 +1,7 @@
 package com.example.inventorymanagement.client.sales.controllers;
 
 import com.example.inventorymanagement.client.admin.models.ProfileManagementAdminModel;
+import com.example.inventorymanagement.client.admin.views.ProfileManagementAdminPanel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
 import com.example.inventorymanagement.client.purchaser.models.ProfileManagementPurchaserModel;
 import com.example.inventorymanagement.client.purchaser.views.ProfileManagementPurchaserPanel;
@@ -92,6 +93,9 @@ public class ProfileManagementSalesController  extends Application implements In
         changeUserAccountComboBox.setStyle("-fx-font-family: '" + font.getFamily() + "'; -fx-font-size: " + font.getSize() + "px;");
         addHoverEffect(logoutButton);
         addHoverEffect(changePasswordButton);
+        // initialize the model and panel objects
+        profileManagementSalesPanel = new ProfileManagementSalesPanel();
+        profileManagementSalesModel = new ProfileManagementSalesModel(registry, clientCallback);
     }
 
     @Override
