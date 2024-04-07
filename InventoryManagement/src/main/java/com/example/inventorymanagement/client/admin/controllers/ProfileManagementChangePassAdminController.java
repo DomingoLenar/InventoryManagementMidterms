@@ -1,9 +1,8 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
-import com.example.inventorymanagement.client.admin.models.ProfileManagementAdminModel;
-import com.example.inventorymanagement.client.admin.views.ProfileManagementAdminPanel;
-import com.example.inventorymanagement.client.common.models.ProfileManagementChangePassModel;
-import com.example.inventorymanagement.client.common.views.ProfileManagementChangePassPanel;
+import com.example.inventorymanagement.client.admin.models.ProfileManagementChangePassAdminModel;
+import com.example.inventorymanagement.client.admin.views.ProfileManagementChangePassAdminPanel;
+import com.example.inventorymanagement.client.common.controllers.MainController;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import javafx.application.Application;
@@ -22,7 +21,7 @@ import java.rmi.registry.Registry;
 import java.util.ResourceBundle;
 
 // todo: handle action event and submit it to rmi server
-public class ProfileManagementChangePassController extends Application implements Initializable, ControllerInterface {
+public class ProfileManagementChangePassAdminController extends Application implements Initializable, ControllerInterface {
     @FXML
     private BorderPane borderPaneProfileManagementChangePass;
     @FXML
@@ -43,8 +42,8 @@ public class ProfileManagementChangePassController extends Application implement
 
     private ClientCallback clientCallback;
     private Registry registry;
-    private ProfileManagementChangePassModel profileManagementChangePassModel;
-    private ProfileManagementChangePassPanel profileManagementChangePassPanel = new ProfileManagementChangePassPanel();
+    private ProfileManagementChangePassAdminModel profileManagementChangePassAdminModel;
+    private ProfileManagementChangePassAdminPanel profileManagementChangePassAdminPanel = new ProfileManagementChangePassAdminPanel();
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
@@ -88,15 +87,15 @@ public class ProfileManagementChangePassController extends Application implement
 
     @Override
     public void start(Stage stage) throws Exception {
-        profileManagementChangePassPanel = new ProfileManagementChangePassPanel();
-        profileManagementChangePassPanel.start(stage);
+        profileManagementChangePassAdminPanel = new ProfileManagementChangePassAdminPanel();
+        profileManagementChangePassAdminPanel.start(stage);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // initialize the model and panel objects
-        profileManagementChangePassPanel = new ProfileManagementChangePassPanel();
-        profileManagementChangePassModel = new ProfileManagementChangePassModel(registry, clientCallback);
+        profileManagementChangePassAdminPanel = new ProfileManagementChangePassAdminPanel();
+        profileManagementChangePassAdminModel = new ProfileManagementChangePassAdminModel(registry, clientCallback);
     }
 }
 
