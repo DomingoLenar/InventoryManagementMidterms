@@ -12,18 +12,14 @@ public class StockControlPurchaserModel {
     private FetchListOfItemsService fetchListOfItems;
     private Registry registry;
     private ClientCallback callback;
-    private Item item;
-
 
     public StockControlPurchaserModel(Registry registry, ClientCallback clientCallback) {
         this.fetchListOfItems = new FetchListOfItemsService();
         this.registry = registry;
         this.callback = clientCallback;
-
     }
     public LinkedList<Item> fetchItems () throws NotLoggedInException {
         try {
-
             // Fetch items using FetchListOfItemsService
             return fetchListOfItems.process(registry, callback);
         } catch (RuntimeException e) {

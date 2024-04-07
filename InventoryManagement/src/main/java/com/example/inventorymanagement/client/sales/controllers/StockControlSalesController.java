@@ -32,7 +32,7 @@ public class StockControlSalesController extends Application implements Controll
     @FXML
     private BorderPane borderPaneStockControlSales;
     @FXML
-    private Button createSalesInvoiceButtonSales;
+    private Button createSalesInvoiceButton;
     @FXML
     private TextField searchFieldSales;
     @FXML
@@ -87,9 +87,9 @@ public class StockControlSalesController extends Application implements Controll
             initialized = true; // Set the flag to true
 
             // Check if UI components are not null
-            if (stockControlSalesTable != null && createSalesInvoiceButtonSales != null) {
-                addHoverEffect(createSalesInvoiceButtonSales);
-                createSalesInvoiceButtonSales.setOnAction(event -> handleSalesInvoice());
+            if (stockControlSalesTable != null && createSalesInvoiceButton != null) {
+                addHoverEffect(createSalesInvoiceButton);
+                createSalesInvoiceButton.setOnAction(event -> handleSalesInvoice());
 
                 try {
                     if (stockControlSalesModel != null) {
@@ -156,7 +156,7 @@ public class StockControlSalesController extends Application implements Controll
 
     @FXML
     public Button getCreateSalesInvoiceButton() {
-        return createSalesInvoiceButtonSales;
+        return createSalesInvoiceButton;
     }
 
     @FXML
