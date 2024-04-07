@@ -6,7 +6,6 @@ import com.example.inventorymanagement.util.objects.ItemOrder;
 import com.google.gson.*;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -41,13 +40,13 @@ public class GSONProcessing {
      */
     public static boolean addItem(Item newItem) {
         try {
-            String filePath = "com/example/inventorymanagement/data/items.json";
+            String filePath = "src/main/resources/com/example/inventorymanagement/data/items.json";
             JsonParser jsonParser = new JsonParser();
             JsonElement rootElement = jsonParser.parse(new FileReader(filePath));
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray itemJsonArray = rootObject.getAsJsonArray("items");
 
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement newItemJson = gson.toJsonTree(newItem);
             itemJsonArray.add(newItemJson);
 
@@ -70,7 +69,7 @@ public class GSONProcessing {
      */
     public static boolean removeItem(String itemName) {
         try {
-            String filePath = "com/example/inventorymanagement/data/items.json";
+            String filePath = "src/main/resources/com/example/inventorymanagement/data/items.json";
             JsonParser jsonParser = new JsonParser();
             JsonElement rootElement = jsonParser.parse(new FileReader(filePath));
             JsonObject rootObject = rootElement.getAsJsonObject();
@@ -78,7 +77,7 @@ public class GSONProcessing {
 
             for (JsonElement jsonElement : itemJsonArray) {
                 JsonObject itemObject = jsonElement.getAsJsonObject();
-                String name = itemObject.get("name").getAsString();
+                String name = itemObject.get("itemName").getAsString();
                 if (name.equals(itemName)) {
                     itemJsonArray.remove(jsonElement);
                     FileWriter writer = new FileWriter(filePath);
@@ -107,9 +106,9 @@ public class GSONProcessing {
         try {
             String filePath;
             if (orderType.equalsIgnoreCase("purchase")) {
-                filePath = "com/example/inventorymanagement/data/purchaseorders.json";
+                filePath = "InventoryManagement/src/main/resources/com/example/inventorymanagement/data/purchaseorders.json";
             } else if (orderType.equalsIgnoreCase("sales")) {
-                filePath = "com/example/inventorymanagement/data/salesorder.json";
+                filePath = "InventoryManagement/src/main/resources/com/example/inventorymanagement/data/salesorders.json";
             } else {
                 throw new IllegalArgumentException("Invalid order type: " + orderType);
             }
@@ -125,7 +124,7 @@ public class GSONProcessing {
                 orderJsonArray = rootObject.getAsJsonArray("salesOrders");
             }
 
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement newOrderJson = gson.toJsonTree(newOrder);
             orderJsonArray.add(newOrderJson);
 
@@ -155,7 +154,7 @@ public class GSONProcessing {
             if (orderType.equalsIgnoreCase("purchase")) {
                 filePath = "com/example/inventorymanagement/data/purchaseorders.json";
             } else if (orderType.equalsIgnoreCase("sales")) {
-                filePath = "com/example/inventorymanagement/data/salesorder.json";
+                filePath = "com/example/inventorymanagement/data/salesorders.json";
             } else {
                 throw new IllegalArgumentException("Invalid order type: " + orderType);
             }
@@ -265,9 +264,9 @@ public class GSONProcessing {
 
     public static synchronized ArrayList<String> fetchListOfSuppliers() {
         ArrayList<String> suppliers = new ArrayList<>();
+        File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/suppliers.json");
         try (
-                InputStream inputStream = GSONProcessing.class.getResourceAsStream("/com/example/inventorymanagement/data/suppliers.json");
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file))
         ) {
             JsonElement rootElement = JsonParser.parseReader(bufferedReader);
             JsonObject jsonObject = rootElement.getAsJsonObject();
@@ -324,9 +323,9 @@ public class GSONProcessing {
      */
     public static synchronized LinkedList<ItemOrder> fetchListOfItemOrder(String type){
         LinkedList<ItemOrder> listOfItemOrder = new LinkedList<>();
+        File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/"+type+"orders.json");
         try(
-                InputStream inputStream = GSONProcessing.class.getResourceAsStream("/com/example/inventorymanagement/data/users.json");
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file))
                 ){
             JsonElement rootElement = JsonParser.parseReader(bufferedReader);
             JsonObject rootObject = rootElement.getAsJsonObject();
@@ -337,7 +336,7 @@ public class GSONProcessing {
                 listOfItemOrder.addLast(itemOrder);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
         return listOfItemOrder;
@@ -394,9 +393,9 @@ public class GSONProcessing {
 
     public static synchronized boolean removeUser(User toRemove){
         Gson gson = new Gson();
+        File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/users.json");
         try{
-            String jsonFile = "com/example/inventorymanagement/data/users.json";
-            JsonElement rootElement = JsonParser.parseReader(new FileReader(jsonFile));
+            JsonElement rootElement = JsonParser.parseReader(new FileReader(file));
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray userArray = rootObject.getAsJsonArray("users");
             for(JsonElement jsonElement: userArray){
