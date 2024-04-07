@@ -32,9 +32,9 @@ public class StockControlPurchaserController extends Application implements Cont
     @FXML
     private BorderPane borderPaneStockControlPurchaser;
     @FXML
-    private Button addItemButtonPurchaser;
+    private Button addItemButton;
     @FXML
-    private Button lowStocksButtonPurchaser;
+    private Button lowStocksButton;
     @FXML
     private TextField searchFieldPurchaser;
     @FXML
@@ -89,11 +89,11 @@ public class StockControlPurchaserController extends Application implements Cont
             initialized = true; // Set the flag to true
 
             // Check if UI components are not null
-            if (stockControlPurchaserTable != null && addItemButtonPurchaser != null & lowStocksButtonPurchaser != null) {
-                addHoverEffect(addItemButtonPurchaser);
-                addHoverEffect(lowStocksButtonPurchaser);
-                lowStocksButtonPurchaser.setOnAction(event -> handleLowStocks());
-                addItemButtonPurchaser.setOnAction(event -> handleAddItem());
+            if (stockControlPurchaserTable != null && addItemButton != null & lowStocksButton != null) {
+                addHoverEffect(addItemButton);
+                addHoverEffect(lowStocksButton);
+                lowStocksButton.setOnAction(event -> handleLowStocks());
+                addItemButton.setOnAction(event -> handleAddItem());
 
                 try {
                     if (stockControlPurchaserModel != null) {
@@ -164,13 +164,13 @@ public class StockControlPurchaserController extends Application implements Cont
     }
 
     @FXML
-    public Button getAddItemButtonPurchaser() {
-        return addItemButtonPurchaser;
+    public Button getAddItemButton() {
+        return addItemButton;
     }
 
     @FXML
-    public Button getLowStocksButtonPurchaser() {
-        return lowStocksButtonPurchaser;
+    public Button getLowStocksButton() {
+        return lowStocksButton;
     }
 
     @FXML
