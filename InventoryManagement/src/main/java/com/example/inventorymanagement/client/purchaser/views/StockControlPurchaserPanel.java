@@ -1,6 +1,6 @@
 package com.example.inventorymanagement.client.purchaser.views;
 
-import javafx.application.Application;
+import com.example.inventorymanagement.client.purchaser.controllers.StockControlPurchaserController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -13,20 +13,23 @@ import com.example.inventorymanagement.client.purchaser.controllers.NavigationBa
 import java.io.IOException;
 import java.io.InputStream;
 
-public class StockControlPurchaserPanel{
+public class StockControlPurchaserPanel {
 
-    public void start(Stage stage) throws IOException {
-
+    public void start(Stage stage, StockControlPurchaserController controller) throws IOException {
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
 
+        // Set the controller before loading the FXML file
+        FXMLLoader viewLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlPurchaser-view.fxml"));
+        viewLoader.setController(controller);
+
+        BorderPane stockControlPanelPurchaser = viewLoader.load();
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/navigationBar/navigationBarPurchaser-view.fxml"));
-        BorderPane navigationBar = loader.load();
+        BorderPane navigationBarPurchaser = loader.load();
 
         // Get the controller
-        NavigationBarPurchaserController navBarController = loader.getController();
+        NavigationBarPurchaserController navBarPurchaserController = loader.getController();
 
-        // Create the stock control panel
-        BorderPane stockControlPurchaserPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlPurchaser-view.fxml"));
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
 
         if (inputStream != null) {
@@ -37,8 +40,8 @@ public class StockControlPurchaserPanel{
         }
 
         BorderPane root = new BorderPane();
-        root.setLeft(navigationBar);
-        root.setRight(stockControlPurchaserPanel);
+        root.setLeft(navigationBarPurchaser);
+        root.setRight(stockControlPanelPurchaser);
 
         Scene scene = new Scene(root, 1080, 650);
         stage.setScene(scene);
@@ -47,6 +50,6 @@ public class StockControlPurchaserPanel{
         stage.show();
 
         // Set the main BorderPane reference in the navigation bar controller
-        navBarController.setMainBorderPane(root);
+        navBarPurchaserController.setMainBorderPane(root);
     }
 }
