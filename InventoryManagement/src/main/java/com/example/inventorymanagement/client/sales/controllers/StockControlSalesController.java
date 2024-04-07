@@ -11,8 +11,13 @@ import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.application.Application;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -23,6 +28,7 @@ import java.rmi.registry.Registry;
 import java.util.LinkedList;
 
 public class StockControlSalesController extends Application implements ControllerInterface {
+
     @FXML
     private BorderPane borderPaneStockControlSales;
     @FXML
@@ -30,7 +36,118 @@ public class StockControlSalesController extends Application implements Controll
     @FXML
     private TextField searchFieldSales;
     @FXML
-    private TableView stockControlSalesTable;
+    private TableView<Item> stockControlSalesTable;
+    @FXML
+    private TableColumn<Item, String> itemNameColumn;
+    @FXML
+    private TableColumn<Item, Integer> totalQtyColumn;
+
+    private Registry registry;
+    private ClientCallback clientCallback;
+    private MainController mainController;
+    private StockControlSalesModel stockControlSalesModel;
+    private StockControlSalesPanel stockControlSalesPanel = new StockControlSalesPanel();
+    private boolean initialized = false; // Flag to track initialization
+
+    public StockControlSalesController() {
+        // Default constructor
+    }
+
+    public StockControlSalesController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry) {
+        this.clientCallback = clientCallback;
+        this.registry = registry;
+    }
+
+    public void setStockControlSalesModel(StockControlSalesModel stockControlSalesModel) {
+        this.stockControlSalesModel = stockControlSalesModel;
+    }
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        // Start the panel first
+        stockControlSalesPanel.start(stage, this);
+
+        // Call initialize after panel is started and model is initialized
+        initialize();
+
+        try {
+            fetchAndUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void initialize() {
+        if (!initialized) { // Check if already initialized
+            initialized = true; // Set the flag to true
+
+            // Check if UI components are not null
+            if (stockControlSalesTable != null && createSalesInvoiceButtonSales != null) {
+                addHoverEffect(createSalesInvoiceButtonSales);
+                createSalesInvoiceButtonSales.setOnAction(event -> handleSalesInvoice());
+
+                try {
+                    if (stockControlSalesModel != null) {
+                        populateTableView(stockControlSalesModel.fetchItems());
+                    } else {
+                        // Handle the case where stockControlSalesModel is null
+                        System.out.println("Stock Control Sales Model is null.");
+                    }
+                } catch (NotLoggedInException e) {
+                    // Show prompt to user not logged in
+                    System.out.println("User is not logged in.");
+                }
+            } else {
+                // Handle the case where UI components are null
+                System.out.println("Error: Table or button is null. Cannot initialize.");
+            }
+        }
+    }
+
+    @FXML
+    private void handleSalesInvoice() {
+        // Handle sales invoice button action
+    }
+
+    @Override
+    public void fetchAndUpdate() throws RemoteException {
+        try {
+            LinkedList<Item> items = stockControlSalesModel.fetchItems();
+            populateTableView(items);
+        } catch (NotLoggedInException e) {
+            // Show Prompt
+        }
+    }
+
+    private void populateTableView(LinkedList<Item> items) {
+        if (stockControlSalesTable != null && itemNameColumn != null && totalQtyColumn != null) {
+            ObservableList<Item> observableItems = FXCollections.observableArrayList(items);
+            stockControlSalesTable.setItems(observableItems);
+
+            // Make sure the cell value factories are set for the table columns
+            itemNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getItemName()));
+            totalQtyColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getTotalQty()).asObject());
+        } else {
+            System.out.println("Error: Table or columns are null. Cannot populate table.");
+        }
+    }
+
+    @Override
+    public String getObjectsUsed() throws RemoteException {
+        return "items";
+    }
+
+    private void addHoverEffect(Button button) {
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
+    }
+
+    // Getters for FXML components (if needed)
 
     @FXML
     public BorderPane getBorderPaneStockControlSales() {
@@ -48,67 +165,17 @@ public class StockControlSalesController extends Application implements Controll
     }
 
     @FXML
-    public TableView getStockControlSalesTable() {
+    public TableView<Item> getStockControlSalesTable() {
         return stockControlSalesTable;
     }
 
-    private StockControlSalesModel stockControlSalesModel;
-    private StockControlSalesPanel stockControlSalesPanel = new StockControlSalesPanel();
-
-    private MainController mainController;
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        stockControlSalesPanel.start(stage);
+    @FXML
+    public TableColumn<Item, String> getItemNameColumn() {
+        return itemNameColumn;
     }
 
     @FXML
-    public void initialize() {
-        if (createSalesInvoiceButtonSales != null) {
-            addHoverEffect(createSalesInvoiceButtonSales);
-            createSalesInvoiceButtonSales.setOnAction(event -> handleSalesInvoice());
-        }
-    }
-
-    @FXML
-    private void handleSalesInvoice() {
-        // Handle sales invoice button action
-    }
-
-    @Override
-    public void fetchAndUpdate() throws RemoteException {
-        try {
-            LinkedList<Item> items = stockControlSalesModel.fetchItems();
-            populateTableView(items);
-        } catch (NotLoggedInException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void populateTableView(LinkedList<Item> items) {
-        stockControlSalesTable.getItems().clear();
-        stockControlSalesTable.getItems().addAll(items);
-    }
-
-    public StockControlSalesController() {
-        // Default constructor
-    }
-
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
-
-    public StockControlSalesController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry) {
-        StockControlSalesModel stockControlSalesModel = new StockControlSalesModel(registry, clientCallback); // use this on events of stockControlSalesView
-    }
-
-    @Override
-    public String getObjectsUsed() throws RemoteException {
-        return null;
-    }
-
-    private void addHoverEffect(Button button) {
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
+    public TableColumn<Item, Integer> getTotalQtyColumn() {
+        return totalQtyColumn;
     }
 }

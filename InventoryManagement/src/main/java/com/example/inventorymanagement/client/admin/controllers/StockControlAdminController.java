@@ -1,17 +1,23 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
-import com.example.inventorymanagement.client.admin.models.AddItemAdminModel;
-import com.example.inventorymanagement.client.admin.models.CreateSalesInvoiceAdminModel;
 import com.example.inventorymanagement.client.admin.models.StockControlAdminModel;
+<<<<<<<<< Temporary merge branch 1
+import com.example.inventorymanagement.client.common.controllers.MainController;
+=========
+>>>>>>>>> Temporary merge branch 2
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
-import javafx.event.ActionEvent;
+import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
+import com.example.inventorymanagement.util.requests.ItemRequestInterface;
+import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 
@@ -30,21 +36,17 @@ public class StockControlAdminController implements ControllerInterface {
     private TextField searchFieldAdmin;
     @FXML
     private TableView stockControlAdminTable;
-    private StockControlAdminModel stockControlAdminModel;
-    private AddItemAdminModel addItemAdminModel = new AddItemAdminModel();
-    private CreateSalesInvoiceAdminModel salesInvoiceModel = new CreateSalesInvoiceAdminModel();
+    private MainController mainController;
+    public StockControlAdminController() {
 
-    private ClientCallback clientCallback;
-    private Registry registry;
-
-    @Override
-    public void fetchAndUpdate() throws RemoteException {
-        // No implementation needed in this controller
+    }
+    public StockControlAdminController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry) {
+        StockControlAdminModel stockControlAdminModel = new StockControlAdminModel(registry, clientCallback); // use this on events of stockcontroladminview
     }
 
-    @Override
-    public String getObjectsUsed() throws RemoteException {
-        return null;
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController; // or this main...getSERVICES....actions()
     }
 
     @FXML
@@ -54,7 +56,7 @@ public class StockControlAdminController implements ControllerInterface {
     public Button getLowStocksButton() { return lowStocksButtonAdmin; }
 
     @FXML
-    public Button getsalesInvoiceButtonAdmin() { return salesInvoiceButtonAdmin; }
+    public Button getSalesInvoiceButton() { return salesInvoiceButtonAdmin; }
 
     @FXML
     public Button getAddListingButton() { return addListingButtonAdmin;}
@@ -68,6 +70,8 @@ public class StockControlAdminController implements ControllerInterface {
     @FXML
     public TableView getStockControlAdminTable() { return stockControlAdminTable; }
 
+<<<<<<<<< Temporary merge branch 1
+=========
     public StockControlAdminController(ClientCallback clientCallback, Registry registry) {
         this.clientCallback = clientCallback;
         this.registry = registry;
@@ -75,25 +79,62 @@ public class StockControlAdminController implements ControllerInterface {
        // stockControlAdminModel = new StockControlAdminModel(registry,clientCallback);
 
     }
+>>>>>>>>> Temporary merge branch 2
     @FXML
     private void initialize() {
         addHoverEffect(lowStocksButtonAdmin);
         addHoverEffect(salesInvoiceButtonAdmin);
         addHoverEffect(addItemButtonAdmin);
         addHoverEffect(addListingButtonAdmin);
-
-        addItemButtonAdmin.setOnAction(this::handleAddItem);
-//        salesInvoiceButtonAdmin.setOnAction(this::handleSalesInvoice);
     }
 
-    private void handleAddItem (ActionEvent event){
-        addItemAdminModel.handleAddItem();
-    }
-//    private void handleSalesInvoice (ActionEvent event){
-//        salesInvoiceModel.handleSalesInvoice();
-//    }
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
+    }
+
+    @FXML
+    public void handleAddItem() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/addItem-view.fxml"));
+            Parent root = fxmlLoader.load();
+
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setTitle("Add Item");
+
+            DialogPane dialogPane = new DialogPane();
+            dialogPane.setContent(root);
+            dialog.setDialogPane(dialogPane);
+
+            dialog.initStyle(StageStyle.UNDECORATED);
+
+            ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+
+            Button okButton = (Button) dialog.getDialogPane().lookupButton(okButtonType);
+            okButton.setOnAction(event -> {
+                //TODO: Logic from AddItemModel for adding items using GSONProcessing
+            });
+
+            Button cancelButton = new Button("Cancel");
+            cancelButton.setOnAction(event -> dialog.close());
+
+            dialog.getDialogPane().getChildren().addAll(okButton, cancelButton);
+
+            dialog.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    @Override
+    public void fetchAndUpdate() throws RemoteException {
+        
+    }
+
+    @Override
+    public String getObjectsUsed() throws RemoteException {
+        return null;
     }
 }

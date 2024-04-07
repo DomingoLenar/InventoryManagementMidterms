@@ -1,11 +1,8 @@
 package com.example.inventorymanagement.client.purchaser.models;
 
-import com.example.inventorymanagement.client.microservices.CreateItemListingService;
 import com.example.inventorymanagement.client.microservices.FetchListOfItemsService;
-import com.example.inventorymanagement.client.microservices.FetchLowestStockService;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
-import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
 import com.example.inventorymanagement.util.objects.Item;
 
 import java.rmi.registry.Registry;
@@ -34,14 +31,6 @@ public class StockControlPurchaserModel {
             e.printStackTrace();
             return new LinkedList<>(); // Or throw an exception
         }
-    }
-
-    public LinkedList<Item> fetchLowestStock() throws NotLoggedInException {
-        return FetchLowestStockService.process(registry, callback);
-    }
-
-    public boolean createItemListing(Item item) throws NotLoggedInException, OutOfRoleException {
-        return CreateItemListingService.process(registry, callback, item);
     }
 }
 
