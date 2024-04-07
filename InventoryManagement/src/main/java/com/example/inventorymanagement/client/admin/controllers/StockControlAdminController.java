@@ -1,10 +1,7 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
 import com.example.inventorymanagement.client.admin.models.StockControlAdminModel;
-<<<<<<<<< Temporary merge branch 1
 import com.example.inventorymanagement.client.common.controllers.MainController;
-=========
->>>>>>>>> Temporary merge branch 2
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
@@ -36,6 +33,8 @@ public class StockControlAdminController implements ControllerInterface {
     private TextField searchFieldAdmin;
     @FXML
     private TableView stockControlAdminTable;
+    private Registry registry;
+    private ClientCallback clientCallback;
     private MainController mainController;
     public StockControlAdminController() {
 
@@ -70,8 +69,6 @@ public class StockControlAdminController implements ControllerInterface {
     @FXML
     public TableView getStockControlAdminTable() { return stockControlAdminTable; }
 
-<<<<<<<<< Temporary merge branch 1
-=========
     public StockControlAdminController(ClientCallback clientCallback, Registry registry) {
         this.clientCallback = clientCallback;
         this.registry = registry;
@@ -79,7 +76,6 @@ public class StockControlAdminController implements ControllerInterface {
        // stockControlAdminModel = new StockControlAdminModel(registry,clientCallback);
 
     }
->>>>>>>>> Temporary merge branch 2
     @FXML
     private void initialize() {
         addHoverEffect(lowStocksButtonAdmin);
