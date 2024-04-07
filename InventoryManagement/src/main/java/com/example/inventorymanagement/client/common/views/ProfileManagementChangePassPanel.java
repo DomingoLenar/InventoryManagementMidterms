@@ -1,6 +1,5 @@
 package com.example.inventorymanagement.client.common.views;
 
-import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -9,7 +8,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ProfileManagementChangePassPanel extends Application {
+public class ProfileManagementChangePassPanel {
     public void start(Stage stage) throws IOException {
 
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"),20);
@@ -24,14 +23,10 @@ public class ProfileManagementChangePassPanel extends Application {
             System.err.println("Failed to load image: logo.png");
         }
 
-        Scene sceneprofileManagement = new Scene(fxmlLoader.load(), 600, 400);
+        Scene sceneprofileManagement = new Scene(fxmlLoader.load(), 850, 500);
         stage.setTitle("Stock Pilot");
         stage.setScene(sceneprofileManagement);
         stage.show();
-
-    }
-    public static void main(String[] args) {
-        launch();
     }
 }
 
