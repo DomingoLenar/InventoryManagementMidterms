@@ -15,7 +15,7 @@ import java.rmi.registry.Registry;
 
 public class CreateSalesInvoiceService {
 
-    public static boolean process(Registry registry, ClientCallback cB, ItemOrder salesInvoice) throws OutOfRoleException, NotLoggedInException {
+    public static boolean process (Registry registry, ClientCallback cB , ItemOrder salesInvoice) throws OutOfRoleException, NotLoggedInException {
         try {
 
             ItemOrderRequestInterface IORequest = (ItemOrderRequestInterface) registry.lookup("itemOrder");

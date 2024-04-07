@@ -11,10 +11,7 @@ import com.example.inventorymanagement.util.objects.User;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.Optional;
+import java.util.*;
 
 // #TODO: Implement GSONProcessing methods, add real logic
 public class UserRequestInterfaceImplementation extends UnicastRemoteObject implements UserRequestInterface {
@@ -160,18 +157,13 @@ public class UserRequestInterfaceImplementation extends UnicastRemoteObject impl
     }
 
     //panel = csv of objects used in panel ex user,item
-    public void callUpdate(String panel){
-
-        clientCallbacks.forEach(clientCallback -> {
-            try {
-                LinkedList<String> objects = new LinkedList<>(Arrays.asList(clientCallback.getObjectsUsedByPanel().split(",")));
-                if(objects.contains(panel)){
-                    clientCallback.updateUICall();
-                }
-            } catch (RemoteException e) {
-                System.out.println(e);
-                throw new RuntimeException(e);
+    public void callUpdate(String object) throws RemoteException {
+        for(int x=0; x<clientCallbacks.size();x++){
+            ClientCallback clientCallback = clientCallbacks.get(x);
+            ArrayList<String> objects = new ArrayList(Arrays.asList((clientCallback.getObjectsUsedByPanel().split(","))));
+            if(objects.contains(object)){
+                clientCallback.updateUICall();
             }
-        });
+        }
     }
 }
