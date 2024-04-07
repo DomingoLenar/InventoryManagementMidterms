@@ -38,5 +38,6 @@ public interface UserRequestInterface extends Remote{
 
     public boolean updateCallback(User user, ClientCallback clientCallback) throws RemoteException, NotLoggedInException;
 
+    public void callUpdate(String object) throws RemoteException;
 
 }
