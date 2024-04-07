@@ -13,16 +13,14 @@ public class StockControlSalesModel {
     private Registry registry;
     private ClientCallback callback;
 
-
     public StockControlSalesModel(Registry registry, ClientCallback clientCallback) {
         this.fetchListOfItems = new FetchListOfItemsService();
         this.registry = registry;
         this.callback = clientCallback;
-
     }
+
     public LinkedList<Item> fetchItems () throws NotLoggedInException {
         try {
-
             // Fetch items using FetchListOfItemsService
             return fetchListOfItems.process(registry, callback);
         } catch (RuntimeException e) {
@@ -31,6 +29,5 @@ public class StockControlSalesModel {
             return new LinkedList<>(); // Or throw an exception
         }
     }
-
 }
 
