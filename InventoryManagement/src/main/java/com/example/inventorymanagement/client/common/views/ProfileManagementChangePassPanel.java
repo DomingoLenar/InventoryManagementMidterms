@@ -27,6 +27,7 @@ public class ProfileManagementChangePassPanel {
         stage.setTitle("Stock Pilot");
         stage.setScene(sceneprofileManagement);
         stage.show();
+        stage.setResizable(false);
     }
 }
 
