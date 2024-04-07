@@ -1,8 +1,6 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
-import com.example.inventorymanagement.client.admin.models.FinancesAdminModel;
 import com.example.inventorymanagement.client.admin.models.ProfileManagementAdminModel;
-import com.example.inventorymanagement.client.admin.views.FinancesAdminPanel;
 import com.example.inventorymanagement.client.admin.views.ProfileManagementAdminPanel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
 import com.example.inventorymanagement.util.ClientCallback;
@@ -82,11 +80,25 @@ public class ProfileManagementAdminController extends Application implements Ini
         changeUserAccountComboBox.setPromptText("Change Role...");
         Font font = new Font("Share Tech Mono", 15);
         changeUserAccountComboBox.setStyle("-fx-font-family: '" + font.getFamily() + "'; -fx-font-size: " + font.getSize() + "px;");
+
+        // add hover effect to buttons
         addHoverEffect(logoutButton);
         addHoverEffect(changePasswordButton);
+
         // initialize the model and panel objects
         profileManagementAdminPanel = new ProfileManagementAdminPanel();
         profileManagementAdminModel = new ProfileManagementAdminModel(registry, clientCallback);
+
+        // Set up event handler for the changePasswordButton
+        changePasswordButton.setOnAction(event -> {
+            try {
+                // Launch the ProfileManagementChangePassController
+                ProfileManagementChangePassAdminController profileManagementChangePassController = new ProfileManagementChangePassAdminController();
+                profileManagementChangePassController.start(new Stage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
