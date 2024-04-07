@@ -9,12 +9,12 @@ import com.example.inventorymanagement.util.objects.User;
 
 import java.rmi.registry.Registry;
 
-public class ProfileManagementChangePassModel {
+public class ProfileManagementChangePassAdminModel {
     private ChangePasswordService changePasswordService;
     private Registry registry;
     private ClientCallback clientCallback;
 
-    public ProfileManagementChangePassModel(Registry registry, ClientCallback clientCallback) {
+    public ProfileManagementChangePassAdminModel(Registry registry, ClientCallback clientCallback) {
         this.registry = registry;
         this.clientCallback = clientCallback;
         this.changePasswordService = new ChangePasswordService();
