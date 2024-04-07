@@ -44,6 +44,10 @@ public class ProfileManagementSalesController  extends Application implements In
     private Registry registry;
     private ProfileManagementSalesModel profileManagementSalesModel;
     private ProfileManagementSalesPanel profileManagementSalesPanel;
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
     public void fetchAndUpdate() throws RemoteException {
         // No implementation needed yet in this controller
     }
