@@ -8,8 +8,6 @@ import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.StageStyle;
@@ -67,6 +65,13 @@ public class StockControlAdminController implements ControllerInterface {
     @FXML
     public TableView getStockControlAdminTable() { return stockControlAdminTable; }
 
+    public StockControlAdminController(ClientCallback clientCallback, Registry registry) {
+        this.clientCallback = clientCallback;
+        this.registry = registry;
+
+       // stockControlAdminModel = new StockControlAdminModel(registry,clientCallback);
+
+    }
     @FXML
     private void initialize() {
         addHoverEffect(lowStocksButtonAdmin);
@@ -78,50 +83,5 @@ public class StockControlAdminController implements ControllerInterface {
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
-    }
-
-    @FXML
-    public void handleAddItem() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/addItem-view.fxml"));
-            Parent root = fxmlLoader.load();
-
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setTitle("Add Item");
-
-            DialogPane dialogPane = new DialogPane();
-            dialogPane.setContent(root);
-            dialog.setDialogPane(dialogPane);
-
-            dialog.initStyle(StageStyle.UNDECORATED);
-
-            ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-            dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
-
-            Button okButton = (Button) dialog.getDialogPane().lookupButton(okButtonType);
-            okButton.setOnAction(event -> {
-                //TODO: Logic from AddItemModel for adding items using GSONProcessing
-            });
-
-            Button cancelButton = new Button("Cancel");
-            cancelButton.setOnAction(event -> dialog.close());
-
-            dialog.getDialogPane().getChildren().addAll(okButton, cancelButton);
-
-            dialog.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
-    }
-
-    @Override
-    public void fetchAndUpdate() throws RemoteException {
-        
-    }
-
-    @Override
-    public String getObjectsUsed() throws RemoteException {
-        return null;
     }
 }

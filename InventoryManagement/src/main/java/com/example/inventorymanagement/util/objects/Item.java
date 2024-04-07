@@ -2,12 +2,13 @@ package com.example.inventorymanagement.util.objects;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 public class Item implements Serializable {
     private String itemName;
     private int itemId;
     private int totalQty;
-    private LinkedHashMap<String, Stock> stocks = new LinkedHashMap<>();
+    private LinkedList<Stock> stocks = new LinkedList<>();
 
     public Item(){
         itemName = null;
@@ -22,7 +23,7 @@ public class Item implements Serializable {
      * @param totalQty      totalQty tallied by the backend
      * @param stocks        LinkedHashMap of Stocks with the batchNo as the Key and object of Stock as the Value
      */
-    public Item(String itemName, int itemId, int totalQty, LinkedHashMap<String, Stock> stocks) {
+    public Item(String itemName, int itemId, int totalQty, LinkedList<Stock> stocks) {
         this.itemName = itemName;
         this.itemId = itemId;
         this.totalQty = totalQty;
@@ -35,7 +36,7 @@ public class Item implements Serializable {
      * @param stock     Object of stock
      */
     public void addStocks(String batchNo, Stock stock){
-        stocks.put(batchNo, stock);
+        stocks.add(stock);
     }
 
     /**
@@ -45,7 +46,12 @@ public class Item implements Serializable {
      * @return
      */
     public Stock getStock(String batchNo){
-        return stocks.get(batchNo);
+        for(Stock stock: stocks){
+            if(stock.getBatchNo().equals(batchNo)){
+                return stock;
+            }
+        }
+        return null;
     }
 
     //Getter and setters below
@@ -74,11 +80,11 @@ public class Item implements Serializable {
         this.totalQty = totalQty;
     }
 
-    public LinkedHashMap<String, Stock> getStocks() {
+    public LinkedList<Stock> getStocks() {
         return stocks;
     }
 
-    public void setStocks(LinkedHashMap<String, Stock> stocks) {
+    public void setStocks(LinkedList<Stock> stocks) {
         this.stocks = stocks;
     }
 }

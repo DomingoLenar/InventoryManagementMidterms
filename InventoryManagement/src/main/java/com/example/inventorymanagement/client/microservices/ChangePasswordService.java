@@ -14,7 +14,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class ChangePasswordService {
-   public boolean process (Registry registry, ClientCallback cB , User toChange, String  newPassword) throws UserExistenceException, OutOfRoleException, NotLoggedInException {
+   public static boolean process(Registry registry, ClientCallback cB, User toChange, String newPassword) throws UserExistenceException, OutOfRoleException, NotLoggedInException {
 
        try {
 

@@ -14,6 +14,9 @@ module com.example.inventorymanagement {
     exports com.example.inventorymanagement.client.sales.controllers;
     opens com.example.inventorymanagement.client.sales.controllers to javafx.fxml;
 
+    exports com.example.inventorymanagement.client.model;
+    exports com.example.inventorymanagement.client.microservices;
+
     // Views
     exports com.example.inventorymanagement.client.common.views;
     opens com.example.inventorymanagement.client.common.views to javafx.fxml;
@@ -30,4 +33,5 @@ module com.example.inventorymanagement {
     exports com.example.inventorymanagement.util.requests;
     exports com.example.inventorymanagement.util.exceptions;
     exports com.example.inventorymanagement.util.objects;
+    opens com.example.inventorymanagement.util.objects to com.google.gson;
 }

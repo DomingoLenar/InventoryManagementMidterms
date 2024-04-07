@@ -5,10 +5,10 @@ import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
 import com.example.inventorymanagement.util.objects.Item;
-import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
 
+import java.io.Serializable;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -17,7 +17,7 @@ import java.rmi.registry.Registry;
 import java.util.Comparator;
 import java.util.LinkedList;
 
-public class ItemRequestImpl implements ItemRequestInterface {
+public class ItemRequestImpl implements ItemRequestInterface, Serializable {
     @Override
     public LinkedList<Item> fetchLisOfItems(ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
         checkIfLoggedIn(clientCallback);
@@ -50,10 +50,11 @@ public class ItemRequestImpl implements ItemRequestInterface {
         return success;
     }
 
-    public void checkIfLoggedIn(ClientCallback clientCallback) throws NotLoggedInException {
+    @Override
+    public void checkIfLoggedIn(ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
         try{
             Registry reg = LocateRegistry.getRegistry("localhost",2018);
-            UserRequestInterfaceImplementation userStub = (UserRequestInterfaceImplementation) reg.lookup("userRequest");
+            UserRequestInterface userStub = (UserRequestInterface) reg.lookup("userRequest");
             if (!(userStub.isLoggedIn(clientCallback))) throw new NotLoggedInException("Not Logged In");
         } catch (AccessException e) {
             throw new RuntimeException(e);
@@ -66,7 +67,8 @@ public class ItemRequestImpl implements ItemRequestInterface {
         }
     }
 
-    public void callUpdate(String panel){
+    @Override
+    public void callUpdate(String panel) throws RemoteException{
         try{
             Registry reg = LocateRegistry.getRegistry("localhost",2018);
             UserRequestInterfaceImplementation userStub = (UserRequestInterfaceImplementation) reg.lookup("userRequest");
