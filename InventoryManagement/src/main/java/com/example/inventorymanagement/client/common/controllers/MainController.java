@@ -40,6 +40,13 @@ public class MainController implements ControllerInterface {
         this.itemService = itemService;
         this.registry = registry;
         this.clientCallback = new ClientCallbackImpl(null);
+
+        initControllers();
+    }
+
+    private void initControllers() {
+        StockControlAdminController stockControlAdminController = new StockControlAdminController(clientCallback, userService, iOService, itemService, registry);
+        stockControlAdminController.setMainController(this);
     }
 
     public ClientCallback getClientCallback() {
@@ -99,9 +106,7 @@ public class MainController implements ControllerInterface {
     }
 
     public void displayAdminMainMenu() throws IOException {
-        StockControlAdminController stockControlAdminController = new StockControlAdminController(clientCallback,registry);
-
-
+        new StockControlAdminPanel().start(new Stage());
     }
 
     public void displayPurchaserMainMenu() throws IOException {

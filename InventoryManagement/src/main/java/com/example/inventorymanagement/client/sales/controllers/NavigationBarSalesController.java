@@ -15,7 +15,7 @@ public class NavigationBarSalesController implements ControllerInterface {
     @FXML
     private Button stockControlButtonSales;
     @FXML
-    private Button salesInvoiceButtonSales;
+    private Button salesHistoryButtonSales;
     @FXML
     private Button profileButtonSales;
 
@@ -44,7 +44,7 @@ public class NavigationBarSalesController implements ControllerInterface {
     public Button getStockControlButtonSales() { return stockControlButtonSales; }
 
     @FXML
-    public Button getSalesInvoiceButtonSales() { return salesInvoiceButtonSales; }
+    public Button getSalesHistoryButtonSales() { return salesHistoryButtonSales; }
 
 
     @FXML
@@ -54,10 +54,11 @@ public class NavigationBarSalesController implements ControllerInterface {
     private void initialize() {
         // Handle button clicks
         stockControlButtonSales.setOnAction(event -> loadStockControlPanel());
+        salesHistoryButtonSales.setOnAction(event -> loadSalesHistoryPanel());
         profileButtonSales.setOnAction(event -> loadProfileManagementPanel());
 
         addHoverEffect(stockControlButtonSales);
-        addHoverEffect(salesInvoiceButtonSales);
+        addHoverEffect(salesHistoryButtonSales);
         addHoverEffect(profileButtonSales);
     }
 
@@ -80,6 +81,15 @@ public class NavigationBarSalesController implements ControllerInterface {
         try {
             BorderPane profileManagementPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagement-view.fxml"));
             mainBorderPane.setRight(profileManagementPanel);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadSalesHistoryPanel() {
+        try {
+            BorderPane salesHistoryPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/salesHistory/salesHistorySales-view.fxml"));
+            mainBorderPane.setRight(salesHistoryPanel);
         } catch (IOException e) {
             e.printStackTrace();
         }

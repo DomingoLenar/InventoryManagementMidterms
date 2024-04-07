@@ -24,13 +24,8 @@
             <children>
                 <TableView fx:id="stockControlPurchaserTable" layoutX="11.0" layoutY="10.0" prefHeight="510.0" prefWidth="829.0" style="-fx-font-family: 'Share Tech Mono'; -fx-font-size: 15;">
                     <columns>
-                        <TableColumn prefWidth="135.0" text="Batch Number" />
-                        <TableColumn minWidth="0.0" prefWidth="221.0" text="Product" />
-                        <TableColumn minWidth="0.0" prefWidth="95.0" text="Quantity" />
-                        <TableColumn minWidth="0.0" prefWidth="72.0" text="Price" />
-                        <TableColumn minWidth="0.0" prefWidth="84.0" text="Cost" />
-                        <TableColumn minWidth="0.0" prefWidth="130.0" text="Supplier" />
-                        <TableColumn minWidth="0.0" prefWidth="91.0" text="Date" />
+                        <TableColumn minWidth="0.0" prefWidth="420.0" text="Item Name" />
+                        <TableColumn minWidth="0.0" prefWidth="408.0" text="Total Quantity" />
                     </columns>
                 </TableView>
             </children></AnchorPane>

@@ -3,6 +3,7 @@ package com.example.inventorymanagement.client.admin.views;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -10,6 +11,7 @@ import javafx.stage.Stage;
 import com.example.inventorymanagement.client.admin.controllers.NavigationBarAdminController;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 public class UserManagementAdminPanel extends Application {
     @Override
@@ -25,6 +27,14 @@ public class UserManagementAdminPanel extends Application {
 
         // Create the user management panel
         BorderPane stockControlPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/userManagement/userManagementAdmin-view.fxml"));
+        InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+
+        if (inputStream != null) {
+            Image image = new Image(inputStream);
+            stage.getIcons().add(image);
+        } else {
+            System.err.println("Failed to load image: logo.png");
+        }
 
         BorderPane root = new BorderPane();
         root.setLeft(navigationBar);
@@ -33,6 +43,7 @@ public class UserManagementAdminPanel extends Application {
         Scene scene = new Scene(root, 1080, 650);
         stage.setScene(scene);
         stage.setTitle("Stock Pilot");
+        stage.setResizable(false);
         stage.show();
 
         // Set the main BorderPane reference in the navigation bar controller
