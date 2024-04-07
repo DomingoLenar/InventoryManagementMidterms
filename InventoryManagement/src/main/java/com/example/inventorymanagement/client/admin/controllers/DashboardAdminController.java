@@ -14,6 +14,7 @@ import javafx.scene.chart.StackedBarChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
 import java.net.URL;
@@ -30,6 +31,8 @@ import javafx.stage.Stage;
 public class DashboardAdminController extends Application implements Initializable, ControllerInterface {
     @FXML
     private BorderPane borderPaneAdminDashboard;
+    @FXML
+    private Button addUserButton;
     @FXML
     private TextField searchButton;
     @FXML
@@ -56,6 +59,7 @@ public class DashboardAdminController extends Application implements Initializab
     private Registry registry;
     private DashboardAdminModel dashboardAdminModel;
     private DashboardAdminPanel dashboardAdminPanel;
+    private AddUserAdminController addUserAdminController;
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
@@ -69,6 +73,7 @@ public class DashboardAdminController extends Application implements Initializab
     public TextField getSearchButton() {
         return searchButton;
     }
+    public Button getAddUserButton(){return addUserButton;}
 
     public Label getUsersActiveLabel() {
         return usersActiveLabel;
@@ -131,9 +136,37 @@ public class DashboardAdminController extends Application implements Initializab
         // Initialize the model and panel objects
         dashboardAdminPanel = new DashboardAdminPanel();
         dashboardAdminModel = new DashboardAdminModel(registry, clientCallback);
+
+        // Add mouse enter and exit event handlers to apply hover effect
+        addUserButton.setOnMouseEntered(this::handleMouseEntered);
+        addUserButton.setOnMouseExited(this::handleMouseExited);
+
+        // call the addUserController using the addUserButton
+        addUserButton.setOnAction(event -> {
+            if (addUserAdminController != null) {
+                try {
+                    addUserAdminController.start(new Stage());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                System.err.println("AddUserAdminController not injected.");
+            }
+        });
+    }
+    // Event handler for mouse enter
+    private void handleMouseEntered(MouseEvent event) {
+        addUserButton.setStyle("-fx-background-color: derive(#EFD1D1, -10%);");
     }
 
+    // Event handler for mouse exit
+    private void handleMouseExited(MouseEvent event) {
+        addUserButton.setStyle("-fx-background-color: #EAB3B3;");
+    }
 
+    public void setAddUserAdminController(AddUserAdminController addUserAdminController) {
+        this.addUserAdminController = addUserAdminController;
+    }
     // Method to update the time label
     private void updateTimeLabel() {
         Thread updateTimeThread = new Thread(() -> {
