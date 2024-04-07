@@ -1,6 +1,12 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
+import com.example.inventorymanagement.client.admin.models.DashboardAdminModel;
+import com.example.inventorymanagement.client.admin.views.AddItemAdminPanel;
+import com.example.inventorymanagement.client.admin.views.DashboardAdminPanel;
+import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,13 +18,16 @@ import javafx.scene.layout.BorderPane;
 
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import javafx.stage.Stage;
 
-public class DashboardAdminController implements Initializable, ControllerInterface {
+
+public class DashboardAdminController extends Application implements Initializable, ControllerInterface {
     @FXML
     private BorderPane borderPaneAdminDashboard;
     @FXML
@@ -41,6 +50,17 @@ public class DashboardAdminController implements Initializable, ControllerInterf
     private Label todayTransactionsLabel;
     @FXML
     private Label topProductsLabel;
+    private MainController mainController;
+
+    private ClientCallback clientCallback;
+    private Registry registry;
+    private DashboardAdminModel dashboardAdminModel;
+    private DashboardAdminPanel dashboardAdminPanel;
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
 
     public BorderPane getBorderPaneAdminDashboard() {
         return borderPaneAdminDashboard;
@@ -91,7 +111,7 @@ public class DashboardAdminController implements Initializable, ControllerInterf
 
     @Override
     public String getObjectsUsed() throws RemoteException {
-        return null;
+        return "Dasboard";
     }
 
     @Override
@@ -107,6 +127,10 @@ public class DashboardAdminController implements Initializable, ControllerInterf
 
         // Update time label every second
         updateTimeLabel();
+
+        // Initialize the model and panel objects
+        dashboardAdminPanel = new DashboardAdminPanel();
+        dashboardAdminModel = new DashboardAdminModel(registry, clientCallback);
     }
 
 
@@ -134,7 +158,14 @@ public class DashboardAdminController implements Initializable, ControllerInterf
         updateTimeThread.setDaemon(true);
         updateTimeThread.start();
     }
+    public static void main(String[] args) {
+        launch();
+    }
 
-
+    @Override
+    public void start(Stage stage) throws Exception {
+        dashboardAdminPanel = new DashboardAdminPanel();
+        dashboardAdminPanel.start(stage);
+    }
 }
 
