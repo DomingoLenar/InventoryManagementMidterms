@@ -1,4 +1,4 @@
-package com.example.inventorymanagement.client.common.controllers;
+package com.example.inventorymanagement.client.admin.controllers;
 
 import com.example.inventorymanagement.client.admin.models.ProfileManagementAdminModel;
 import com.example.inventorymanagement.client.admin.views.ProfileManagementAdminPanel;
