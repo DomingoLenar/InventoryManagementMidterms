@@ -33,6 +33,4 @@ public class DashboardAdminModel {
     public LinkedHashMap<Integer, Float> fetchMonthlyRevenue() throws NotLoggedInException, OutOfRoleException{
         return FetchMonthlyRevenueService.process(registry, clientCallback);
     }
-
-
 }
