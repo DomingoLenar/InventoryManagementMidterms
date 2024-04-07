@@ -15,7 +15,7 @@ import java.rmi.registry.Registry;
 
 public class RemoveUserService {
 
-    public boolean process (Registry registry, ClientCallback cB , User toRemove) throws UserExistenceException, OutOfRoleException, NotLoggedInException {
+    public static boolean process (Registry registry, ClientCallback cB , User toRemove) throws UserExistenceException, OutOfRoleException, NotLoggedInException {
         try {
 
             UserRequestInterface userRequest = (UserRequestInterface) registry.lookup("userRequest");

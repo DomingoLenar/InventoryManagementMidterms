@@ -3,19 +3,181 @@
     {
       "username": "testadmin",
       "password": "admintest",
-      "role":"admin",
-      "isActive": "false"
-    },
-    {
-      "username": "testsales",
-      "password": "salestest",
-      "role":"sales",
+      "role": "admin",
       "isActive": "false"
     },
     {
       "username": "testpurchase",
       "password": "purchasetest",
-      "role":"purchaser",
+      "role": "purchase",
+      "isActive": "false"
+    },
+    {
+      "username": "testsales",
+      "password": "salestest",
+      "role": "sales",
+      "isActive": "false"
+    },
+    {
+      "username": "testUser",
+      "isActive": "false",
+      "role": "sales",
+      "password": "newPassword"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "isActive": "false",
+      "role": "sales"
+    },
+    {
+      "username": "testUser",
+      "password": "password123",
+      "role": "admin",
       "isActive": "false"
     }
   ]

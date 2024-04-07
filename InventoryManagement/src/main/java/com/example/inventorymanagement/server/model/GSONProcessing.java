@@ -6,7 +6,6 @@ import com.example.inventorymanagement.util.objects.ItemOrder;
 import com.google.gson.*;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -40,21 +39,20 @@ public class GSONProcessing {
      * @return true if item is added successfully, false if otherwise.
      */
     public static boolean addItem(Item newItem) {
-        String filePath = "com/example/inventorymanagement/data/items.json";
-
         try {
-            Gson gson = new Gson();
-
-            JsonElement rootElement = JsonParser.parseReader(new FileReader(filePath));
+            String filePath = "src/main/resources/com/example/inventorymanagement/data/items.json";
+            JsonParser jsonParser = new JsonParser();
+            JsonElement rootElement = jsonParser.parse(new FileReader(filePath));
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray itemJsonArray = rootObject.getAsJsonArray("items");
 
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement newItemJson = gson.toJsonTree(newItem);
             itemJsonArray.add(newItemJson);
 
-            try (FileWriter writer = new FileWriter(filePath)) {
-                gson.toJson(rootElement, writer);
-            }
+            FileWriter writer = new FileWriter(filePath);
+            gson.toJson(rootElement, writer);
+            writer.close();
 
             return true;
         } catch (IOException e) {
@@ -70,12 +68,10 @@ public class GSONProcessing {
      * @return true if the item was successfully removed, false if otherwise.
      */
     public static boolean removeItem(String itemName) {
-        String filePath = "com/example/inventorymanagement/data/items.json";
-
         try {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-            JsonElement rootElement = JsonParser.parseReader(new FileReader(filePath));
+            String filePath = "src/main/resources/com/example/inventorymanagement/data/items.json";
+            JsonParser jsonParser = new JsonParser();
+            JsonElement rootElement = jsonParser.parse(new FileReader(filePath));
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray itemJsonArray = rootObject.getAsJsonArray("items");
 
@@ -84,16 +80,14 @@ public class GSONProcessing {
                 String name = itemObject.get("itemName").getAsString();
                 if (name.equals(itemName)) {
                     itemJsonArray.remove(jsonElement);
-
-                    try (FileWriter writer = new FileWriter(filePath)) {
-                        gson.toJson(rootElement, writer);
-                    }
-
+                    FileWriter writer = new FileWriter(filePath);
+                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                    gson.toJson(rootElement, writer);
+                    writer.close();
                     return true;
                 }
             }
-
-            return false;
+            return false; // Item not found
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -111,34 +105,33 @@ public class GSONProcessing {
     public static boolean addItemOrder(String orderType, ItemOrder newOrder) {
         try {
             String filePath;
-            String orderArrayName;
-            switch (orderType.toLowerCase()) {
-                case "purchase":
-                    filePath = "/com/example/inventorymanagement/data/purchaseorders.json";
-                    orderArrayName = "purchaseOrders";
-                    break;
-                case "sales":
-                    filePath = "/com/example/inventorymanagement/data/salesorder.json";
-                    orderArrayName = "salesOrders";
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid order type: " + orderType);
+            if (orderType.equalsIgnoreCase("purchase")) {
+                filePath = "InventoryManagement/src/main/resources/com/example/inventorymanagement/data/purchaseorders.json";
+            } else if (orderType.equalsIgnoreCase("sales")) {
+                filePath = "InventoryManagement/src/main/resources/com/example/inventorymanagement/data/salesorders.json";
+            } else {
+                throw new IllegalArgumentException("Invalid order type: " + orderType);
             }
-            Gson gson = new Gson();
-            try (
-                    InputStream inputStream = GSONProcessing.class.getResourceAsStream(filePath);
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                    FileWriter writer = new FileWriter(filePath)
-            ) {
-                JsonElement rootElement = JsonParser.parseReader(bufferedReader);
-                JsonObject rootObject = rootElement.getAsJsonObject();
-                JsonArray orderJsonArray = rootObject.getAsJsonArray(orderArrayName);
 
-                JsonElement newOrderJson = gson.toJsonTree(newOrder);
-                orderJsonArray.add(newOrderJson);
+            JsonParser jsonParser = new JsonParser();
+            JsonElement rootElement = jsonParser.parse(new FileReader(filePath));
+            JsonObject rootObject = rootElement.getAsJsonObject();
 
-                gson.toJson(rootElement, writer);
+            JsonArray orderJsonArray;
+            if (orderType.equalsIgnoreCase("purchase")) {
+                orderJsonArray = rootObject.getAsJsonArray("purchaseOrders");
+            } else {
+                orderJsonArray = rootObject.getAsJsonArray("salesOrders");
             }
+
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            JsonElement newOrderJson = gson.toJsonTree(newOrder);
+            orderJsonArray.add(newOrderJson);
+
+            FileWriter writer = new FileWriter(filePath);
+            gson.toJson(rootElement, writer);
+            writer.close();
+
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -161,7 +154,7 @@ public class GSONProcessing {
             if (orderType.equalsIgnoreCase("purchase")) {
                 filePath = "com/example/inventorymanagement/data/purchaseorders.json";
             } else if (orderType.equalsIgnoreCase("sales")) {
-                filePath = "com/example/inventorymanagement/data/salesorder.json";
+                filePath = "com/example/inventorymanagement/data/salesorders.json";
             } else {
                 throw new IllegalArgumentException("Invalid order type: " + orderType);
             }
@@ -201,10 +194,9 @@ public class GSONProcessing {
 
 
     public static synchronized boolean changePassword(User toChange, String newPassword) {
-        String filePath = "/com/example/inventorymanagement/data/users.json";
+        File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/users.json");
         try (
-                InputStream inputStream = GSONProcessing.class.getResourceAsStream(filePath);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
         ) {
             JsonElement rootElement = JsonParser.parseReader(bufferedReader);
             JsonObject rootObject = rootElement.getAsJsonObject();
@@ -215,14 +207,15 @@ public class GSONProcessing {
                 String name = userObject.get("username").getAsString();
                 if (name.equals(toChange.getUsername())) {
                     String currentPassword = userObject.get("password").getAsString();
+                    userObject.remove("password");
                     if (currentPassword.equals(newPassword)) {
-                        throw new IllegalArgumentException("The new password cannot be the same as the current password");
+                        return false;
                     }
                     userObject.addProperty("password", newPassword);
 
 
                     Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                    try (Writer writer = new FileWriter(filePath)) {
+                    try (Writer writer = new FileWriter(file)) {
                         gson.toJson(rootElement, writer);
                     }
                     return true;
@@ -237,10 +230,9 @@ public class GSONProcessing {
 
 
     public static synchronized boolean changeUserRole(User toChange, String newRole) {
-        String filePath = "/com/example/inventorymanagement/data/users.json";
+        File file =new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/users.json");
         try (
-                InputStream inputStream = GSONProcessing.class.getResourceAsStream(filePath);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file))
         ) {
             JsonElement rootElement = JsonParser.parseReader(bufferedReader);
             JsonObject rootObject = rootElement.getAsJsonObject();
@@ -252,10 +244,11 @@ public class GSONProcessing {
                 if (name.equals(toChange.getUsername())) {
                     String role = userObject.get("role").getAsString();
                     if (!role.equals(newRole)) {
+                        userObject.remove("role");
                         userObject.addProperty("role", newRole);
 
                         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                        try (Writer writer = new FileWriter(filePath)) {
+                        try (Writer writer = new FileWriter(file)) {
                             gson.toJson(rootElement, writer);
                         }
                         return true;
@@ -271,9 +264,9 @@ public class GSONProcessing {
 
     public static synchronized ArrayList<String> fetchListOfSuppliers() {
         ArrayList<String> suppliers = new ArrayList<>();
+        File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/suppliers.json");
         try (
-                InputStream inputStream = GSONProcessing.class.getResourceAsStream("/com/example/inventorymanagement/data/suppliers.json");
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file))
         ) {
             JsonElement rootElement = JsonParser.parseReader(bufferedReader);
             JsonObject jsonObject = rootElement.getAsJsonObject();
@@ -299,9 +292,9 @@ public class GSONProcessing {
      * @return  object of User or null if not found
      */
     public static synchronized User fetchUser(String username){
+        File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/users.json");
         try(
-                InputStream inputStream = GSONProcessing.class.getResourceAsStream("/com/example/inventorymanagement/data/users.json");
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file))
                 ){
 
             JsonElement rootElement = JsonParser.parseReader(bufferedReader);
@@ -330,9 +323,11 @@ public class GSONProcessing {
      */
     public static synchronized LinkedList<ItemOrder> fetchListOfItemOrder(String type){
         LinkedList<ItemOrder> listOfItemOrder = new LinkedList<>();
-        try{
-            String jsonFile = "com/example/inventorymanagement/data/"+type+"order.json";
-            JsonElement rootElement = JsonParser.parseReader(new FileReader(jsonFile));
+        File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/"+type+"orders.json");
+        try(
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file))
+                ){
+            JsonElement rootElement = JsonParser.parseReader(bufferedReader);
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray jsonArray = rootObject.getAsJsonArray(type+"Orders");
             for(JsonElement jsonElement: jsonArray){
@@ -341,7 +336,7 @@ public class GSONProcessing {
                 listOfItemOrder.addLast(itemOrder);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
         return listOfItemOrder;
@@ -349,9 +344,12 @@ public class GSONProcessing {
 
     public static synchronized LinkedList<Item> fetchListOfItems(){
         LinkedList<Item> itemList = new LinkedList<>();
-        try{
-            String itemJsonFile = "com/example/inventorymanagement/data/items.json";
-            JsonElement rootElement = JsonParser.parseReader(new FileReader(itemJsonFile));
+        File file = new File("src/main/resources/com/example/inventorymanagement/data/items.json");
+        try(
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file))
+                ){
+
+            JsonElement rootElement = JsonParser.parseReader(bufferedReader);
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray itemJsonArray = rootObject.getAsJsonArray("items");
             for(JsonElement jsonElement : itemJsonArray){
@@ -367,29 +365,37 @@ public class GSONProcessing {
     }
 
     public static synchronized boolean addUser(User newUser){
-        Gson gson = new Gson();
-        try{
-            String jsonFile = "com/example/inventorymanagement/data/users.json";
-            JsonElement rootElement = JsonParser.parseReader(new FileReader(jsonFile));
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/users.json");
+        try(
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+                ){
+            JsonElement rootElement = JsonParser.parseReader(bufferedReader);
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray userJsonArray = rootObject.getAsJsonArray("users");
 
             String jsonString = gson.toJson(newUser);
             JsonElement userElement = JsonParser.parseString(jsonString);
+            JsonObject userObject = userElement.getAsJsonObject();
+            userObject.addProperty("isActive","false");
             userJsonArray.add(userElement);
-
+            try(FileWriter writer = new FileWriter(file)) {
+                gson.toJson(rootElement, writer);
+            }
             return true;
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
             return false;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
     public static synchronized boolean removeUser(User toRemove){
         Gson gson = new Gson();
+        File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/users.json");
         try{
-            String jsonFile = "com/example/inventorymanagement/data/users.json";
-            JsonElement rootElement = JsonParser.parseReader(new FileReader(jsonFile));
+            JsonElement rootElement = JsonParser.parseReader(new FileReader(file));
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray userArray = rootObject.getAsJsonArray("users");
             for(JsonElement jsonElement: userArray){
@@ -405,5 +411,25 @@ public class GSONProcessing {
             throw new RuntimeException(e);
         }
         return false;
+    }
+
+    public static LinkedList<User> fetchListOfUsers(){
+        LinkedList<User> userList = new LinkedList<>();
+        Gson gson = new Gson();
+        File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/users.json");
+        try(
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+                ){
+            JsonElement rootElement = JsonParser.parseReader(bufferedReader);
+            JsonObject rootObject = rootElement.getAsJsonObject();
+            JsonArray jsonArray = rootObject.getAsJsonArray("users");
+            for(JsonElement jsonElement: jsonArray){
+                userList.add(gson.fromJson(jsonElement, User.class));
+            }
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return userList;
     }
 }
