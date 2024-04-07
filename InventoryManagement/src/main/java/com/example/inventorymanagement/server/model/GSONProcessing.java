@@ -412,4 +412,24 @@ public class GSONProcessing {
         }
         return false;
     }
+
+    public static LinkedList<User> fetchListOfUsers(){
+        LinkedList<User> userList = new LinkedList<>();
+        Gson gson = new Gson();
+        File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/users.json");
+        try(
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+                ){
+            JsonElement rootElement = JsonParser.parseReader(bufferedReader);
+            JsonObject rootObject = rootElement.getAsJsonObject();
+            JsonArray jsonArray = rootObject.getAsJsonArray("users");
+            for(JsonElement jsonElement: jsonArray){
+                userList.add(gson.fromJson(jsonElement, User.class));
+            }
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return userList;
+    }
 }
