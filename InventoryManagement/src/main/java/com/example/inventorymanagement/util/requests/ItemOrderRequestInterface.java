@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
-public interface ItemOrderRequestInterface {
+public interface ItemOrderRequestInterface extends Remote {
 
     public boolean createSalesInvoice(ClientCallback clientCallback, ItemOrder salesInvoice) throws RemoteException, OutOfRoleException, NotLoggedInException;
 
@@ -28,8 +28,15 @@ public interface ItemOrderRequestInterface {
 
     public LinkedHashMap<Integer, Float> fetchMonthlyCost(ClientCallback clientCallback) throws RemoteException, OutOfRoleException, NotLoggedInException;
 
-    public ArrayList<String> fetchSuppliers(ClientCallback cLientCallback) throws RemoteException, NotLoggedInException;
+    public ArrayList<String> fetchSuppliers(ClientCallback clientCallback) throws RemoteException, NotLoggedInException;
 
     public LinkedList<ItemOrder> fetchTransactionsToday(ClientCallback clientCallback) throws RemoteException, NotLoggedInException;
 
+    public void checkIfValidPerm(User user) throws RemoteException, OutOfRoleException;
+
+    public void checkIfLoggedIn(ClientCallback clientCallback) throws RemoteException, NotLoggedInException;
+
+    public String getCurrentDate() throws RemoteException;
+
+    public void callUpdate(String panel) throws RemoteException;
 }
