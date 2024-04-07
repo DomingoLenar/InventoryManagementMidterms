@@ -38,6 +38,8 @@ public class UserManagementAdminController extends Application implements Initia
     private Registry registry;
     private UserManagementAdminModel userManagementAdminModel;
     private UserManagementAdminPanel userManagementAdminPanel;
+    private AddUserAdminController addUserAdminController;
+
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
@@ -80,6 +82,22 @@ public class UserManagementAdminController extends Application implements Initia
         // initialize the panel and model objects
         userManagementAdminPanel = new UserManagementAdminPanel();
         userManagementAdminModel = new UserManagementAdminModel(registry, clientCallback);
+
+        // call the addUserAdminController using the addUserButton
+        addUserButton.setOnAction(event -> {
+            if (addUserAdminController != null) {
+                try {
+                    addUserAdminController.start(new Stage());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                System.err.println("AddUserAdminController not injected.");
+            }
+        });
+    }
+    public void setAddUserAdminController(AddUserAdminController addUserAdminController) {
+        this.addUserAdminController = addUserAdminController;
     }
 
     @Override
