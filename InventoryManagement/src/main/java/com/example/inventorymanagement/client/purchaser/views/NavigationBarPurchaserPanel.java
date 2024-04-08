@@ -1,6 +1,5 @@
 package com.example.inventorymanagement.client.purchaser.views;
 
-import com.example.inventorymanagement.client.admin.views.NavigationBarAdminPanel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

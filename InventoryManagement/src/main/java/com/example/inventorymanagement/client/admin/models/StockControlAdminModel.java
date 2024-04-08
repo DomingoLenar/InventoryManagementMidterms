@@ -13,16 +13,14 @@ public class StockControlAdminModel {
     private Registry registry;
     private ClientCallback callback;
 
-
     public StockControlAdminModel(Registry registry, ClientCallback clientCallback) {
         this.fetchLisOfItems = new FetchListOfItemsService();
         this.registry = registry;
         this.callback = clientCallback;
-
     }
+
     public LinkedList<Item> fetchItems () throws NotLoggedInException {
         try {
-
             // Fetch items using FetchListOfItemsService
             return fetchLisOfItems.process(registry, callback);
         } catch (RuntimeException e) {
@@ -31,6 +29,5 @@ public class StockControlAdminModel {
             return new LinkedList<>(); // Or throw an exception
         }
     }
-
 }
 

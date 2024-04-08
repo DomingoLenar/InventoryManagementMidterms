@@ -1,7 +1,5 @@
 package com.example.inventorymanagement.client.admin.views;
 
-import com.example.inventorymanagement.client.admin.controllers.DashboardAdminController;
-import com.example.inventorymanagement.client.admin.controllers.FinancesAdminController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,20 +16,17 @@ import java.io.InputStream;
 public class FinancesAdminPanel extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        //load font
+        // load font
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
 
-        //load the FXML files
-        FXMLLoader navigationBarLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/navigationBar/navigationBarAdmin-view.fxml"));
-        FXMLLoader financesLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/finances/financesAdmin-view.fxml"));
-        financesLoader.setController(new FinancesAdminController());
-
-        // load UI elements
-        BorderPane navigationBar = navigationBarLoader.load();
-        BorderPane financesAdminPanel = financesLoader.load();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/navigationBar/navigationBarAdmin-view.fxml"));
+        BorderPane navigationBar = loader.load();
 
         // Get the controller
-        FinancesAdminController controller = financesLoader.getController();
+        NavigationBarAdminController navBarAdminController = loader.getController();
+
+        // Create the finances panel
+        BorderPane financesAdminPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/finances/financesAdmin-view.fxml"));
 
         //Set up root pane
         BorderPane root = new BorderPane();
@@ -39,7 +34,7 @@ public class FinancesAdminPanel extends Application {
         root.setRight(financesAdminPanel);
 
         //Create Scene
-        Scene sceneStockControlAdminPanel = new Scene(root, 1080, 650);
+        Scene sceneFinancesAdminPanel = new Scene(root, 1080, 650);
 
         // Load icon
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
@@ -52,10 +47,14 @@ public class FinancesAdminPanel extends Application {
 
         // Set stage properties
         stage.setTitle("Stock Pilot");
-        stage.setScene(sceneStockControlAdminPanel);
+        stage.setScene(sceneFinancesAdminPanel);
         stage.setResizable(false);
         stage.show();
+
+        // Set the main BorderPane reference in the navigation bar controller
+        navBarAdminController.setMainBorderPane(root);
     }
+
 
     public static void main(String[] args) {
         launch();

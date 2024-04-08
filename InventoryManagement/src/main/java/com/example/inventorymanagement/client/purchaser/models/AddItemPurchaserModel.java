@@ -1,4 +1,4 @@
-package com.example.inventorymanagement.client.admin.models;
+package com.example.inventorymanagement.client.purchaser.models;
 
 import com.example.inventorymanagement.client.microservices.CreatePurchaseOrderService;
 import com.example.inventorymanagement.util.ClientCallback;
@@ -8,12 +8,12 @@ import com.example.inventorymanagement.util.objects.ItemOrder;
 
 import java.rmi.registry.Registry;
 
-public class AddItemAdminModel {
+public class AddItemPurchaserModel {
     private Registry registry;
     private ClientCallback clientCallback;
     private CreatePurchaseOrderService createPurchaseOrderService;
 
-    public AddItemAdminModel(Registry registry, ClientCallback clientCallback) {
+    public AddItemPurchaserModel(Registry registry, ClientCallback clientCallback) {
         this.registry = registry;
         this.clientCallback = clientCallback;
         this.createPurchaseOrderService = new CreatePurchaseOrderService();

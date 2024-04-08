@@ -1,10 +1,13 @@
 package com.example.inventorymanagement.client;
 
 import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
+import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -15,7 +18,9 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) throws Exception {
         Registry registry = LocateRegistry.getRegistry("localhost", 2018);
         UserRequestInterface userService = (UserRequestInterface) registry.lookup("userRequest");
-        MainController mainController = new MainController(userService);
+        //ItemOrderRequestInterface iOService = (ItemOrderRequestInterface) registry.lookup("itemOrder");
+        //ItemRequestInterface itemService = (ItemRequestInterface) registry.lookup("item");
+        MainController mainController = new MainController(userService, null, null, registry);
         mainController.setStage(primaryStage);
         mainController.loadWelcomeView();
         primaryStage.setTitle("Stock Pilot");

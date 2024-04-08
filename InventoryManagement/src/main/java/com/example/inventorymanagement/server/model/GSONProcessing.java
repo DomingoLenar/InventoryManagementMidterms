@@ -351,9 +351,12 @@ public class GSONProcessing {
 
     public static synchronized LinkedList<Item> fetchListOfItems(){
         LinkedList<Item> itemList = new LinkedList<>();
-        try{
-            String itemJsonFile = "com/example/inventorymanagement/data/items.json";
-            JsonElement rootElement = JsonParser.parseReader(new FileReader(itemJsonFile));
+        File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/items.json");
+        try(
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file))
+                ){
+
+            JsonElement rootElement = JsonParser.parseReader(bufferedReader);
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray itemJsonArray = rootObject.getAsJsonArray("items");
             for(JsonElement jsonElement : itemJsonArray){

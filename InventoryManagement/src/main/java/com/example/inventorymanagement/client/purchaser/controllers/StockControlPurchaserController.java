@@ -1,41 +1,162 @@
 package com.example.inventorymanagement.client.purchaser.controllers;
 
+import com.example.inventorymanagement.client.common.controllers.MainController;
 import com.example.inventorymanagement.client.purchaser.models.StockControlPurchaserModel;
+import com.example.inventorymanagement.client.purchaser.views.StockControlPurchaserPanel;
+import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
-import javafx.event.ActionEvent;
+import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
+import com.example.inventorymanagement.util.objects.Item;
+import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
+import com.example.inventorymanagement.util.requests.ItemRequestInterface;
+import com.example.inventorymanagement.util.requests.UserRequestInterface;
+import javafx.application.Application;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
+import java.util.LinkedList;
 
-public class StockControlPurchaserController implements ControllerInterface {
+public class StockControlPurchaserController extends Application implements ControllerInterface {
+
     @FXML
     private BorderPane borderPaneStockControlPurchaser;
     @FXML
-    private Button lowStocksButtonPurchaser;
+    private Button addItemButton;
     @FXML
-    private Button addItemButtonPurchaser;
+    private Button lowStocksButton;
     @FXML
     private TextField searchFieldPurchaser;
     @FXML
-    private TableView stockControlPurchaserTable;
-    private StockControlPurchaserModel model = new StockControlPurchaserModel();
+    private TableView<Item> stockControlPurchaserTable;
+    @FXML
+    private TableColumn<Item, String> itemNameColumn;
+    @FXML
+    private TableColumn<Item, Integer> totalQtyColumn;
 
-    public StockControlPurchaserController(){
+    private Registry registry;
+    private ClientCallback clientCallback;
+    private MainController mainController;
+    private StockControlPurchaserModel stockControlPurchaserModel;
+    private StockControlPurchaserPanel stockControlPurchaserPanel = new StockControlPurchaserPanel();
+    private boolean initialized = false; // Flag to track initialization
+
+    public StockControlPurchaserController() {
+        // Default constructor
+    }
+
+    public StockControlPurchaserController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry) {
+        this.clientCallback = clientCallback;
+        this.registry = registry;
+    }
+
+    public void setStockControlPurchaserModel(StockControlPurchaserModel stockControlPurchaserModel) {
+        this.stockControlPurchaserModel = stockControlPurchaserModel;
+    }
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        // Start the panel first
+        stockControlPurchaserPanel.start(stage, this);
+
+        // Call initialize after panel is started and model is initialized
+        initialize();
+
+        try {
+            fetchAndUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void initialize() {
+        if (!initialized) { // Check if already initialized
+            initialized = true; // Set the flag to true
+
+            // Check if UI components are not null
+            if (stockControlPurchaserTable != null && addItemButton != null & lowStocksButton != null) {
+                addHoverEffect(addItemButton);
+                addHoverEffect(lowStocksButton);
+                lowStocksButton.setOnAction(event -> handleLowStocks());
+                addItemButton.setOnAction(event -> handleAddItem());
+
+                try {
+                    if (stockControlPurchaserModel != null) {
+                        populateTableView(stockControlPurchaserModel.fetchItems());
+                    } else {
+                        // Handle the case where stockControlPurchaserModel is null
+                        System.out.println("Stock Control Purchaser Model is null.");
+                    }
+                } catch (NotLoggedInException e) {
+                    // Show prompt to user not logged in
+                    System.out.println("User is not logged in.");
+                }
+            } else {
+                // Handle the case where UI components are null
+                System.out.println("Error: Table or button is null. Cannot initialize.");
+            }
+        }
+    }
+
+    @FXML
+    private void handleAddItem() {
+        // Handle Add Item Button Action
+    }
+
+    @FXML
+    private void handleLowStocks() {
+        // Handle Low Stocks Button Action
     }
 
     @Override
     public void fetchAndUpdate() throws RemoteException {
-        // No implementation needed in this controller
+        try {
+            LinkedList<Item> items = stockControlPurchaserModel.fetchItems();
+            populateTableView(items);
+        } catch (NotLoggedInException e) {
+            // Show Prompt
+        }
+    }
+
+    private void populateTableView(LinkedList<Item> items) {
+        if (stockControlPurchaserTable != null && itemNameColumn != null && totalQtyColumn != null) {
+            ObservableList<Item> observableItems = FXCollections.observableArrayList(items);
+            stockControlPurchaserTable.setItems(observableItems);
+
+            // Make sure the cell value factories are set for the table columns
+            itemNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getItemName()));
+            totalQtyColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getTotalQty()).asObject());
+        } else {
+            System.out.println("Error: Table or columns are null. Cannot populate table.");
+        }
     }
 
     @Override
     public String getObjectsUsed() throws RemoteException {
-        return null;
+        return "items";
     }
+
+    private void addHoverEffect(Button button) {
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
+    }
+
+    // Getters for FXML components (if needed)
 
     @FXML
     public BorderPane getBorderPaneStockControlPurchaser() {
@@ -43,35 +164,32 @@ public class StockControlPurchaserController implements ControllerInterface {
     }
 
     @FXML
+    public Button getAddItemButton() {
+        return addItemButton;
+    }
+
+    @FXML
     public Button getLowStocksButton() {
-        return lowStocksButtonPurchaser;
+        return lowStocksButton;
     }
 
     @FXML
-    public Button getAddItemButton() { return addItemButtonPurchaser;}
-
-    @FXML
-    public TextField getSearchFieldPurchaser() { return searchFieldPurchaser; }
-
-    @FXML
-    public TableView getStockControlPurchaserTable() { return stockControlPurchaserTable; }
-
-
-    @FXML
-    private void initialize() {
-        addHoverEffect(lowStocksButtonPurchaser);
-        addHoverEffect(addItemButtonPurchaser);
-
-        addItemButtonPurchaser.setOnAction(this::handleAddItem);
+    public TextField getSearchFieldSPurchaser() {
+        return searchFieldPurchaser;
     }
 
-    private void handleAddItem(ActionEvent event) {
-        model.handleAddItem();
+    @FXML
+    public TableView<Item> getStockControlPurchaserTable() {
+        return stockControlPurchaserTable;
     }
 
+    @FXML
+    public TableColumn<Item, String> getItemNameColumn() {
+        return itemNameColumn;
+    }
 
-    private void addHoverEffect(Button button) {
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
+    @FXML
+    public TableColumn<Item, Integer> getTotalQtyColumn() {
+        return totalQtyColumn;
     }
 }

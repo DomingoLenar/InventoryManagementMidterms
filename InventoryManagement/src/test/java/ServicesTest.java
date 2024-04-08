@@ -8,6 +8,7 @@ import com.example.inventorymanagement.util.objects.ItemOrder;
 import com.example.inventorymanagement.util.objects.User;
 
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
+import com.google.gson.Gson;
 import org.junit.jupiter.api.*;
 
 import com.example.inventorymanagement.util.exceptions.UserExistenceException;
@@ -105,7 +106,7 @@ public class ServicesTest implements ControllerInterface{
 
    @Test
    public void testCreateItemListingService() throws RemoteException, NotBoundException, NotLoggedInException, OutOfRoleException {
-      Item item = new Item("TestItem", 2234, 100, new LinkedHashMap<>());
+      Item item = new Item("TestItem", 2234, 100, new LinkedList<>());
 
       boolean result = CreateItemListingService.process(registry, clientCallback, item);
 
@@ -231,7 +232,7 @@ public class ServicesTest implements ControllerInterface{
 
    @Test
    public void testRemoveItemListingService() {
-      Item itemToRemove = new Item("TestItem", 2234, 100, new LinkedHashMap<>());
+      Item itemToRemove = new Item("TestItem", 2234, 100, new LinkedList<>());
 
       boolean result = false;
       try {

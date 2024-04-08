@@ -1,6 +1,8 @@
 package com.example.inventorymanagement.client.common.controllers;
 
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
+import com.example.inventorymanagement.util.ClientCallback;
+import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.exceptions.AlreadyLoggedInException;
 import com.example.inventorymanagement.util.exceptions.UserExistenceException;
 import com.example.inventorymanagement.util.objects.User;
@@ -19,7 +21,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
-public class LoginController {
+public class LoginController implements ControllerInterface {
     @FXML
     private Button loginButtonLogin;
     @FXML
@@ -28,6 +30,7 @@ public class LoginController {
     private TextField passwordField;
 
     private MainController mainController;
+    private ClientCallback clientCallback;
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
@@ -47,7 +50,9 @@ public class LoginController {
         String password = passwordField.getText();
         User user = new User(username, password, null);
         try {
-            mainController.setClientCallback(new ClientCallbackImpl(user));
+            clientCallback = new ClientCallbackImpl(user);
+            clientCallback.setCurrentPanel(this);
+            mainController.setClientCallback(clientCallback);
             mainController.getUserService().login(mainController.getClientCallback());
             User currentUser = mainController.getClientCallback().getUser();
             String role = currentUser.role;
@@ -62,7 +67,7 @@ public class LoginController {
                 case "sales":
                     mainController.displaySalesMainMenu();
                     break;
-                case "purchaser":
+                case "purchase":
                     mainController.displayPurchaserMainMenu();
                     break;
             }
@@ -76,5 +81,15 @@ public class LoginController {
             throw new RuntimeException(e);
         }
         // todo: handle the exception using javafx components
+    }
+
+    @Override
+    public void fetchAndUpdate() throws RemoteException {
+        //
+    }
+
+    @Override
+    public String getObjectsUsed() throws RemoteException {
+        return "user";
     }
 }

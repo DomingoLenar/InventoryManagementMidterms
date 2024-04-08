@@ -33,4 +33,5 @@ module com.example.inventorymanagement {
     exports com.example.inventorymanagement.util.requests;
     exports com.example.inventorymanagement.util.exceptions;
     exports com.example.inventorymanagement.util.objects;
+    opens com.example.inventorymanagement.util.objects to com.google.gson;
 }

@@ -1,26 +1,29 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
 import com.example.inventorymanagement.util.ControllerInterface;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.fxml.FXML;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 
+
+import java.net.URL;
 import java.rmi.RemoteException;
-import java.time.LocalTime;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
-public class FinancesAdminController implements ControllerInterface {
+public class FinancesAdminController implements Initializable, ControllerInterface {
     @FXML
     private BorderPane borderPaneFinancesAdmin;
     @FXML
@@ -207,6 +210,7 @@ public class FinancesAdminController implements ControllerInterface {
     public Label getDateTodayLabel() {
         return dateTodayLabel;
     }
+
     @Override
     public void fetchAndUpdate() throws RemoteException {
     }
@@ -221,50 +225,38 @@ public class FinancesAdminController implements ControllerInterface {
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
 
-        public class ClockController {
+    public void initialize(URL location, ResourceBundle resources) {
+        // Set the current date
+        LocalDate currentDate = LocalDate.now();
+        dateTodayLabel.setText(currentDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 
-            @FXML
-            private Line hourHand;
-            @FXML
-            private Line minuteHand;
+        // Set the current day
+        String currentDay = currentDate.getDayOfWeek().toString();
+        dayLabel.setText(currentDay);
 
-            public void initialize() {
-                updateClock();
-            }
-
-            private void updateClock() {
-                Runnable updater = () -> {
-                    while (true) {
-                        // Get current time
-                        LocalTime time = LocalTime.now();
-
-                        // Calculate rotation angles for hour and minute
-                        double minuteAngle = (time.getMinute() + time.getSecond() / 60.0) * 6;
-                        double hourAngle = (time.getHour() % 12 + time.getMinute() / 60.0) * 30;
-
-                        // Rotate the clock hands
-                        rotateHand(minuteHand, minuteAngle);
-                        rotateHand(hourHand, hourAngle);
-
-                        // Sleep for 1 second before updating again
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-
-                // Start a new thread for updating the clock
-                Thread clockThread = new Thread(updater);
-                clockThread.setDaemon(true);
-                clockThread.start();
-            }
-
-            private void rotateHand(Line hand, double angle) {
-                hand.setRotate(angle);
-            }
-        }
+        // Update time label every second
+        updateTimeLabel();
     }
+
+    // Method to update the time label
+    private void updateTimeLabel() {
+        Thread updateTimeThread = new Thread(() -> {
+            while (true) {
+                LocalDateTime currentTime = LocalDateTime.now();
+                String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("hh:mm:ss a", Locale.forLanguageTag("fil-PH")));
+                Platform.runLater(() -> timeLabel.setText(formattedTime));
+
+                try {
+                    // Sleep for 1 second
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        updateTimeThread.setDaemon(true);
+        updateTimeThread.start();
+    }
+}
 
 

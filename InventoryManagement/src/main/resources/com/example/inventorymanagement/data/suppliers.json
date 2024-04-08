@@ -1,10 +1,19 @@
 {
   "suppliers":[
     {
-      "name": ""
+      "name": "FeatherFarms"
     },
     {
-      "name": ""
+      "name": "OfficeEase"
+    },
+    {
+      "name": "SweetTreats"
+    },
+    {
+      "name": "SteelCraft"
+    },
+    {
+      "name": "ComMeats"
     }
   ]
 }
