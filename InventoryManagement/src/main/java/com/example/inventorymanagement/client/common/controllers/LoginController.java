@@ -67,7 +67,7 @@ public class LoginController implements ControllerInterface {
                 case "sales":
                     mainController.displaySalesMainMenu();
                     break;
-                case "purchaser":
+                case "purchase":
                     mainController.displayPurchaserMainMenu();
                     break;
             }

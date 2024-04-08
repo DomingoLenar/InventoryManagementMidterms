@@ -2,12 +2,15 @@ package com.example.inventorymanagement.client.common.controllers;
 
 import com.example.inventorymanagement.client.admin.controllers.AddItemAdminController;
 import com.example.inventorymanagement.client.admin.controllers.StockControlAdminController;
+import com.example.inventorymanagement.client.admin.models.StockControlAdminModel;
 import com.example.inventorymanagement.client.admin.views.StockControlAdminPanel;
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.client.purchaser.controllers.NavigationBarPurchaserController;
 import com.example.inventorymanagement.client.purchaser.controllers.StockControlPurchaserController;
 import com.example.inventorymanagement.client.purchaser.models.StockControlPurchaserModel;
 import com.example.inventorymanagement.client.purchaser.views.StockControlPurchaserPanel;
+import com.example.inventorymanagement.client.sales.controllers.StockControlSalesController;
+import com.example.inventorymanagement.client.sales.models.StockControlSalesModel;
 import com.example.inventorymanagement.client.sales.views.StockControlSalesPanel;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
@@ -103,6 +106,15 @@ public class MainController implements ControllerInterface {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/welcome/welcome-view.fxml"));
             BorderPane welcomePane = fxmlLoader.load();
 
+            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                stage.getIcons().add(image);
+            } else {
+                System.err.println("Failed to load image: logo.png");
+            }
+
             Scene scene = new Scene(welcomePane);
             stage.setScene(scene);
 
@@ -119,6 +131,15 @@ public class MainController implements ControllerInterface {
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/login/login-view.fxml"));
             BorderPane loginPane = fxmlLoader.load();
+
+            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                stage.getIcons().add(image);
+            } else {
+                System.err.println("Failed to load image: logo.png");
+            }
 
             Scene scene = new Scene(loginPane);
 
@@ -175,6 +196,15 @@ public class MainController implements ControllerInterface {
         // Set the main BorderPane reference in the navigation bar controller
         navigationBarPurchaserController.setMainBorderPane(root);
 //        new StockControlPurchaserPanel().start(new Stage());
+    public void displayPurchaserMainMenu() {
+        try {
+            StockControlPurchaserController purchaserController = new StockControlPurchaserController(clientCallback, userService, iOService, itemService, registry);
+            purchaserController.setStockControlPurchaserModel(new StockControlPurchaserModel(registry, clientCallback));
+            purchaserController.setMainController(this); // Set the MainController instance in StockControlPurchaserController
+            purchaserController.start(new Stage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void displaySalesMainMenu() throws IOException{

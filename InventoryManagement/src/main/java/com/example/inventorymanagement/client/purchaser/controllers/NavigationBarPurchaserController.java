@@ -50,15 +50,6 @@ public class NavigationBarPurchaserController implements ControllerInterface {
     }
 
     @FXML
-    public BorderPane getBorderPaneNavigationBarPurchaser() { return borderPaneNavigationBarPurchaser;}
-
-    @FXML
-    public Button getStockControlButtonPurchaser() { return stockControlButtonPurchaser; }
-
-    @FXML
-    public Button getProfileButtonPurchaser() { return profileButtonPurchaser; }
-
-    @FXML
     private void initialize() {
         // Handle button clicks
         stockControlButtonPurchaser.setOnAction(event -> loadStockControlPanel());
@@ -89,4 +80,13 @@ public class NavigationBarPurchaserController implements ControllerInterface {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    public BorderPane getBorderPaneNavigationBarPurchaser() { return borderPaneNavigationBarPurchaser;}
+
+    @FXML
+    public Button getStockControlButtonPurchaser() { return stockControlButtonPurchaser; }
+
+    @FXML
+    public Button getProfileButtonPurchaser() { return profileButtonPurchaser; }
 }

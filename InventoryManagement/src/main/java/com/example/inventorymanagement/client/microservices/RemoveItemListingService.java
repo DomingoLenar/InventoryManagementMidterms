@@ -14,7 +14,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class RemoveItemListingService {
-    public boolean process (Registry registry, ClientCallback cB , Item item) throws NotLoggedInException, OutOfRoleException {
+    public static boolean process (Registry registry, ClientCallback cB , Item item) throws NotLoggedInException, OutOfRoleException {
         try {
 
             ItemRequestInterface ItemRequest = (ItemRequestInterface) registry.lookup("item");

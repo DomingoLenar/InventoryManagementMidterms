@@ -1,6 +1,6 @@
 package com.example.inventorymanagement.client.sales.views;
 
-import javafx.application.Application;
+import com.example.inventorymanagement.client.sales.controllers.StockControlSalesController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -15,18 +15,20 @@ import java.io.InputStream;
 
 public class StockControlSalesPanel {
 
-    public void start(Stage stage) throws IOException {
-
+    public void start(Stage stage, StockControlSalesController controller) throws IOException {
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
+        // Set the controller before loading the FXML file
+        FXMLLoader viewLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlSales-view.fxml"));
+        viewLoader.setController(controller);
+
+        BorderPane stockControlPanelSales = viewLoader.load();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/navigationBar/navigationBarSales-view.fxml"));
         BorderPane navigationBarSales = loader.load();
 
         // Get the controller
         NavigationBarSalesController navBarSalesController = loader.getController();
-
-        // Create the stock control panel
-        BorderPane stockControlPanelSales = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlSales-view.fxml"));
 
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
 
