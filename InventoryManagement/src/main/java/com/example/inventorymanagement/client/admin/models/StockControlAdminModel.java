@@ -22,7 +22,7 @@ public class StockControlAdminModel {
     public LinkedList<Item> fetchItems () throws NotLoggedInException {
         try {
             // Fetch items using FetchListOfItemsService
-            return fetchLisOfItems.process(registry, callback);
+            return FetchListOfItemsService.process(registry, callback);
         } catch (RuntimeException e) {
             // Handle exceptions appropriately
             e.printStackTrace();

@@ -16,6 +16,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -23,106 +24,58 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.LinkedList;
+import java.util.ResourceBundle;
 
-public class StockControlPurchaserController extends Application implements ControllerInterface {
-
+public class StockControlPurchaserController implements ControllerInterface {
     @FXML
     private BorderPane borderPaneStockControlPurchaser;
     @FXML
-    private Button addItemButton;
+    private Button lowStocksButtonPurchaser;
     @FXML
-    private Button lowStocksButton;
+    private Button addItemButtonPurchaser;
     @FXML
     private TextField searchFieldPurchaser;
     @FXML
-    private TableView<Item> stockControlPurchaserTable;
+    private TableView stockControlPurchaserTable;
     @FXML
     private TableColumn<Item, String> itemNameColumn;
     @FXML
     private TableColumn<Item, Integer> totalQtyColumn;
 
-    private Registry registry;
-    private ClientCallback clientCallback;
-    private MainController mainController;
+    @FXML
+    public BorderPane getBorderPaneStockControlPurchaser() {
+        return borderPaneStockControlPurchaser;
+    }
+
+    @FXML
+    public Button getLowStocksButton() {
+        return lowStocksButtonPurchaser;
+    }
+
+    @FXML
+    public Button getAddItemButton() { return addItemButtonPurchaser;}
+
+    @FXML
+    public TextField getSearchFieldPurchaser() { return searchFieldPurchaser; }
+
+    @FXML
+    public TableView getStockControlPurchaserTable() { return stockControlPurchaserTable; }
+
     private StockControlPurchaserModel stockControlPurchaserModel;
-    private StockControlPurchaserPanel stockControlPurchaserPanel = new StockControlPurchaserPanel();
-    private boolean initialized = false; // Flag to track initialization
 
-    public StockControlPurchaserController() {
-        // Default constructor
+    private MainController mainController;
+    public StockControlPurchaserController(){
+
     }
 
-    public StockControlPurchaserController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry) {
-        this.clientCallback = clientCallback;
-        this.registry = registry;
+    public StockControlPurchaserController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
+        this.stockControlPurchaserModel = new StockControlPurchaserModel(registry, clientCallback);
     }
-
-    public void setStockControlPurchaserModel(StockControlPurchaserModel stockControlPurchaserModel) {
-        this.stockControlPurchaserModel = stockControlPurchaserModel;
-    }
-
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        // Start the panel first
-        stockControlPurchaserPanel.start(stage, this);
-
-        // Call initialize after panel is started and model is initialized
-        initialize();
-
-        try {
-            fetchAndUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    public void initialize() {
-        if (!initialized) { // Check if already initialized
-            initialized = true; // Set the flag to true
-
-            // Check if UI components are not null
-            if (stockControlPurchaserTable != null && addItemButton != null & lowStocksButton != null) {
-                addHoverEffect(addItemButton);
-                addHoverEffect(lowStocksButton);
-                lowStocksButton.setOnAction(event -> handleLowStocks());
-                addItemButton.setOnAction(event -> handleAddItem());
-
-                try {
-                    if (stockControlPurchaserModel != null) {
-                        populateTableView(stockControlPurchaserModel.fetchItems());
-                    } else {
-                        // Handle the case where stockControlPurchaserModel is null
-                        System.out.println("Stock Control Purchaser Model is null.");
-                    }
-                } catch (NotLoggedInException e) {
-                    // Show prompt to user not logged in
-                    System.out.println("User is not logged in.");
-                }
-            } else {
-                // Handle the case where UI components are null
-                System.out.println("Error: Table or button is null. Cannot initialize.");
-            }
-        }
-    }
-
-    @FXML
-    private void handleAddItem() {
-        // Handle Add Item Button Action
-    }
-
-    @FXML
-    private void handleLowStocks() {
-        // Handle Low Stocks Button Action
-    }
-
+    boolean initialized = false;
     @Override
     public void fetchAndUpdate() throws RemoteException {
         try {
@@ -156,40 +109,49 @@ public class StockControlPurchaserController extends Application implements Cont
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
 
-    // Getters for FXML components (if needed)
-
     @FXML
-    public BorderPane getBorderPaneStockControlPurchaser() {
-        return borderPaneStockControlPurchaser;
+    private void handleAddItem() {
+        // Handle sales invoice button action
     }
 
     @FXML
-    public Button getAddItemButton() {
-        return addItemButton;
+    private void handleLowStocks() {
+        // Handle low stocks button action
     }
-
     @FXML
-    public Button getLowStocksButton() {
-        return lowStocksButton;
-    }
+    public void initialize() { // initialize components -> better approach is to initialize just the components and let nav___bar buttons handle the population of data/realtime
+        System.out.println("initialize");
+        addHoverEffect(lowStocksButtonPurchaser);
+        addHoverEffect(addItemButtonPurchaser);
 
-    @FXML
-    public TextField getSearchFieldSPurchaser() {
-        return searchFieldPurchaser;
-    }
+        lowStocksButtonPurchaser.setOnAction(event -> handleLowStocks());
+        addItemButtonPurchaser.setOnAction(event -> handleAddItem());
+        stockControlPurchaserModel = new StockControlPurchaserModel(MainController.registry, MainController.clientCallback);
+        if (!initialized) { // Check if already initialized
+            initialized = true; // Set the flag to true
 
-    @FXML
-    public TableView<Item> getStockControlPurchaserTable() {
-        return stockControlPurchaserTable;
-    }
+            // Check if UI components are not null
+            if (stockControlPurchaserTable != null && addItemButtonPurchaser != null & lowStocksButtonPurchaser != null) {
+                addHoverEffect(addItemButtonPurchaser);
+                addHoverEffect(lowStocksButtonPurchaser);
+                lowStocksButtonPurchaser.setOnAction(event -> handleLowStocks());
+                addItemButtonPurchaser.setOnAction(event -> handleAddItem());
 
-    @FXML
-    public TableColumn<Item, String> getItemNameColumn() {
-        return itemNameColumn;
-    }
-
-    @FXML
-    public TableColumn<Item, Integer> getTotalQtyColumn() {
-        return totalQtyColumn;
+                try {
+                    if (stockControlPurchaserModel != null) {
+                        populateTableView(stockControlPurchaserModel.fetchItems());
+                    } else {
+                        // Handle the case where stockControlPurchaserModel is null
+                        System.out.println("Stock Control Purchaser Model is null.");
+                    }
+                } catch (NotLoggedInException e) {
+                    // Show prompt to user not logged in
+                    System.out.println("User is not logged in.");
+                }
+            } else {
+                // Handle the case where UI components are null
+                System.out.println("Error: Table or button is null. Cannot initialize.");
+            }
+        }
     }
 }

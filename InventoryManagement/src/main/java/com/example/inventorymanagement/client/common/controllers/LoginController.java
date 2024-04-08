@@ -79,6 +79,8 @@ public class LoginController implements ControllerInterface {
 
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         // todo: handle the exception using javafx components
     }

@@ -1,6 +1,11 @@
 package com.example.inventorymanagement.client.purchaser.controllers;
 
+import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
+import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
+import com.example.inventorymanagement.util.requests.ItemRequestInterface;
+import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -8,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 
 public class NavigationBarPurchaserController implements ControllerInterface {
     @FXML
@@ -18,11 +24,18 @@ public class NavigationBarPurchaserController implements ControllerInterface {
     private Button profileButtonPurchaser;
 
     // Reference to the main BorderPane
-    private BorderPane mainBorderPane;
+    private BorderPane mainPane;
+    private MainController mainController;
+    public NavigationBarPurchaserController() {
+
+    }
+    public NavigationBarPurchaserController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
+        this.mainController = mainController;
+    }
 
     // Setter for main BorderPane
-    public void setMainBorderPane(BorderPane mainBorderPane) {
-        this.mainBorderPane = mainBorderPane;
+    public void setMainPane(BorderPane mainPane) {
+        this.mainPane = mainPane;
     }
 
     @Override
@@ -34,15 +47,6 @@ public class NavigationBarPurchaserController implements ControllerInterface {
     public String getObjectsUsed() throws RemoteException {
         return null;
     }
-
-    @FXML
-    public BorderPane getBorderPaneNavigationBarPurchaser() { return borderPaneNavigationBarPurchaser;}
-
-    @FXML
-    public Button getStockControlButtonPurchaser() { return stockControlButtonPurchaser; }
-
-    @FXML
-    public Button getProfileButtonPurchaser() { return profileButtonPurchaser; }
 
     @FXML
     private void initialize() {
@@ -60,21 +64,30 @@ public class NavigationBarPurchaserController implements ControllerInterface {
     }
 
     private void loadStockControlPanel() {
-        // Load Stock Control panel
         try {
-            BorderPane stockControlPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlPurchaser-view.fxml"));
-            mainBorderPane.setRight(stockControlPanel);
+            MainController.getStockControlPurchaserController().fetchAndUpdate(); // triggered when btn stock control is click
+            mainPane.setRight(MainController.getStockControlPurchaserPanel()); // get the refresh components of stock control of purchaser
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
     private void loadProfileManagementPanel() {
         try {
-            BorderPane profileManagementPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagement-view.fxml"));
-            mainBorderPane.setRight(profileManagementPanel);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagement-view.fxml"));
+            BorderPane profileManagementPane = loader.load();
+            mainPane.setRight(profileManagementPane);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    public BorderPane getBorderPaneNavigationBarPurchaser() { return borderPaneNavigationBarPurchaser;}
+
+    @FXML
+    public Button getStockControlButtonPurchaser() { return stockControlButtonPurchaser; }
+
+    @FXML
+    public Button getProfileButtonPurchaser() { return profileButtonPurchaser; }
 }

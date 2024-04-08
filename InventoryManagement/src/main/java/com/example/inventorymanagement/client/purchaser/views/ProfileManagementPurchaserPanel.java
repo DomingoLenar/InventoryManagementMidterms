@@ -45,6 +45,6 @@ public class ProfileManagementPurchaserPanel {
         stage.show();
 
         // Set the main BorderPane reference in the navigation bar controller
-        navBarPurchaserController.setMainBorderPane(root);
+        navBarPurchaserController.setMainPane(root);
     }
 }

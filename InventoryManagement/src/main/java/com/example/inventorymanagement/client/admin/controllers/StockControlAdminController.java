@@ -1,172 +1,82 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
-import com.example.inventorymanagement.client.common.controllers.MainController;
 import com.example.inventorymanagement.client.admin.models.StockControlAdminModel;
-import com.example.inventorymanagement.client.admin.views.StockControlAdminPanel;
+import com.example.inventorymanagement.client.common.controllers.MainController;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
-import com.example.inventorymanagement.util.objects.Item;
+import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
+import com.example.inventorymanagement.util.objects.ItemOrder;
+import com.example.inventorymanagement.util.objects.User;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
-import javafx.application.Application;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
-import java.util.LinkedList;
 
-public class StockControlAdminController extends Application implements ControllerInterface {
-
+public class StockControlAdminController implements ControllerInterface {
     @FXML
     private BorderPane borderPaneStockControlAdmin;
     @FXML
-    private Button addItemButton;
+    private Button lowStocksButtonAdmin;
     @FXML
-    private Button lowStocksButton;
+    private Button salesInvoiceButtonAdmin;
     @FXML
-    private Button createSalesInvoiceButton;
+    private Button addListingButtonAdmin;
     @FXML
-    private Button addListingButton;
+    private Button addItemButtonAdmin;
     @FXML
     private TextField searchFieldAdmin;
     @FXML
-    private TableView<Item> stockControlAdminTable;
-    @FXML
-    private TableColumn<Item, String> itemNameColumn;
-    @FXML
-    private TableColumn<Item, Integer> totalQtyColumn;
-
-    private Registry registry;
-    private ClientCallback clientCallback;
+    private TableView stockControlAdminTable;
     private MainController mainController;
-    private StockControlAdminModel stockControlAdminModel;
-    private StockControlAdminPanel stockControlAdminPanel = new StockControlAdminPanel();
-    private boolean initialized = false; // Flag to track initialization
-
     public StockControlAdminController() {
-        // Default constructor
-    }
 
+    }
+    public StockControlAdminController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
+    }
     public StockControlAdminController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry) {
-        this.clientCallback = clientCallback;
-        this.registry = registry;
+        StockControlAdminModel stockControlAdminModel = new StockControlAdminModel(registry, clientCallback); // use this on events of stockcontroladminview
     }
-
-    public void setStockControlAdminModel(StockControlAdminModel stockControlAdminModel) {
-        this.stockControlAdminModel = stockControlAdminModel;
-    }
-
     public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        // Start the panel first
-        stockControlAdminPanel.start(stage, this);
-
-        // Call initialize after panel is started and model is initialized
-        initialize();
-
-        try {
-            fetchAndUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.mainController = mainController; // or this main...getSERVICES....actions()
     }
 
     @FXML
-    public void initialize() {
-        if (!initialized) { // Check if already initialized
-            initialized = true; // Set the flag to true
-
-            // Check if UI components are not null
-            if (stockControlAdminTable != null && addItemButton != null & lowStocksButton != null & addListingButton != null & createSalesInvoiceButton != null) {
-                addHoverEffect(addItemButton);
-                addHoverEffect(lowStocksButton);
-                addHoverEffect(addListingButton);
-                addHoverEffect(createSalesInvoiceButton);
-                lowStocksButton.setOnAction(event -> handleLowStocks());
-                addItemButton.setOnAction(event -> handleAddItem());
-                addListingButton.setOnAction(event -> handleAddListing());
-                createSalesInvoiceButton.setOnAction(event -> handleCreateSalesInvoice());
-
-                try {
-                    if (stockControlAdminModel != null) {
-                        populateTableView(stockControlAdminModel.fetchItems());
-                    } else {
-                        // Handle the case where stockControlAdminModel is null
-                        System.out.println("Stock Control Adminr Model is null.");
-                    }
-                } catch (NotLoggedInException e) {
-                    // Show prompt to user not logged in
-                    System.out.println("User is not logged in.");
-                }
-            } else {
-                // Handle the case where UI components are null
-                System.out.println("Error: Table or button is null. Cannot initialize.");
-            }
-        }
-    }
+    public BorderPane getBorderPaneStockControlAdmin() { return borderPaneStockControlAdmin;}
 
     @FXML
-    private void handleAddItem() {
-        // Handle Add Item Button Action
-    }
+    public Button getLowStocksButton() { return lowStocksButtonAdmin; }
 
     @FXML
-    private void handleLowStocks() {
-        // Handle Low Stocks Button Action
-    }
+    public Button getSalesInvoiceButton() { return salesInvoiceButtonAdmin; }
 
     @FXML
-    private void handleAddListing() {
-        // Handle Add Listing Button Action
-    }
+    public Button getAddListingButton() { return addListingButtonAdmin;}
 
     @FXML
-    private void handleCreateSalesInvoice() {
-        // Handle Create Sales Invoice Button Action
-    }
+    public Button getAddItemButton() { return addItemButtonAdmin;}
 
-    @Override
-    public void fetchAndUpdate() throws RemoteException {
-        try {
-            LinkedList<Item> items = stockControlAdminModel.fetchItems();
-            populateTableView(items);
-        } catch (NotLoggedInException e) {
-            // Show Prompt
-        }
-    }
+    @FXML
+    public TextField getSearchFieldAdmin() { return searchFieldAdmin; }
 
-    private void populateTableView(LinkedList<Item> items) {
-        if (stockControlAdminTable != null && itemNameColumn != null && totalQtyColumn != null) {
-            ObservableList<Item> observableItems = FXCollections.observableArrayList(items);
-            stockControlAdminTable.setItems(observableItems);
+    @FXML
+    public TableView getStockControlAdminTable() { return stockControlAdminTable; }
 
-            // Make sure the cell value factories are set for the table columns
-            itemNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getItemName()));
-            totalQtyColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getTotalQty()).asObject());
-        } else {
-            System.out.println("Error: Table or columns are null. Cannot populate table.");
-        }
-    }
-
-    @Override
-    public String getObjectsUsed() throws RemoteException {
-        return "items";
+    @FXML
+    private void initialize() {
+        addHoverEffect(lowStocksButtonAdmin);
+        addHoverEffect(salesInvoiceButtonAdmin);
+        addHoverEffect(addItemButtonAdmin);
+        addHoverEffect(addListingButtonAdmin);
     }
 
     private void addHoverEffect(Button button) {
@@ -174,40 +84,54 @@ public class StockControlAdminController extends Application implements Controll
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
 
-    // Getters for FXML components (if needed)
-
     @FXML
-    public BorderPane getBorderPaneStockControlAdmin() {
-        return borderPaneStockControlAdmin;
+    public void handleAddItem() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/addItem-view.fxml"));
+            Parent root = fxmlLoader.load();
+
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setTitle("Add Item");
+
+            DialogPane dialogPane = new DialogPane();
+            dialogPane.setContent(root);
+            dialog.setDialogPane(dialogPane);
+
+            dialog.initStyle(StageStyle.UNDECORATED);
+
+            ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+            User user = new User("testadmin", "admintest", "admin");
+            Button okButton = (Button) dialog.getDialogPane().lookupButton(okButtonType);
+            okButton.setOnAction(event -> {
+                try {
+                    mainController.getAddItemAdminController().getAddItemAdminModel().createPurchaseOrder(new ItemOrder(0, user, null, null));
+                } catch (OutOfRoleException e) {
+                    throw new RuntimeException(e);
+                } catch (NotLoggedInException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            Button cancelButton = new Button("Cancel");
+            cancelButton.setOnAction(event -> dialog.close());
+
+            dialog.getDialogPane().getChildren().addAll(okButton, cancelButton);
+
+            dialog.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
     }
 
-    @FXML
-    public Button getAddItemButton() {
-        return addItemButton;
+    @Override
+    public void fetchAndUpdate() throws RemoteException {
+        
     }
 
-    @FXML
-    public Button getLowStocksButton() {
-        return lowStocksButton;
-    }
-
-    @FXML
-    public TextField getSearchFieldSAdmin() {
-        return searchFieldAdmin;
-    }
-
-    @FXML
-    public TableView<Item> getStockControlAdminTable() {
-        return stockControlAdminTable;
-    }
-
-    @FXML
-    public TableColumn<Item, String> getItemNameColumn() {
-        return itemNameColumn;
-    }
-
-    @FXML
-    public TableColumn<Item, Integer> getTotalQtyColumn() {
-        return totalQtyColumn;
+    @Override
+    public String getObjectsUsed() throws RemoteException {
+        return null;
     }
 }
