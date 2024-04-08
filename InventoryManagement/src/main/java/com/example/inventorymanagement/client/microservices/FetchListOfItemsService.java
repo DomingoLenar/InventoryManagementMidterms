@@ -16,7 +16,7 @@ import java.util.LinkedList;
 public class FetchListOfItemsService {
 
 
-    public LinkedList<Item> process (Registry registry, ClientCallback cB ) throws NotLoggedInException{
+    public static LinkedList<Item> process (Registry registry, ClientCallback cB ) throws NotLoggedInException{
         try {
 
             ItemRequestInterface ItemRequest = (ItemRequestInterface) registry.lookup("item");

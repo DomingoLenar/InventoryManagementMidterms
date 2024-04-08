@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.LinkedList;
+import java.rmi.registry.Registry;
 
 public class StockControlAdminController implements ControllerInterface {
     @FXML
@@ -36,6 +37,8 @@ public class StockControlAdminController implements ControllerInterface {
     @FXML
     private TableView stockControlAdminTable;
     private StockControlAdminModel stockControlAdminModel;
+    private AddItemAdminModel addItemAdminModel = new AddItemAdminModel();
+    private CreateSalesInvoiceAdminModel salesInvoiceModel = new CreateSalesInvoiceAdminModel();
 
     private ClientCallback clientCallback;
     private Registry registry;
