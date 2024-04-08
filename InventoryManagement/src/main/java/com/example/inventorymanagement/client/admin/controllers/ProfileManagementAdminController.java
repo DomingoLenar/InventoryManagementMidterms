@@ -2,12 +2,7 @@ package com.example.inventorymanagement.client.admin.controllers;
 
 import com.example.inventorymanagement.client.admin.models.ProfileManagementAdminModel;
 import com.example.inventorymanagement.client.admin.models.ProfileManagementChangePassAdminModel;
-import com.example.inventorymanagement.client.admin.views.ProfileManagementAdminPanel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
-import com.example.inventorymanagement.client.microservices.ChangeUserRoleService;
-import com.example.inventorymanagement.client.microservices.RemoveUserService;
-import com.example.inventorymanagement.client.model.ClientCallbackImpl;
-import com.example.inventorymanagement.client.purchaser.models.StockControlPurchaserModel;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
@@ -17,14 +12,12 @@ import com.example.inventorymanagement.util.objects.User;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
-import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.LinkedList;
 
