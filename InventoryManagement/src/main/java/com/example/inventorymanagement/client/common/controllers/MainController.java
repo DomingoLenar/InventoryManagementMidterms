@@ -5,6 +5,8 @@ import com.example.inventorymanagement.client.admin.controllers.StockControlAdmi
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.client.purchaser.controllers.NavigationBarPurchaserController;
 import com.example.inventorymanagement.client.purchaser.controllers.StockControlPurchaserController;
+import com.example.inventorymanagement.client.admin.controllers.NavigationBarAdminController;
+import com.example.inventorymanagement.client.admin.controllers.StockControlAdminController;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
@@ -35,8 +37,12 @@ public class MainController implements ControllerInterface {
     public static ItemOrderRequestInterface iOService;
     public static ItemRequestInterface itemService;
     public static Registry registry;
-    StockControlAdminController stockControlAdminController;
+
+    static StockControlAdminController stockControlAdminController;
+    NavigationBarAdminController navigationBarAdminController;
+    static BorderPane stockControlAdminPanel;
     AddItemAdminController addItemAdminController;
+
     static StockControlPurchaserController stockControlPurchaserController;
     NavigationBarPurchaserController navigationBarPurchaserController;
     static BorderPane stockControlPurchaserPanel;
@@ -120,11 +126,50 @@ public class MainController implements ControllerInterface {
             e.printStackTrace();
         }
     }
+
     public static BorderPane getStockControlPurchaserPanel() {
         return stockControlPurchaserPanel;
     }
 
-    public void displayAdminMainMenu() throws IOException { // TODO: load admin view
+    public static BorderPane getStockControlAdminPanel() {
+        return stockControlAdminPanel;
+    }
+
+    public void displayAdminMainMenu() throws IOException {
+        Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
+        FXMLLoader navLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/navigationBar/navigationBarAdmin-view.fxml"));
+        BorderPane navigationBar = navLoader.load(); // convert .fxml components into borderPane/panel
+        navigationBarAdminController = navLoader.getController(); // initialize obj of navbarAdmincontroller
+
+        // same process below
+
+        // Create the stock control panel
+        FXMLLoader stockAdminLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlAdmin-view.fxml"));
+        stockControlAdminPanel = stockAdminLoader.load();
+        stockControlAdminController = stockAdminLoader.getController();
+
+        InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+
+        if (inputStream != null) {
+            Image image = new Image(inputStream);
+            stage.getIcons().add(image);
+        } else {
+            System.err.println("Failed to load image: logo.png");
+        }
+
+        BorderPane root = new BorderPane(); // create pane to insert components
+        root.setLeft(navigationBar); // set to left
+        root.setRight(stockControlAdminPanel); // set to right
+
+        Scene scene = new Scene(root, 1080, 650); // create a container place the pane
+        stage.setScene(scene); // kind of like jframe -> place it into jframe
+        stage.setTitle("Stock Pilot");
+        stage.setResizable(false);
+        stage.show(); // then show
+
+        // Set the main BorderPane reference in the navigation bar controller
+        navigationBarAdminController.setMainPane(root);
     }
 
     public void displayPurchaserMainMenu() throws Exception { // load purchaser view
@@ -166,6 +211,7 @@ public class MainController implements ControllerInterface {
 
     public void displaySalesMainMenu() { // TODO: load sales view
     }
+
     @Override
     public void fetchAndUpdate() throws RemoteException {
 
@@ -176,13 +222,16 @@ public class MainController implements ControllerInterface {
         return "user";
     }
 
-
     public NavigationBarPurchaserController getNavigationBarPurchaserController() {
         return navigationBarPurchaserController;
     }
 
     public static StockControlPurchaserController getStockControlPurchaserController() {
         return stockControlPurchaserController;
+    }
+
+    public static StockControlAdminController getStockControlAdminController() {
+        return stockControlAdminController;
     }
 
     public AddItemAdminController getAddItemAdminController() {
