@@ -16,6 +16,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
@@ -70,13 +71,25 @@ public class LowStocksAdminController implements ControllerInterface {
         }
     }
 
+    /**
+     * Method to show for exceptions (for user toleration)
+     * @param message to be showed to user
+     */
+    private void showAlert(String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     @Override
     public void fetchAndUpdate() throws RemoteException {
         try {
             LinkedList<Item> items = lowStocksAdminModel.fetchLowStocks();
             populateTableView(items);
         } catch (NotLoggedInException e) {
-            throw new RuntimeException(e);
+            showAlert("User not logged in");
         }
     }
 
@@ -101,7 +114,7 @@ public class LowStocksAdminController implements ControllerInterface {
                         System.out.println("Low Stocks Model is null.");
                     }
                 } catch (NotLoggedInException e) {
-                    System.out.println("User not logged in.");
+                    showAlert("User not logged in");
                 }
             } else {
                 System.out.println("Table is null. Cannot Initialize");
