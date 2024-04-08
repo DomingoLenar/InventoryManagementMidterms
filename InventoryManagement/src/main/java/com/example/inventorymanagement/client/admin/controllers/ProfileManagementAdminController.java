@@ -93,8 +93,8 @@ public class ProfileManagementAdminController extends Application implements Ini
         changePasswordButton.setOnAction(event -> {
             try {
                 // Launch the ProfileManagementChangePassController
-                ProfileManagementChangePassAdminController profileManagementChangePassController = new ProfileManagementChangePassAdminController();
-                profileManagementChangePassController.start(new Stage());
+                ProfileManagementChangePassAdminController profileManagementChangePassAdminController = new ProfileManagementChangePassAdminController();
+                profileManagementChangePassAdminController.start(new Stage());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
