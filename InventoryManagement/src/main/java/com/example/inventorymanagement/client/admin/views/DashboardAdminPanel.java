@@ -40,7 +40,7 @@ public class DashboardAdminPanel {
         }
 
         // Set the main BorderPane reference in the navigation bar controller
-        navController.setMainBorderPane(dashboard);
+        //navController.setMainBorderPane(dashboard);
 
         BorderPane root = new BorderPane();
         root.setLeft(navigationBar);

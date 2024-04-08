@@ -51,6 +51,6 @@ public class FinancesAdminPanel {
         stage.show();
 
         // Set the main BorderPane reference in the navigation bar controller
-        navBarAdminController.setMainBorderPane(root);
+        //navBarAdminController.setMainBorderPane(root);
     }
 }
