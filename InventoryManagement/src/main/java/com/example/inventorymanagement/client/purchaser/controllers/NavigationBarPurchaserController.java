@@ -24,7 +24,7 @@ public class NavigationBarPurchaserController implements ControllerInterface {
     private Button profileButtonPurchaser;
 
     // Reference to the main BorderPane
-    private BorderPane mainBorderPane;
+    private BorderPane mainPane;
     private MainController mainController;
     public NavigationBarPurchaserController() {
 
@@ -33,10 +33,9 @@ public class NavigationBarPurchaserController implements ControllerInterface {
         this.mainController = mainController;
     }
 
-
     // Setter for main BorderPane
-    public void setMainBorderPane(BorderPane mainBorderPane) {
-        this.mainBorderPane = mainBorderPane;
+    public void setMainPane(BorderPane mainPane) {
+        this.mainPane = mainPane;
     }
 
     @Override
@@ -66,16 +65,18 @@ public class NavigationBarPurchaserController implements ControllerInterface {
 
     private void loadStockControlPanel() {
         try {
-            mainController.getStockControlPurchaserController().fetchAndUpdate();
-        } catch (RemoteException e) {
+            MainController.getStockControlPurchaserController().fetchAndUpdate(); // triggered when btn stock control is click
+            mainPane.setRight(MainController.getStockControlPurchaserPanel()); // get the refresh components of stock control of purchaser
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     private void loadProfileManagementPanel() {
         try {
-            BorderPane profileManagementPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagement-view.fxml"));
-            mainBorderPane.setRight(profileManagementPanel);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagement-view.fxml"));
+            BorderPane profileManagementPane = loader.load();
+            mainPane.setRight(profileManagementPane);
         } catch (IOException e) {
             e.printStackTrace();
         }

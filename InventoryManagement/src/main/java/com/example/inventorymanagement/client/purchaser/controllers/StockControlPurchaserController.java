@@ -16,6 +16,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -23,9 +24,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.LinkedList;
+import java.util.ResourceBundle;
 
 public class StockControlPurchaserController implements ControllerInterface {
     @FXML
@@ -73,41 +76,6 @@ public class StockControlPurchaserController implements ControllerInterface {
         this.stockControlPurchaserModel = new StockControlPurchaserModel(registry, clientCallback);
     }
     boolean initialized = false;
-    @FXML
-    public void initialize() {
-        addHoverEffect(lowStocksButtonPurchaser);
-        addHoverEffect(addItemButtonPurchaser);
-
-        lowStocksButtonPurchaser.setOnAction(event -> handleLowStocks());
-        addItemButtonPurchaser.setOnAction(event -> handleAddItem());
-        stockControlPurchaserModel = new StockControlPurchaserModel(MainController.registry, MainController.clientCallback);
-        if (!initialized) { // Check if already initialized
-            initialized = true; // Set the flag to true
-
-            // Check if UI components are not null
-            if (stockControlPurchaserTable != null && addItemButtonPurchaser != null & lowStocksButtonPurchaser != null) {
-                addHoverEffect(addItemButtonPurchaser);
-                addHoverEffect(lowStocksButtonPurchaser);
-                lowStocksButtonPurchaser.setOnAction(event -> handleLowStocks());
-                addItemButtonPurchaser.setOnAction(event -> handleAddItem());
-
-                try {
-                    if (stockControlPurchaserModel != null) {
-                        populateTableView(stockControlPurchaserModel.fetchItems());
-                    } else {
-                        // Handle the case where stockControlPurchaserModel is null
-                        System.out.println("Stock Control Purchaser Model is null.");
-                    }
-                } catch (NotLoggedInException e) {
-                    // Show prompt to user not logged in
-                    System.out.println("User is not logged in.");
-                }
-            } else {
-                // Handle the case where UI components are null
-                System.out.println("Error: Table or button is null. Cannot initialize.");
-            }
-        }
-    }
     @Override
     public void fetchAndUpdate() throws RemoteException {
         try {
@@ -149,5 +117,41 @@ public class StockControlPurchaserController implements ControllerInterface {
     @FXML
     private void handleLowStocks() {
         // Handle low stocks button action
+    }
+    @FXML
+    public void initialize() { // initialize components -> better approach is to initialize just the components and let nav___bar buttons handle the population of data/realtime
+        System.out.println("initialize");
+        addHoverEffect(lowStocksButtonPurchaser);
+        addHoverEffect(addItemButtonPurchaser);
+
+        lowStocksButtonPurchaser.setOnAction(event -> handleLowStocks());
+        addItemButtonPurchaser.setOnAction(event -> handleAddItem());
+        stockControlPurchaserModel = new StockControlPurchaserModel(MainController.registry, MainController.clientCallback);
+        if (!initialized) { // Check if already initialized
+            initialized = true; // Set the flag to true
+
+            // Check if UI components are not null
+            if (stockControlPurchaserTable != null && addItemButtonPurchaser != null & lowStocksButtonPurchaser != null) {
+                addHoverEffect(addItemButtonPurchaser);
+                addHoverEffect(lowStocksButtonPurchaser);
+                lowStocksButtonPurchaser.setOnAction(event -> handleLowStocks());
+                addItemButtonPurchaser.setOnAction(event -> handleAddItem());
+
+                try {
+                    if (stockControlPurchaserModel != null) {
+                        populateTableView(stockControlPurchaserModel.fetchItems());
+                    } else {
+                        // Handle the case where stockControlPurchaserModel is null
+                        System.out.println("Stock Control Purchaser Model is null.");
+                    }
+                } catch (NotLoggedInException e) {
+                    // Show prompt to user not logged in
+                    System.out.println("User is not logged in.");
+                }
+            } else {
+                // Handle the case where UI components are null
+                System.out.println("Error: Table or button is null. Cannot initialize.");
+            }
+        }
     }
 }

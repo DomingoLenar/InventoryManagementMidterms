@@ -2,16 +2,9 @@ package com.example.inventorymanagement.client.common.controllers;
 
 import com.example.inventorymanagement.client.admin.controllers.AddItemAdminController;
 import com.example.inventorymanagement.client.admin.controllers.StockControlAdminController;
-import com.example.inventorymanagement.client.admin.models.StockControlAdminModel;
-import com.example.inventorymanagement.client.admin.views.StockControlAdminPanel;
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.client.purchaser.controllers.NavigationBarPurchaserController;
 import com.example.inventorymanagement.client.purchaser.controllers.StockControlPurchaserController;
-import com.example.inventorymanagement.client.purchaser.models.StockControlPurchaserModel;
-import com.example.inventorymanagement.client.purchaser.views.StockControlPurchaserPanel;
-import com.example.inventorymanagement.client.sales.controllers.StockControlSalesController;
-import com.example.inventorymanagement.client.sales.models.StockControlSalesModel;
-import com.example.inventorymanagement.client.sales.views.StockControlSalesPanel;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
@@ -44,8 +37,10 @@ public class MainController implements ControllerInterface {
     public static Registry registry;
     StockControlAdminController stockControlAdminController;
     AddItemAdminController addItemAdminController;
-    StockControlPurchaserController stockControlPurchaserController;
+    static StockControlPurchaserController stockControlPurchaserController;
     NavigationBarPurchaserController navigationBarPurchaserController;
+    static BorderPane stockControlPurchaserPanel;
+
 
     public MainController(UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry) throws RemoteException {
         MainController.userService = userService;
@@ -54,50 +49,19 @@ public class MainController implements ControllerInterface {
         MainController.registry = registry;
         clientCallback = new ClientCallbackImpl(null);
 
-        initControllers();
+//        initControllers();
     }
 
-    public Registry getRegistry() {
-        return registry;
-    }
-
-    private void initControllers() {
-        stockControlAdminController= new StockControlAdminController(clientCallback, userService, iOService, itemService, registry, this);
-        stockControlAdminController.setMainController(this);
-        addItemAdminController= new AddItemAdminController(clientCallback, userService, iOService, itemService, registry, this);
-        addItemAdminController.setMainController(this);
-//        stockControlPurchaserController = new StockControlPurchaserController(clientCallback, userService, iOService, itemService, registry, this);
-//        navigationBarPurchaserController = new NavigationBarPurchaserController(clientCallback, userService, iOService, itemService, registry, this);
-
-    }
-
-    public NavigationBarPurchaserController getNavigationBarPurchaserController() {
-        return navigationBarPurchaserController;
-    }
-
-    public StockControlPurchaserController getStockControlPurchaserController() {
-        return stockControlPurchaserController;
-    }
-
-    public AddItemAdminController getAddItemAdminController() {
-        return addItemAdminController;
-    }
-
-    public ClientCallback getClientCallback() {
-        return clientCallback;
-    }
-
-    public void setClientCallback(ClientCallback clientCallback) {
-        this.clientCallback = clientCallback;
-    }
-
-    public UserRequestInterface getUserService() {
-        return userService;
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
+    // for future ref.
+//    private void initControllers() {
+//        stockControlAdminController = new StockControlAdminController(clientCallback, userService, iOService, itemService, registry, this);
+//        stockControlAdminController.setMainController(this);
+//        addItemAdminController = new AddItemAdminController(clientCallback, userService, iOService, itemService, registry, this);
+//        addItemAdminController.setMainController(this);
+////        stockControlPurchaserController = new StockControlPurchaserController(clientCallback, userService, iOService, itemService, registry, this);
+////        navigationBarPurchaserController = new NavigationBarPurchaserController(clientCallback, userService, iOService, itemService, registry, this);
+//
+//    }
 
     public void loadWelcomeView() { // load welcome/index view
         try {
@@ -156,23 +120,26 @@ public class MainController implements ControllerInterface {
             e.printStackTrace();
         }
     }
-
-    public void displayAdminMainMenu() throws IOException {
-        new StockControlAdminPanel().start(new Stage());
+    public static BorderPane getStockControlPurchaserPanel() {
+        return stockControlPurchaserPanel;
     }
 
-    public void displayPurchaserMainMenu() throws Exception {
+    public void displayAdminMainMenu() throws IOException { // TODO: load admin view
+    }
+
+    public void displayPurchaserMainMenu() throws Exception { // load purchaser view
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
 
         FXMLLoader navLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/navigationBar/navigationBarPurchaser-view.fxml"));
-        BorderPane navigationBar = navLoader.load();
-        navigationBarPurchaserController = navLoader.getController();
+        BorderPane navigationBar = navLoader.load(); // convert .fxml components into borderPane/panel
+        navigationBarPurchaserController = navLoader.getController(); // initialize obj of navbarpurchasercontroller
+
+        // same process below
 
         // Create the stock control panel
         FXMLLoader stockPurchaserLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlPurchaser-view.fxml"));
-        BorderPane stockControlPurchaserPanel = stockPurchaserLoader.load();
+        stockControlPurchaserPanel = stockPurchaserLoader.load();
         stockControlPurchaserController = stockPurchaserLoader.getController();
-
 
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
 
@@ -183,41 +150,61 @@ public class MainController implements ControllerInterface {
             System.err.println("Failed to load image: logo.png");
         }
 
-        BorderPane root = new BorderPane();
-        root.setLeft(navigationBar);
-        root.setRight(stockControlPurchaserPanel);
+        BorderPane root = new BorderPane(); // create pane to insert components
+        root.setLeft(navigationBar); // set to left
+        root.setRight(stockControlPurchaserPanel); // set to right
 
-        Scene scene = new Scene(root, 1080, 650);
-        stage.setScene(scene);
+        Scene scene = new Scene(root, 1080, 650); // create a container place the pane
+        stage.setScene(scene); // kind of like jframe -> place it into jframe
         stage.setTitle("Stock Pilot");
         stage.setResizable(false);
-        stage.show();
+        stage.show(); // then show
 
         // Set the main BorderPane reference in the navigation bar controller
-        navigationBarPurchaserController.setMainBorderPane(root);
-//        new StockControlPurchaserPanel().start(new Stage());
-    public void displayPurchaserMainMenu() {
-        try {
-            StockControlPurchaserController purchaserController = new StockControlPurchaserController(clientCallback, userService, iOService, itemService, registry);
-            purchaserController.setStockControlPurchaserModel(new StockControlPurchaserModel(registry, clientCallback));
-            purchaserController.setMainController(this); // Set the MainController instance in StockControlPurchaserController
-            purchaserController.start(new Stage());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        navigationBarPurchaserController.setMainPane(root);
     }
 
-    public void displaySalesMainMenu() throws IOException{
-        new StockControlSalesPanel().start(new Stage());
+    public void displaySalesMainMenu() { // TODO: load sales view
     }
-
     @Override
     public void fetchAndUpdate() throws RemoteException {
-        //invalid
+
     }
 
     @Override
     public String getObjectsUsed() throws RemoteException {
         return "user";
+    }
+
+
+    public NavigationBarPurchaserController getNavigationBarPurchaserController() {
+        return navigationBarPurchaserController;
+    }
+
+    public static StockControlPurchaserController getStockControlPurchaserController() {
+        return stockControlPurchaserController;
+    }
+
+    public AddItemAdminController getAddItemAdminController() {
+        return addItemAdminController;
+    }
+
+    public ClientCallback getClientCallback() {
+        return clientCallback;
+    }
+
+    public void setClientCallback(ClientCallback clientCallback) {
+        this.clientCallback = clientCallback;
+    }
+
+    public UserRequestInterface getUserService() {
+        return userService;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+    public Registry getRegistry() {
+        return registry;
     }
 }
