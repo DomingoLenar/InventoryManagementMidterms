@@ -1,7 +1,5 @@
 package com.example.inventorymanagement.client.purchaser.controllers;
 
-import com.example.inventorymanagement.client.admin.models.ProfileManagementChangePassAdminModel;
-import com.example.inventorymanagement.client.admin.views.ProfileManagementChangePassAdminPanel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
 import com.example.inventorymanagement.client.purchaser.models.ProfileManagementChangePassPurchaserModel;
 import com.example.inventorymanagement.client.purchaser.views.ProfileManagementChangePassPurchaserPanel;
@@ -97,6 +95,6 @@ public class ProfileManagementChangePassPurchaserController extends Application 
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // initialize the model and panel objects
         profileManagementChangePassPurchaserPanel = new ProfileManagementChangePassPurchaserPanel();
-        profileManagementChangePassPurchaserPanel = new ProfileManagementChangePassPurchaserPanel(registry, clientCallback);
+        profileManagementChangePassPurchaserModel = new ProfileManagementChangePassPurchaserModel(registry, clientCallback);
     }
 }
