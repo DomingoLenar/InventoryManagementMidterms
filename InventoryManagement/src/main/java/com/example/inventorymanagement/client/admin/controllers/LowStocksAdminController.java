@@ -7,6 +7,9 @@ import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.objects.Item;
+import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
+import com.example.inventorymanagement.util.requests.ItemRequestInterface;
+import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -47,7 +50,7 @@ public class LowStocksAdminController implements ControllerInterface {
     public LowStocksAdminController(){
         //default constructor
     }
-    public LowStocksAdminController(Registry registry, ClientCallback clientCallback){
+    public LowStocksAdminController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController){
         this.lowStocksAdminModel = new LowStocksAdminModel(registry, clientCallback);
     }
 
