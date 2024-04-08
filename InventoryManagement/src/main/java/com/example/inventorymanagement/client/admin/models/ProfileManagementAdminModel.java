@@ -55,10 +55,4 @@ public class ProfileManagementAdminModel {
             return null;
         }
     }
-
-    public boolean changePassword(String newPassword) throws UserExistenceException, OutOfRoleException, NotLoggedInException {
-
-            return ChangePasswordService.process(registry, clientCallback, null, null);
-
-    }
 }
