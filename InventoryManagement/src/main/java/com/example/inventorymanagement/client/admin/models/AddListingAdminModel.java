@@ -13,7 +13,7 @@ public class AddListingAdminModel {
     private ClientCallback clientCallback;
     private CreateItemListingService createItemListingService;
 
-    AddListingAdminModel(Registry registry, ClientCallback clientCallback){
+    public AddListingAdminModel(Registry registry, ClientCallback clientCallback){
         this.registry = registry;
         this.clientCallback = clientCallback;
         new  CreateItemListingService();
