@@ -25,7 +25,6 @@ import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
-<<<<<<<<< Temporary merge branch 1
 import java.util.LinkedList;
 
 public class StockControlAdminController extends Application implements ControllerInterface {
