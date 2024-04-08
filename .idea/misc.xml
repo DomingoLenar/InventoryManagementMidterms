@@ -13,6 +13,9 @@
       </list>
     </option>
   </component>
+  <component name="ProjectResources">
+    <resource url="http://javafx.com/fxml " location="$PROJECT_DIR$/InventoryManagement/src/main/resources/com/example/inventorymanagement/client/view/stockControl/addItem-view.fxml" />
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_X" default="true" project-jdk-name="openjdk-21" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>

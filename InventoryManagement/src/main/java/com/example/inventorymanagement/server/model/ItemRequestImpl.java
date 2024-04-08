@@ -14,10 +14,14 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Comparator;
 import java.util.LinkedList;
 
-public class ItemRequestImpl implements ItemRequestInterface {
+public class ItemRequestImpl extends UnicastRemoteObject implements ItemRequestInterface {
+    public ItemRequestImpl() throws RemoteException {
+    }
+
     @Override
     public LinkedList<Item> fetchLisOfItems(ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
         checkIfLoggedIn(clientCallback);

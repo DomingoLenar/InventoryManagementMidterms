@@ -4,6 +4,10 @@ import com.example.inventorymanagement.client.admin.models.StockControlAdminMode
 import com.example.inventorymanagement.client.common.controllers.MainController;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
+import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
+import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
+import com.example.inventorymanagement.util.objects.ItemOrder;
+import com.example.inventorymanagement.util.objects.User;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
@@ -37,11 +41,11 @@ public class StockControlAdminController implements ControllerInterface {
     public StockControlAdminController() {
 
     }
+    public StockControlAdminController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
+    }
     public StockControlAdminController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry) {
         StockControlAdminModel stockControlAdminModel = new StockControlAdminModel(registry, clientCallback); // use this on events of stockcontroladminview
     }
-
-
     public void setMainController(MainController mainController) {
         this.mainController = mainController; // or this main...getSERVICES....actions()
     }
@@ -97,10 +101,16 @@ public class StockControlAdminController implements ControllerInterface {
 
             ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
             dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
-
+            User user = new User("testadmin", "admintest", "admin");
             Button okButton = (Button) dialog.getDialogPane().lookupButton(okButtonType);
             okButton.setOnAction(event -> {
-                //TODO: Logic from AddItemModel for adding items using GSONProcessing
+                try {
+                    mainController.getAddItemAdminController().getAddItemAdminModel().createPurchaseOrder(new ItemOrder(0, user, null, null));
+                } catch (OutOfRoleException e) {
+                    throw new RuntimeException(e);
+                } catch (NotLoggedInException e) {
+                    throw new RuntimeException(e);
+                }
             });
 
             Button cancelButton = new Button("Cancel");

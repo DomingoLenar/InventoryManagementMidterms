@@ -1,6 +1,11 @@
 package com.example.inventorymanagement.client.purchaser.controllers;
 
+import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
+import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
+import com.example.inventorymanagement.util.requests.ItemRequestInterface;
+import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -8,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 
 public class NavigationBarPurchaserController implements ControllerInterface {
     @FXML
@@ -19,6 +25,14 @@ public class NavigationBarPurchaserController implements ControllerInterface {
 
     // Reference to the main BorderPane
     private BorderPane mainBorderPane;
+    private MainController mainController;
+    public NavigationBarPurchaserController() {
+
+    }
+    public NavigationBarPurchaserController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
+        this.mainController = mainController;
+    }
+
 
     // Setter for main BorderPane
     public void setMainBorderPane(BorderPane mainBorderPane) {
@@ -60,12 +74,10 @@ public class NavigationBarPurchaserController implements ControllerInterface {
     }
 
     private void loadStockControlPanel() {
-        // Load Stock Control panel
         try {
-            BorderPane stockControlPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlPurchaser-view.fxml"));
-            mainBorderPane.setRight(stockControlPanel);
-        } catch (IOException e) {
-            e.printStackTrace();
+            mainController.getStockControlPurchaserController().fetchAndUpdate();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
         }
     }
 
