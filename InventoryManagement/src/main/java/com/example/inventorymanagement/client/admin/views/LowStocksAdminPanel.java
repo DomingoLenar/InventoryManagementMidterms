@@ -13,7 +13,7 @@ public class LowStocksAdminPanel {
     public void start(Stage stage) throws IOException {
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"),20);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(AddItemAdminPanel.class.getResource("/com/example/inventorymanagement/client/view/stockControl/lowStocks-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(AddItemAdminPanel.class.getResource("/com/example/inventorymanagement/client/view/stockControl/lowStocksAdmin-view.fxml"));
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
 
         if (inputStream != null) {
