@@ -40,7 +40,7 @@ public class GSONProcessing {
      * @param newItem item to be added
      * @return true if item is added successfully, false if otherwise.
      */
-    public static boolean addItem(Item newItem) {
+    public synchronized static boolean addItem(Item newItem) {
         try {
             String filePath = "src/main/resources/com/example/inventorymanagement/data/items.json";
             JsonParser jsonParser = new JsonParser();
@@ -69,7 +69,7 @@ public class GSONProcessing {
      * @param itemName name of the item to be removed.
      * @return true if the item was successfully removed, false if otherwise.
      */
-    public static boolean removeItem(String itemName) {
+    public synchronized static boolean removeItem(String itemName) {
         try {
             String filePath = "src/main/resources/com/example/inventorymanagement/data/items.json";
             JsonParser jsonParser = new JsonParser();
@@ -104,7 +104,7 @@ public class GSONProcessing {
      * @param newOrder  new object of ItemOrder to be added.
      * @return true if order is successfully added, false otherwise.
      */
-    public static boolean addItemOrder(String orderType, ItemOrder newOrder) {
+    public synchronized static boolean addItemOrder(String orderType, ItemOrder newOrder) {
         try {
             String filePath;
             String orderArrayName;
@@ -112,19 +112,19 @@ public class GSONProcessing {
 
             switch (orderType.toLowerCase()) {
                 case "purchase":
-                    filePath = "/com/example/inventorymanagement/data/purchaseorders.json";
+                    filePath = "InventoryManagement/src/main/resources/com/example/inventorymanagement/data/purchaseorders.json";
                     orderArrayName = "purchaseOrders";
                     break;
                 case "sales":
-                    filePath = "/com/example/inventorymanagement/data/salesorder.json";
+                    filePath = "InventoryManagement/src/main/resources/com/example/inventorymanagement/data/salesorders.json";
                     orderArrayName = "salesOrders";
                     break;
                 default:
                     throw new IllegalArgumentException("Invalid order type: " + orderType);
             }
 
-            try (InputStream inputStream = GSONProcessing.class.getResourceAsStream(filePath);
-                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            try (
+                 BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
                  FileWriter writer = new FileWriter(filePath)) {
                 JsonElement rootElement = JsonParser.parseReader(bufferedReader);
                 JsonObject rootObject = rootElement.getAsJsonObject();
@@ -152,7 +152,7 @@ public class GSONProcessing {
         }
     }
 
-    private static void updateItem(ItemOrder order, String type){
+    private synchronized static void updateItem(ItemOrder order, String type){
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         File itemFile = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/items.json");
         try(
@@ -210,7 +210,7 @@ public class GSONProcessing {
      * @param orderID ID of order to be removed.
      * @return true if ItemOrder is successfully removed, false otherwise.
      */
-    public static boolean removeItemOrder(String orderType, String orderID) {
+    public synchronized static boolean removeItemOrder(String orderType, String orderID) {
         try {
             String filePath;
             if (orderType.equalsIgnoreCase("purchase")) {
@@ -436,6 +436,13 @@ public class GSONProcessing {
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray userJsonArray = rootObject.getAsJsonArray("users");
 
+            for(JsonElement element: userJsonArray){
+                JsonObject object = element.getAsJsonObject();
+                if(object.get("username").getAsString().equals(newUser.getUsername())){
+                    return false;
+                }
+            }
+
             String jsonString = gson.toJson(newUser);
             JsonElement userElement = JsonParser.parseString(jsonString);
             JsonObject userObject = userElement.getAsJsonObject();
@@ -475,7 +482,7 @@ public class GSONProcessing {
         return false;
     }
 
-    public static LinkedList<User> fetchListOfUsers(){
+    public synchronized static LinkedList<User> fetchListOfUsers(){
         LinkedList<User> userList = new LinkedList<>();
         Gson gson = new Gson();
         File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/users.json");
