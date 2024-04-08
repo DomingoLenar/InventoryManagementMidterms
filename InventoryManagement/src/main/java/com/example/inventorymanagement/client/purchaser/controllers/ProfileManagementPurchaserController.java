@@ -1,6 +1,12 @@
 package com.example.inventorymanagement.client.purchaser.controllers;
 
 import com.example.inventorymanagement.client.admin.controllers.NavigationBarAdminController;
+import com.example.inventorymanagement.client.admin.models.ProfileManagementAdminModel;
+import com.example.inventorymanagement.client.admin.views.ProfileManagementAdminPanel;
+import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.client.purchaser.models.ProfileManagementPurchaserModel;
+import com.example.inventorymanagement.client.purchaser.views.ProfileManagementPurchaserPanel;
+import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -17,9 +23,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 import java.util.ResourceBundle;
 
-public class ProfileManagementPurchaserController implements Initializable, ControllerInterface {
+public class ProfileManagementPurchaserController extends Application implements Initializable, ControllerInterface {
     @FXML
     private BorderPane borderPaneProfileManagement;
     @FXML
@@ -34,13 +41,24 @@ public class ProfileManagementPurchaserController implements Initializable, Cont
     private Button changePasswordButton;
     @FXML
     private Button logoutButton;
+    private MainController mainController;
+
+    private ClientCallback clientCallback;
+    private Registry registry;
+    private ProfileManagementPurchaserModel profileManagementPurchaserModel;
+    private ProfileManagementPurchaserPanel profileManagementPurchaserPanel;
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
     public void fetchAndUpdate() throws RemoteException {
         // No implementation needed yet in this controller
     }
 
+
     @Override
     public String getObjectsUsed() throws RemoteException {
-        return null;
+        return "ProfileManagementPurchaser";
     }
 
     public BorderPane getBorderPaneProfileManagement(){
@@ -77,5 +95,25 @@ public class ProfileManagementPurchaserController implements Initializable, Cont
         changeUserAccountComboBox.setPromptText("Change Role...");
         Font font = new Font("Share Tech Mono", 15);
         changeUserAccountComboBox.setStyle("-fx-font-family: '" + font.getFamily() + "'; -fx-font-size: " + font.getSize() + "px;");
+        // initialize the model and panel objects
+        profileManagementPurchaserPanel = new ProfileManagementPurchaserPanel();
+        profileManagementPurchaserModel = new ProfileManagementPurchaserModel(registry, clientCallback);
+
+        // Set up event handler for the changePasswordButton
+        changePasswordButton.setOnAction(event -> {
+            try {
+                // Launch the ProfileManagementChangePassAdminController
+                ProfileManagementChangePassPurchaserController profileManagementChangePassPurchaserController = new ProfileManagementChangePassPurchaserController();
+                profileManagementChangePassPurchaserController.start(new Stage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        profileManagementPurchaserPanel = new ProfileManagementPurchaserPanel();
+        profileManagementPurchaserPanel.start(stage);
     }
 }

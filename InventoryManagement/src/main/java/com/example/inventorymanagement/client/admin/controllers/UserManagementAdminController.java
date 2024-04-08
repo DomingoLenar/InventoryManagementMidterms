@@ -1,19 +1,28 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
+import com.example.inventorymanagement.client.admin.models.DashboardAdminModel;
+import com.example.inventorymanagement.client.admin.models.UserManagementAdminModel;
+import com.example.inventorymanagement.client.admin.views.DashboardAdminPanel;
+import com.example.inventorymanagement.client.admin.views.UserManagementAdminPanel;
+import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.objects.User;
+import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 import java.util.ResourceBundle;
 
-public class UserManagementAdminController implements Initializable, ControllerInterface {
+public class UserManagementAdminController extends Application implements Initializable, ControllerInterface {
 
     @FXML
     private BorderPane borderPaneUserManagement;
@@ -23,6 +32,19 @@ public class UserManagementAdminController implements Initializable, ControllerI
     private TableView<User> userManagementTableView;
     @FXML
     private Button addUserButton;
+    private MainController mainController;
+
+    private ClientCallback clientCallback;
+    private Registry registry;
+    private UserManagementAdminModel userManagementAdminModel;
+    private UserManagementAdminPanel userManagementAdminPanel;
+    private AddUserAdminController addUserAdminController;
+
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
 
     public BorderPane getBorderPaneUserManagement() {
         return borderPaneUserManagement;
@@ -46,12 +68,7 @@ public class UserManagementAdminController implements Initializable, ControllerI
 
     @Override
     public String getObjectsUsed() throws RemoteException {
-        return null;
-    }
-
-    @FXML
-    private void initialize() {
-        addHoverEffect(addUserButton);
+        return "UserManagementAdmin";
     }
 
     private void addHoverEffect(Button button) {
@@ -59,7 +76,33 @@ public class UserManagementAdminController implements Initializable, ControllerI
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
     @Override
+    @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        addHoverEffect(addUserButton);
+        // initialize the panel and model objects
+        userManagementAdminPanel = new UserManagementAdminPanel();
+        userManagementAdminModel = new UserManagementAdminModel(registry, clientCallback);
 
+        // call the addUserAdminController using the addUserButton
+        addUserButton.setOnAction(event -> {
+            if (addUserAdminController != null) {
+                try {
+                    addUserAdminController.start(new Stage());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                System.err.println("AddUserAdminController not injected.");
+            }
+        });
+    }
+    public void setAddUserAdminController(AddUserAdminController addUserAdminController) {
+        this.addUserAdminController = addUserAdminController;
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        userManagementAdminPanel = new UserManagementAdminPanel();
+        userManagementAdminPanel.start(stage);
     }
 }

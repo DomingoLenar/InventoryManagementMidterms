@@ -2,7 +2,6 @@ package com.example.inventorymanagement.client.admin.views;
 
 import com.example.inventorymanagement.client.admin.controllers.DashboardAdminController;
 import com.example.inventorymanagement.client.admin.controllers.NavigationBarAdminController;
-import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -13,8 +12,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class DashboardAdminPanel extends Application {
-    @Override
+public class DashboardAdminPanel {
+
     public void start(Stage stage) throws IOException {
         // Load font
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
@@ -52,9 +51,5 @@ public class DashboardAdminPanel extends Application {
         stage.setTitle("Stock Pilot");
         stage.show();
         stage.setResizable(false);
-    }
-
-    public static void main(String[] args) {
-        launch();
     }
 }

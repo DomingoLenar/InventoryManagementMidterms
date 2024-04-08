@@ -1,31 +1,30 @@
 package com.example.inventorymanagement.client.admin.models;
 
-import com.example.inventorymanagement.client.microservices.AddUserService;
+import com.example.inventorymanagement.client.microservices.ChangePasswordService;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
 import com.example.inventorymanagement.util.exceptions.UserExistenceException;
 import com.example.inventorymanagement.util.objects.User;
+
 import java.rmi.registry.Registry;
 
-public class AddUserAdminModel {
-    private AddUserService addUserService;
+public class ProfileManagementChangePassAdminModel {
+    private ChangePasswordService changePasswordService;
     private Registry registry;
     private ClientCallback clientCallback;
 
-    public AddUserAdminModel(Registry registry, ClientCallback clientCallback) {
+    public ProfileManagementChangePassAdminModel(Registry registry, ClientCallback clientCallback) {
         this.registry = registry;
         this.clientCallback = clientCallback;
-        this.addUserService = new AddUserService();
+        this.changePasswordService = new ChangePasswordService();
     }
 
-
-    public boolean addUserService(User newUser) {
+    public boolean changePassword(User user, String newPassword) throws UserExistenceException, OutOfRoleException, NotLoggedInException {
         try {
-            // Call the AddUserService microservice to add the user
-            return addUserService.process(registry, clientCallback, newUser);
-        } catch (UserExistenceException | OutOfRoleException | NotLoggedInException e) {
-            // Handle exceptions appropriately
+            return changePasswordService.process(registry, clientCallback, user, newPassword);
+        } catch (RuntimeException e) {
+            // Handle any runtime exceptions
             e.printStackTrace();
             return false;
         }

@@ -126,6 +126,16 @@ public class UserRequestInterfaceImplementation extends UnicastRemoteObject impl
     }
 
     @Override
+    public LinkedList<User> fetchUsers(ClientCallback clientCallback) throws RemoteException, OutOfRoleException, NotLoggedInException {
+        isLoggedIn(clientCallback);
+        if(clientCallback.getUser().getRole().equals("admin")){
+            return GSONProcessing.fetchListOfUsers();
+        }else{
+            throw new OutOfRoleException("Insufficient Permission");
+        }
+    }
+
+    @Override
     public boolean isLoggedIn(ClientCallback clientCallback) throws RemoteException, NotLoggedInException, OutOfRoleException {
         return clientCallbacks.stream().anyMatch(callbacks ->{
             try {

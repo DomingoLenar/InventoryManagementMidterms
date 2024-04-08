@@ -1,7 +1,6 @@
 package com.example.inventorymanagement.client.sales.views;
 
 import com.example.inventorymanagement.client.sales.controllers.NavigationBarSalesController;
-import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -12,9 +11,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static javafx.application.Application.launch;
-
-public class ProfileManagementSalesPanel extends Application {
+public class ProfileManagementSalesPanel {
     public void start(Stage stage) throws IOException{
 
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
@@ -50,9 +47,5 @@ public class ProfileManagementSalesPanel extends Application {
 
         // Set the main BorderPane reference in the navigation bar controller
         navBarSalesController.setMainBorderPane(root);
-    }
-
-    public static void main(String[] args) {
-        launch();
     }
 }

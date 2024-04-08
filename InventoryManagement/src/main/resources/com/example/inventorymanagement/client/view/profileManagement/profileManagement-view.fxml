@@ -30,11 +30,6 @@
                   <Font name="Share Tech Mono" size="24.0" />
                </font>
             </Label>
-            <Label fx:id="userEmailLabel" layoutX="297.0" layoutY="219.0" text="marvensheesh@gmail.com">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
             <ImageView fitHeight="78.0" fitWidth="79.0" layoutX="198.0" layoutY="165.0">
                <image>
                   <Image url="@../../../../../../icons/personIcon.png" />
