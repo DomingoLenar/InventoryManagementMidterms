@@ -13,16 +13,13 @@ public class LowStocksAdminModel {
     ClientCallback clientCallback;
     FetchLowestStockService fetchLowestStockService;
 
-    LowStocksAdminModel(){
-        //default constructor
-    }
-    LowStocksAdminModel(Registry registry, ClientCallback clientCallback){
+    public LowStocksAdminModel(Registry registry, ClientCallback clientCallback){
         this.registry = registry;
         this.clientCallback = clientCallback;
         new FetchLowestStockService();
     }
 
-    public LinkedList<Item> fetchLowStocks(Registry registry, ClientCallback clientCallback) throws NotLoggedInException {
+    public LinkedList<Item> fetchLowStocks() throws NotLoggedInException {
         return FetchLowestStockService.process(registry, clientCallback);
     }
 }
