@@ -1,6 +1,11 @@
 package com.example.inventorymanagement.client.sales.controllers;
 
+import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
+import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
+import com.example.inventorymanagement.util.requests.ItemRequestInterface;
+import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -8,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 
 public class NavigationBarSalesController implements ControllerInterface {
     @FXML
@@ -20,11 +26,18 @@ public class NavigationBarSalesController implements ControllerInterface {
     private Button profileButtonSales;
 
     // Reference to the main BorderPane
-    private BorderPane mainBorderPane;
+    private BorderPane mainPane;
+    private MainController mainController;
+    public NavigationBarSalesController() {
+
+    }
+    public NavigationBarSalesController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
+        this.mainController = mainController;
+    }
 
     // Setter for main BorderPane
-    public void setMainBorderPane(BorderPane mainBorderPane) {
-        this.mainBorderPane = mainBorderPane;
+    public void setMainPane(BorderPane mainPane) {
+        this.mainPane = mainPane;
     }
 
     @Override
@@ -36,19 +49,6 @@ public class NavigationBarSalesController implements ControllerInterface {
     public String getObjectsUsed() throws RemoteException {
         return null;
     }
-
-    @FXML
-    public BorderPane getBorderPaneNavigationBarSales() { return borderPaneNavigationBarSales;}
-
-    @FXML
-    public Button getStockControlButtonSales() { return stockControlButtonSales; }
-
-    @FXML
-    public Button getSalesHistoryButtonSales() { return salesHistoryButtonSales; }
-
-
-    @FXML
-    public Button getProfileButtonSales() { return profileButtonSales; }
 
     @FXML
     private void initialize() {
@@ -68,30 +68,37 @@ public class NavigationBarSalesController implements ControllerInterface {
     }
 
     private void loadStockControlPanel() {
-        // Load Stock Control panel
         try {
-            BorderPane stockControlPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlSales-view.fxml"));
-            mainBorderPane.setRight(stockControlPanel);
+            MainController.getStockControlSalesController().fetchAndUpdate(); // triggered when btn stock control is click
+            mainPane.setRight(MainController.getStockControlSalesPanel()); // get the refresh components of stock control of sales
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void loadProfileManagementPanel() {
-        try {
-            BorderPane profileManagementPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagement-view.fxml"));
-            mainBorderPane.setRight(profileManagementPanel);
-        } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
     private void loadSalesHistoryPanel() {
+        // TODO: Add Getters
+    }
+
+    private void loadProfileManagementPanel() {
         try {
-            BorderPane salesHistoryPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/salesHistory/salesHistorySales-view.fxml"));
-            mainBorderPane.setRight(salesHistoryPanel);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagement-view.fxml"));
+            BorderPane profileManagementPane = loader.load();
+            mainPane.setRight(profileManagementPane);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    public BorderPane getBorderPaneNavigationBarSales() { return borderPaneNavigationBarSales;}
+
+    @FXML
+    public Button getStockControlButtonSales() { return stockControlButtonSales; }
+
+    @FXML
+    public Button getSalesHistoryButtonSales() { return salesHistoryButtonSales;}
+
+    @FXML
+    public Button getProfileButtonSales() { return profileButtonSales; }
 }
