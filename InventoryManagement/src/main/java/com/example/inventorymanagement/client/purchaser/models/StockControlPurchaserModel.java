@@ -18,6 +18,7 @@ public class StockControlPurchaserModel {
         this.registry = registry;
         this.callback = clientCallback;
     }
+
     public LinkedList<Item> fetchItems () throws NotLoggedInException {
         try {
             // Fetch items using FetchListOfItemsService
