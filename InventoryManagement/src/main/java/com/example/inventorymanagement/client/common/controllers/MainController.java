@@ -17,11 +17,13 @@ import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 
@@ -77,6 +79,15 @@ public class MainController implements ControllerInterface {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/welcome/welcome-view.fxml"));
             BorderPane welcomePane = fxmlLoader.load();
 
+            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                stage.getIcons().add(image);
+            } else {
+                System.err.println("Failed to load image: logo.png");
+            }
+
             Scene scene = new Scene(welcomePane);
             stage.setScene(scene);
 
@@ -93,6 +104,15 @@ public class MainController implements ControllerInterface {
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/login/login-view.fxml"));
             BorderPane loginPane = fxmlLoader.load();
+
+            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                stage.getIcons().add(image);
+            } else {
+                System.err.println("Failed to load image: logo.png");
+            }
 
             Scene scene = new Scene(loginPane);
 
