@@ -8,10 +8,13 @@ import com.example.inventorymanagement.util.exceptions.UserExistenceException;
 import com.example.inventorymanagement.util.objects.User;
 
 import java.rmi.registry.Registry;
+import java.util.LinkedList;
 
 public class ProfileManagementAdminModel {
     private ChangeUserRoleService changeUserRoleService;
     private RemoveUserService removeUserService;
+    private FetchListOfUsersService fetchListOfUsersService; // New service
+    private ChangePasswordService changePasswordService;
     private Registry registry;
     private ClientCallback clientCallback;
 
@@ -20,6 +23,7 @@ public class ProfileManagementAdminModel {
         this.clientCallback = clientCallback;
         this.changeUserRoleService = new ChangeUserRoleService();
         this.removeUserService = new RemoveUserService();
+        this.fetchListOfUsersService = new FetchListOfUsersService(); // Initialize the new service;
     }
 
     public boolean changeUserRole(User user, String newRole) throws UserExistenceException, OutOfRoleException, NotLoggedInException {
@@ -40,5 +44,21 @@ public class ProfileManagementAdminModel {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public LinkedList<User> fetchListOfUsers() throws NotLoggedInException, OutOfRoleException {
+        try {
+            return fetchListOfUsersService.process(clientCallback, registry);
+        } catch (RuntimeException e) {
+            // Handle any runtime exceptions
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean changePassword(String newPassword) throws UserExistenceException, OutOfRoleException, NotLoggedInException {
+
+            return ChangePasswordService.process(registry, clientCallback, null, null);
+
     }
 }
