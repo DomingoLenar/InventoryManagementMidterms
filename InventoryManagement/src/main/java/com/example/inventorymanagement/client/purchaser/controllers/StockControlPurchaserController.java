@@ -2,7 +2,6 @@ package com.example.inventorymanagement.client.purchaser.controllers;
 
 import com.example.inventorymanagement.client.common.controllers.MainController;
 import com.example.inventorymanagement.client.purchaser.models.StockControlPurchaserModel;
-import com.example.inventorymanagement.client.purchaser.views.StockControlPurchaserPanel;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
@@ -10,25 +9,20 @@ import com.example.inventorymanagement.util.objects.Item;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
-import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 
-import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.LinkedList;
-import java.util.ResourceBundle;
 
 public class StockControlPurchaserController implements ControllerInterface {
     @FXML
