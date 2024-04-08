@@ -98,6 +98,17 @@ public class ProfileManagementPurchaserController extends Application implements
         // initialize the model and panel objects
         profileManagementPurchaserPanel = new ProfileManagementPurchaserPanel();
         profileManagementPurchaserModel = new ProfileManagementPurchaserModel(registry, clientCallback);
+
+        // Set up event handler for the changePasswordButton
+        changePasswordButton.setOnAction(event -> {
+            try {
+                // Launch the ProfileManagementChangePassAdminController
+                ProfileManagementChangePassPurchaserController profileManagementChangePassPurchaserController = new ProfileManagementChangePassPurchaserController();
+                profileManagementChangePassPurchaserController.start(new Stage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @Override
