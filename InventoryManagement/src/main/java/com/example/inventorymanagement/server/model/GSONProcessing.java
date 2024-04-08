@@ -176,7 +176,7 @@ public class GSONProcessing {
                                     stockObject.addProperty("qty", String.valueOf(initialQty - detail.getQty()));
                                     int initialTQty = item.get("totalQty").getAsInt();
                                     item.remove("totalQty");
-                                    item.addProperty("totalQty", String.valueOf((initialQty-detail.getQty())));
+                                    item.addProperty("totalQty", String.valueOf((initialTQty-detail.getQty())));
                                 }
                             }
                         }else{
