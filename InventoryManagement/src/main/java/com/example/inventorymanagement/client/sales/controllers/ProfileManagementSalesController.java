@@ -96,6 +96,17 @@ public class ProfileManagementSalesController  extends Application implements In
         // initialize the model and panel objects
         profileManagementSalesPanel = new ProfileManagementSalesPanel();
         profileManagementSalesModel = new ProfileManagementSalesModel(registry, clientCallback);
+
+        // Set up event handler for the changePasswordButton
+        changePasswordButton.setOnAction(event -> {
+            try {
+                // Launch the ProfileManagementChangePassAdminController
+                ProfileManagementChangePassSalesController profileManagementChangePassSalesController = new ProfileManagementChangePassSalesController();
+                profileManagementChangePassSalesController.start(new Stage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @Override
