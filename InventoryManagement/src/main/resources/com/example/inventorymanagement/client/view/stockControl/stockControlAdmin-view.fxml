@@ -24,8 +24,8 @@
          <children>
             <TableView fx:id="stockControlAdminTable" layoutX="11.0" layoutY="10.0" prefHeight="510.0" prefWidth="829.0" style="-fx-font-family: 'Share Tech Mono'; -fx-font-size: 15;">
                <columns>
-                  <TableColumn minWidth="0.0" prefWidth="420.0" text="Item Name" />
-                  <TableColumn minWidth="0.0" prefWidth="408.0" text="Total Quantity" />
+                  <TableColumn fx:id="itemNameColumn" minWidth="0.0" prefWidth="420.0" text="Item Name" />
+                  <TableColumn fx:id="totalQtyColumn" minWidth="0.0" prefWidth="408.0" text="Total Quantity" />
                </columns>
             </TableView>
          </children></AnchorPane>
@@ -33,7 +33,7 @@
    <bottom>
       <AnchorPane prefHeight="62.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="addItemButtonAdmin" layoutX="755.0" layoutY="17.0" mnemonicParsing="false" onAction="#handleAddItem" style="-fx-background-color: EAD7D7;" text="Add Item">
+            <Button fx:id="addItemButtonAdmin" layoutX="755.0" layoutY="17.0" mnemonicParsing="false" style="-fx-background-color: EAD7D7;" text="Add Item">
                <font>
                   <Font name="Share Tech Mono" size="15.0" />
                </font>
@@ -43,7 +43,7 @@
                   <Font name="Share Tech Mono" size="15.0" />
                </font>
             </Button>
-            <Button fx:id="salesInvoiceButtonAdmin" layoutX="497.0" layoutY="18.0" mnemonicParsing="false" style="-fx-background-color: EAD7D7;" text="Sales Invoice">
+            <Button fx:id="createSalesInvoiceButtonAdmin" layoutX="497.0" layoutY="18.0" mnemonicParsing="false" style="-fx-background-color: EAD7D7;" text="Sales Invoice">
                <font>
                   <Font name="Share Tech Mono" size="15.0" />
                </font>

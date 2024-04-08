@@ -1,56 +1,33 @@
 package com.example.inventorymanagement.client.admin.models;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import com.example.inventorymanagement.client.microservices.AddUserService;
+import com.example.inventorymanagement.util.ClientCallback;
+import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
+import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
+import com.example.inventorymanagement.util.exceptions.UserExistenceException;
+import com.example.inventorymanagement.util.objects.User;
+import java.rmi.registry.Registry;
 
 public class AddUserAdminModel {
-    private final StringProperty role;
-    private final StringProperty username;
-    private final StringProperty password;
+    private AddUserService addUserService;
+    private Registry registry;
+    private ClientCallback clientCallback;
 
-    public  AddUserAdminModel() {
-        this(null, null, null);
+    public AddUserAdminModel(Registry registry, ClientCallback clientCallback) {
+        this.registry = registry;
+        this.clientCallback = clientCallback;
+        this.addUserService = new AddUserService();
     }
 
-    public AddUserAdminModel (String role, String username, String password) {
-        this.role = new SimpleStringProperty(role);
-        this.username = new SimpleStringProperty(username);
-        this.password = new SimpleStringProperty(password);
-    }
 
-    public String getRole() {
-        return role.get();
-    }
-
-    public void setRole(String role) {
-        this.role.set(role);
-    }
-
-    public StringProperty roleProperty() {
-        return role;
-    }
-
-    public String getUsername() {
-        return username.get();
-    }
-
-    public void setUsername(String username) {
-        this.username.set(username);
-    }
-
-    public StringProperty usernameProperty() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password.get();
-    }
-
-    public void setPassword(String password) {
-        this.password.set(password);
-    }
-
-    public StringProperty passwordProperty() {
-        return password;
+    public boolean addUserService(User newUser) {
+        try {
+            // Call the AddUserService microservice to add the user
+            return addUserService.process(registry, clientCallback, newUser);
+        } catch (UserExistenceException | OutOfRoleException | NotLoggedInException e) {
+            // Handle exceptions appropriately
+            e.printStackTrace();
+            return false;
+        }
     }
 }

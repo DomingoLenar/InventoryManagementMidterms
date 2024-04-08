@@ -15,7 +15,7 @@ public class FetchListOfUsersService {
     public static LinkedList<User> process(ClientCallback clientCallback, Registry registry) throws OutOfRoleException, NotLoggedInException {
         try{
             UserRequestInterface userStub = (UserRequestInterface) registry.lookup("userRequest");
-//            return userStub.fetchUsers(clientCallback);
+            return userStub.fetchUsers(clientCallback);
         }catch(RemoteException | NotBoundException e){
             e.printStackTrace();
         }

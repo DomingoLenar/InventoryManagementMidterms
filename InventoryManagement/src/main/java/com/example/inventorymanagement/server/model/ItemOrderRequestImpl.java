@@ -10,8 +10,10 @@ import com.example.inventorymanagement.util.objects.User;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
 
+import java.io.Serializable;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -22,7 +24,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
-public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrderRequestInterface {
+public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrderRequestInterface, Serializable {
 
     public ItemOrderRequestImpl() throws RemoteException{
 
@@ -200,44 +202,48 @@ public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrd
         return transactionsToday;
     }
 
+    @Override
     // Checks if user invoking the request has valid permissions
-    public void checkIfValidPerm(User user) throws OutOfRoleException{
+    public void checkIfValidPerm(User user) throws RemoteException, OutOfRoleException{
         String userRole = user.getRole();
         if(!(userRole.equals("admin") || userRole.equals("sales"))){
             throw new OutOfRoleException("Insufficient Permission");
         }
     }
 
-    public void checkIfLoggedIn(ClientCallback clientCallback) throws NotLoggedInException {
+    @Override
+    public void checkIfLoggedIn(ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
         try {
             Registry reg = LocateRegistry.getRegistry("localhost", 2018);
-            UserRequestInterfaceImplementation userStub = (UserRequestInterfaceImplementation) reg.lookup("userRequest");
+            UserRequestInterface userStub = (UserRequestInterface) reg.lookup("userRequest");
             if (!(userStub.isLoggedIn(clientCallback))) throw new NotLoggedInException("Not Logged In");
         } catch (AccessException e) {
             throw new RuntimeException(e);
         } catch (NotBoundException e) {
-            throw new RuntimeException(e);
-        } catch (RemoteException e) {
             throw new RuntimeException(e);
         } catch (OutOfRoleException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static String getCurrentDate(){
+    @Override
+    public String getCurrentDate() throws RemoteException{
         LocalDate localDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String currentDate = localDate.format(formatter);
         return currentDate;
     }
 
-    public void callUpdate(String panel){
+    @Override
+    public void callUpdate(String panel) throws RemoteException {
         try{
             Registry reg = LocateRegistry.getRegistry("localhost",2018);
-            UserRequestInterfaceImplementation userStub = (UserRequestInterfaceImplementation) reg.lookup("userRequest");
+            UserRequestInterface userStub = (UserRequestInterface) reg.lookup("userRequest");
             userStub.callUpdate(panel);
-        }catch(Exception e){
-
+        } catch (AccessException e) {
+            throw new RuntimeException(e);
+        } catch (NotBoundException e) {
+            throw new RuntimeException(e);
         }
     }
 

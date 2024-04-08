@@ -1,6 +1,13 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
+import com.example.inventorymanagement.client.admin.models.DashboardAdminModel;
+import com.example.inventorymanagement.client.admin.models.FinancesAdminModel;
+import com.example.inventorymanagement.client.admin.views.DashboardAdminPanel;
+import com.example.inventorymanagement.client.admin.views.FinancesAdminPanel;
+import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,17 +20,19 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.stage.Stage;
 
 
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class FinancesAdminController implements Initializable, ControllerInterface {
+public class FinancesAdminController extends Application implements Initializable, ControllerInterface {
     @FXML
     private BorderPane borderPaneFinancesAdmin;
     @FXML
@@ -86,6 +95,12 @@ public class FinancesAdminController implements Initializable, ControllerInterfa
     private Line minuteHand;
     @FXML
     private Label dateTodayLabel;
+    private MainController mainController;
+
+    private ClientCallback clientCallback;
+    private Registry registry;
+    private FinancesAdminPanel financesAdminPanel;
+    private FinancesAdminModel financesAdminModel;
 
     public BorderPane getBorderPaneFinancesAdmin() {
         return borderPaneFinancesAdmin;
@@ -210,6 +225,9 @@ public class FinancesAdminController implements Initializable, ControllerInterfa
     public Label getDateTodayLabel() {
         return dateTodayLabel;
     }
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
 
     @Override
     public void fetchAndUpdate() throws RemoteException {
@@ -217,12 +235,7 @@ public class FinancesAdminController implements Initializable, ControllerInterfa
 
     @Override
     public String getObjectsUsed() throws RemoteException {
-        return null;
-    }
-
-    private void addHoverEffect(Button button) {
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
+        return "FinancesAdmin";
     }
 
     public void initialize(URL location, ResourceBundle resources) {
@@ -236,6 +249,11 @@ public class FinancesAdminController implements Initializable, ControllerInterfa
 
         // Update time label every second
         updateTimeLabel();
+
+        // initialize the model and panel objects
+        financesAdminPanel = new FinancesAdminPanel();
+        financesAdminModel = new FinancesAdminModel(registry, clientCallback);
+
     }
 
     // Method to update the time label
@@ -256,6 +274,12 @@ public class FinancesAdminController implements Initializable, ControllerInterfa
         });
         updateTimeThread.setDaemon(true);
         updateTimeThread.start();
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        financesAdminPanel = new FinancesAdminPanel();
+        financesAdminPanel.start(stage);
     }
 }
 

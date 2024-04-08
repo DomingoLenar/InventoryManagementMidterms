@@ -116,7 +116,7 @@ public class ServicesTest implements ControllerInterface{
 
    @Test
    public void testCreatePurchaseOrderService() {
-      ItemOrder purchaseOrder = new ItemOrder(223,new User("Marven","", ""),"2/20/23",new LinkedList<>());
+      ItemOrder purchaseOrder = new ItemOrder(223,"Marven","2/20/23",new LinkedList<>());
 
       boolean result = false;
       try {
@@ -130,7 +130,7 @@ public class ServicesTest implements ControllerInterface{
 
    @Test
    public void testCreateSalesInvoiceService() {
-      ItemOrder salesInvoice = new ItemOrder(223,new User("Marven","", ""),"2/20/23",new LinkedList<>());
+      ItemOrder salesInvoice = new ItemOrder(223,"Marven","2/20/23",new LinkedList<>());
 
       boolean result = false;
       try {

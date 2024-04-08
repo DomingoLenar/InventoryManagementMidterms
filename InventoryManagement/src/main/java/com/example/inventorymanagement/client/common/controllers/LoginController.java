@@ -67,7 +67,7 @@ public class LoginController implements ControllerInterface {
                 case "sales":
                     mainController.displaySalesMainMenu();
                     break;
-                case "purchaser":
+                case "purchase":
                     mainController.displayPurchaserMainMenu();
                     break;
             }
@@ -78,6 +78,8 @@ public class LoginController implements ControllerInterface {
         } catch (AlreadyLoggedInException alreadyLoggedInException) {
 
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         // todo: handle the exception using javafx components
