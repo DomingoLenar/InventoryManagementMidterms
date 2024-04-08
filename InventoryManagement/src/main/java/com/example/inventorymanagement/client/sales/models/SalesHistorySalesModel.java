@@ -22,7 +22,6 @@ public class SalesHistorySalesModel {
     }
     public LinkedList<Item> fetchItems () throws NotLoggedInException {
         try {
-
             // Fetch items using FetchListOfItemsService
             return fetchLisOfItems.process(registry, callback);
         } catch (RuntimeException e) {

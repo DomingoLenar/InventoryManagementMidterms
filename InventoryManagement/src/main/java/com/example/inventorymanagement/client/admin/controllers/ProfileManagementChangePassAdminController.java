@@ -109,7 +109,7 @@ public class ProfileManagementChangePassAdminController extends Application impl
     public void start(Stage stage) throws Exception {
         populateTestVariables();
         profileManagementChangePassAdminPanel = new ProfileManagementChangePassAdminPanel();
-        profileManagementChangePassAdminPanel.start(stage, this);
+//        profileManagementChangePassAdminPanel.start(stage, this);
     }
 
     @Override

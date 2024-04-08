@@ -10,6 +10,8 @@ import com.example.inventorymanagement.util.objects.Item;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -28,9 +30,9 @@ public class LowStocksPurchaserController implements ControllerInterface {
     @FXML
     private TableView lowStocksTable;
     @FXML
-    private TableColumn productColumn;
+    private TableColumn<Item, String> productColumn;
     @FXML
-    private TableColumn quantityLeftColumn;
+    private TableColumn<Item, String> quantityLeftColumn;
     private LowStocksPurchaserModel lowStocksPurchaserModel;
     private MainController mainController;
     boolean initialized=false;
@@ -64,6 +66,9 @@ public class LowStocksPurchaserController implements ControllerInterface {
         if (lowStocksTable != null && productColumn != null && quantityLeftColumn != null) {
             ObservableList<Item> observableList = FXCollections.observableArrayList(items);
             lowStocksTable.setItems(observableList);
+
+            productColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getItemName()));
+            quantityLeftColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getTotalQty()).asObject().asString());
         } else {
             System.out.println("Error: Table and/or Columns are null. Populate canceled");
         }
