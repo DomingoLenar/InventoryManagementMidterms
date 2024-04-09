@@ -2,6 +2,7 @@ package com.example.inventorymanagement.client.admin.controllers;
 
 import com.example.inventorymanagement.client.admin.models.CreateSalesInvoiceAdminModel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.client.microservices.UpdateCallback;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
@@ -67,13 +68,24 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
                 showAlert("User does not have required permission.");
             }
         });
+
+        // Fetch and update data from the model
+        try {
+            // Fetch list of items and populate the ComboBox
+            LinkedList<Item> itemList = createSalesInvoiceAdminModel.fetchListOfItems();
+            itemNameComboBox.getItems().addAll(itemList);
+        } catch (NotLoggedInException e) {
+            showAlert("User not logged in.");
+        }
     }
+
 
     @Override
     public String getObjectsUsed() throws RemoteException {
         return "Item";
     }
 
+    @FXML
     private void handleOkButton(ActionEvent actionEvent) throws NotLoggedInException, OutOfRoleException {
         try {
             validateAndProcessSalesInvoice();
@@ -174,6 +186,7 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
         alert.showAndWait();
     }
 
+    @FXML
     public void initialize() {
         if (!initialized) {
             addHoverEffect(okButton);
@@ -206,6 +219,14 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
                     showAlert("User does not have required permission.");
                 }
             });
+        }
+        try {
+            MainController.clientCallback.setCurrentPanel(this);
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
+        } catch (NotLoggedInException e){
+            showAlert("User is not logged in");
+        } catch (RemoteException e) {
+            System.out.println(e.getMessage());
         }
     }
 }
