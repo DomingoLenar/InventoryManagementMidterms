@@ -175,5 +175,12 @@ public class StockControlAdminController implements ControllerInterface {
                 System.out.println("Error: Table or button is null. Cannot initialize.");
             }
         }
+
+        try {
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
+        }catch(NotLoggedInException e){
+            //prompt user not logged in
+        }
+
     }
 }
