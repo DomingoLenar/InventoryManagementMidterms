@@ -1,28 +1,29 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
 import com.example.inventorymanagement.client.admin.models.AddUserAdminModel;
-import com.example.inventorymanagement.client.admin.views.AddUserAdminPanel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.objects.User;
-import javafx.application.Application;
+import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
+import com.example.inventorymanagement.util.requests.ItemRequestInterface;
+import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
-import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
-import java.util.ResourceBundle;
 
-public class AddUserAdminController extends Application implements Initializable, ControllerInterface {
+import static com.example.inventorymanagement.client.common.controllers.MainController.clientCallback;
+import static com.example.inventorymanagement.client.common.controllers.MainController.registry;
+
+public class AddUserAdminController implements ControllerInterface {
 
     @FXML
     private ComboBox<String> roleComboBox;
@@ -37,53 +38,9 @@ public class AddUserAdminController extends Application implements Initializable
     private Button saveButton;
 
     private AddUserAdminModel addUserAdminModel;
-    private AddUserAdminPanel addUserAdminPanel = new AddUserAdminPanel();
     private MainController mainController;
 
-    private ClientCallback clientCallback;
-    private Registry registry;
-    public void start(Stage stage) throws Exception {
-        addUserAdminPanel.start(stage);
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        // Create a list of choices
-        ObservableList<String> choices = FXCollections.observableArrayList(
-                "Sales", "Purchaser"
-        );
-
-        // Set the choices to the ComboBox
-        roleComboBox.setItems(choices);
-
-        // Set font style for ComboBox
-        Font font = new Font("Share Tech Mono", 15);
-        roleComboBox.setStyle("-fx-font-family: '" + font.getFamily() + "'; -fx-font-size: " + font.getSize() + "px;");
-
-        // Add hover effect to the save button
-        addHoverEffect(saveButton);
-
-        // Initialize the model and panel objects
-        addUserAdminModel = new AddUserAdminModel(registry, clientCallback);
-        addUserAdminPanel = new AddUserAdminPanel();
-    }
-
-
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
-
-    private void addHoverEffect(Button button) {
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
-    }
-
-
-
-    public void setClientCallback(ClientCallback clientCallback) {
-        this.clientCallback = clientCallback;
-    }
-
+    // Getter methods of FXML Components
     public ComboBox<String> getRoleComboBox() {
         return roleComboBox;
     }
@@ -100,31 +57,97 @@ public class AddUserAdminController extends Application implements Initializable
         return saveButton;
     }
 
-    @Override
+    public AddUserAdminController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController){
+        this.addUserAdminModel = new AddUserAdminModel(registry, clientCallback);
+    }
+
+    boolean initialized = false;
+
     public void fetchAndUpdate() throws RemoteException {
     }
 
-    @Override
     public String getObjectsUsed() throws RemoteException {
         return "User";
     }
-
-
+    private void addHoverEffect (Button button){
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
+    }
     @FXML
-    private void handleSaveButtonClick() {
-        try {
-            String username = usernameField.getText();
-            String password = passwordField.getText();
-            String role = roleComboBox.getValue();
-            User newUser = new User(username, password, role);
-            boolean success = addUserAdminModel.addUserService(newUser);
-            if (success) {
-                throw new RuntimeException("User added successfully.");
-            } else {
-                throw new RuntimeException("Failed to add user. Make sure to enter a 7 character password or check if the username has duplicates");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    private void handleSave() {
+        String newUserUsername = usernameField.getText(); // Get the new username from the input field
+        String newUserPassword = passwordField.getText(); // Get the new password from the input field
+        String newUserRole = roleComboBox.getValue(); // Get the selected role from the combo box
+
+        // Check if any of the fields are empty
+        if (newUserUsername.isEmpty() || newUserPassword.isEmpty() || newUserRole == null) {
+            showErrorDialog("Error", "Please fill in all fields.");
+            return;
         }
+
+        // Create a new User object with the provided username, password, and role
+        User newUser = new User(newUserUsername, newUserPassword, newUserRole);
+
+        // Call the addUserService method from the model to add the new user
+        boolean success = addUserAdminModel.addUserService(newUser);
+        if (success) {
+            // User addition was successful
+            showInformationDialog("Success", "User added successfully.");
+        } else {
+            // User addition failed
+            showErrorDialog("Error", "Failed to add user.");
+        }
+    }
+
+
+    // Helper method to show an information dialog
+    private void showInformationDialog(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    // Helper method to show an error dialog
+    private void showErrorDialog(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    public void initialize() {
+        // Create a list of choices
+        ObservableList<String> choices = FXCollections.observableArrayList("Sales", "Purchaser");
+
+        // Set the choices to the ComboBox
+        roleComboBox.setItems(choices);
+
+        // Set font style for ComboBox
+        Font font = new Font("Share Tech Mono", 15);
+        roleComboBox.setStyle("-fx-font-family: '" + font.getFamily() + "'; -fx-font-size: " + font.getSize() + "px;");
+
+        // Add hover effect to the save button
+        addHoverEffect(saveButton);
+
+        // action handlers
+        saveButton.setOnAction(event -> handleSave());
+        addUserAdminModel = new AddUserAdminModel(registry,clientCallback);
+        if (!initialized) {
+            initialized = true;
+            try {
+                if (addUserAdminModel != null) {
+                    fetchAndUpdate();
+                }
+                else {
+                    System.out.println("Add User Model is null");
+                }
+            } catch (RemoteException e) {
+                System.out.println("User is not logged in");
+            }
+        }else {
+            System.out.println("Error: Save button is null. Cannot Initialize");
+        }
+
     }
 }
