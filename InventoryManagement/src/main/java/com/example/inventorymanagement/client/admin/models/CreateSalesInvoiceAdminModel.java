@@ -29,7 +29,7 @@ public class CreateSalesInvoiceAdminModel {
         return createSalesInvoiceService.process(registry, clientCallback, purchaseOrder);
     }
 
-    public LinkedList<Item> fetchListofItems() throws NotLoggedInException{
+    public LinkedList<Item> fetchListOfItems() throws NotLoggedInException{
         return fetchListOfItemsService.process(registry, clientCallback);
     }
 }
