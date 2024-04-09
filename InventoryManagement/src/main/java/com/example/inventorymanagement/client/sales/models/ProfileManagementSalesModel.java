@@ -9,9 +9,11 @@ import com.example.inventorymanagement.util.exceptions.UserExistenceException;
 import com.example.inventorymanagement.util.objects.User;
 
 import java.rmi.registry.Registry;
+import java.util.LinkedList;
 
 public class ProfileManagementSalesModel {
     private ChangeUserRoleService changeUserRoleService;
+    private FetchListOfUsersService fetchListOfUsersService;
     private RemoveUserService removeUserService;
     private Registry registry;
     private ClientCallback clientCallback;
@@ -40,6 +42,15 @@ public class ProfileManagementSalesModel {
             // Handle any runtime exceptions
             e.printStackTrace();
             return false;
+        }
+    }
+    public LinkedList<User> fetchListOfUsers() throws NotLoggedInException, OutOfRoleException {
+        try {
+            return fetchListOfUsersService.process(clientCallback, registry);
+        } catch (RuntimeException e) {
+            // Handle any runtime exceptions
+            e.printStackTrace();
+            return null;
         }
     }
 }
