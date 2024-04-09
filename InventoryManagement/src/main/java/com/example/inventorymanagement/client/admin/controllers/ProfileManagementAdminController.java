@@ -173,13 +173,22 @@ public class ProfileManagementAdminController implements ControllerInterface {
     // Action handlers
     @FXML
     private void handleChangePassword() {
-        ProfileManagementChangePassAdminController pManagementCPAC = new ProfileManagementChangePassAdminController(clientCallback, registry);
-        pManagementCPAC.setProfileManagementChangePassAdminModel(new ProfileManagementChangePassAdminModel(registry, clientCallback));
+        ProfileManagementChangePassAdminModel pManagementCPAC = new ProfileManagementChangePassAdminModel(MainController.registry, clientCallback);
         try {
-            pManagementCPAC.start(new Stage());
+            new ProfileManagementChangePassAdminController(new Stage());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            // Show an error dialog to the user
+            showErrorDialog("Error", "Failed to open change password window.");
+            e.printStackTrace();
         }
+    }
+
+    // Helper method to display an error dialog
+    private void showErrorDialog(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML
@@ -237,6 +246,11 @@ public class ProfileManagementAdminController implements ControllerInterface {
                 // Handle the case where UI components are null
                 System.out.println("Error: ComboBox or Button is null. Cannot initialize.");
             }
+        }
+    }
+
+    private class ProfileManagementChangePassAdminController {
+        public ProfileManagementChangePassAdminController(Stage stage) {
         }
     }
 }
