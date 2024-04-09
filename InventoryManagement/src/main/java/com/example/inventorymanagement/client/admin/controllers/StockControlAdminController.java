@@ -2,6 +2,7 @@ package com.example.inventorymanagement.client.admin.controllers;
 
 import com.example.inventorymanagement.client.admin.models.StockControlAdminModel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.client.microservices.UpdateCallback;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
@@ -14,10 +15,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 
 import java.rmi.RemoteException;
@@ -86,7 +84,7 @@ public class StockControlAdminController implements ControllerInterface {
             LinkedList<Item> items = stockControlAdminModel.fetchItems();
             populateTableView(items);
         } catch (NotLoggedInException e) {
-            // Show Prompt
+            showAlert("Error occurred while fetching items: " + e.getMessage());
         }
     }
 
@@ -111,6 +109,14 @@ public class StockControlAdminController implements ControllerInterface {
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
+    }
+
+    private void showAlert(String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML
@@ -168,19 +174,20 @@ public class StockControlAdminController implements ControllerInterface {
                     }
                 } catch (NotLoggedInException e) {
                     // Show prompt to user not logged in
-                    System.out.println("User is not logged in.");
+                    showAlert("User is not logged in.");
                 }
             } else {
                 // Handle the case where UI components are null
                 System.out.println("Error: Table or button is null. Cannot initialize.");
             }
         }
-
         try {
+            MainController.clientCallback.setCurrentPanel(this);
             UpdateCallback.process(MainController.clientCallback, MainController.registry);
-        }catch(NotLoggedInException e){
-            //prompt user not logged in
+        } catch (NotLoggedInException e){
+            showAlert("User is not logged in");
+        } catch (RemoteException e) {
+            System.out.println(e.getMessage());
         }
-
     }
 }

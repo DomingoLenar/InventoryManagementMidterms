@@ -9,12 +9,12 @@ import java.rmi.registry.Registry;
 import java.util.LinkedList;
 
 public class StockControlAdminModel {
-    private FetchListOfItemsService fetchLisOfItems;
+    private FetchListOfItemsService fetchListOfItems;
     private Registry registry;
     private ClientCallback callback;
 
     public StockControlAdminModel(Registry registry, ClientCallback clientCallback) {
-        this.fetchLisOfItems = new FetchListOfItemsService();
+        this.fetchListOfItems = new FetchListOfItemsService();
         this.registry = registry;
         this.callback = clientCallback;
     }
@@ -22,7 +22,7 @@ public class StockControlAdminModel {
     public LinkedList<Item> fetchItems () throws NotLoggedInException {
         try {
             // Fetch items using FetchListOfItemsService
-            return FetchListOfItemsService.process(registry, callback);
+            return fetchListOfItems.process(registry, callback);
         } catch (RuntimeException e) {
             // Handle exceptions appropriately
             e.printStackTrace();
