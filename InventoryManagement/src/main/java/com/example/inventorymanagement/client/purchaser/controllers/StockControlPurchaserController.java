@@ -114,7 +114,6 @@ public class StockControlPurchaserController implements ControllerInterface {
     }
     @FXML
     public void initialize() { // initialize components -> better approach is to initialize just the components and let nav___bar buttons handle the population of data/realtime
-        System.out.println("initialize");
         addHoverEffect(lowStocksButtonPurchaser);
         addHoverEffect(addItemButtonPurchaser);
 
