@@ -12,14 +12,14 @@
    <content>
       <Pane layoutX="32.0" layoutY="137.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: linear-gradient(to bottom, #e8b0b0, #f4f4f4);">
          <children>
-            <TextField layoutX="310.0" layoutY="137.0" prefHeight="38.0" prefWidth="100.0" promptText="Quantity" />
+            <TextField fx:id="itemQuantityField" layoutX="310.0" layoutY="137.0" prefHeight="38.0" prefWidth="100.0" promptText="Quantity" />
             <Label layoutX="212.0" layoutY="48.0" text="Sales Invoice">
                <font>
                   <Font name="Share Tech Mono" size="30.0" />
                </font>
             </Label>
-            <ComboBox editable="true" layoutX="32.0" layoutY="137.0" prefHeight="38.0" prefWidth="264.0" />
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="422.0" layoutY="139.0" prefHeight="35.0" prefWidth="84.0" text="00.00" textAlignment="CENTER">
+            <ComboBox fx:id="itemNameComboBox" editable="true" layoutX="32.0" layoutY="137.0" prefHeight="38.0" prefWidth="264.0" />
+            <Label fx:id="itemPriceLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="422.0" layoutY="139.0" prefHeight="35.0" prefWidth="84.0" text="00.00" textAlignment="CENTER">
                <font>
                   <Font name="Share Tech Mono" size="24.0" />
                </font>
