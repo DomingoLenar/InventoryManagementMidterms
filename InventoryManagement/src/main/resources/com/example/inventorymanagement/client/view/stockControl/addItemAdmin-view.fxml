@@ -24,7 +24,7 @@
                   <Font name="Share Tech Mono" size="17.0" />
                </font>
             </Label>
-            <Label layoutX="32.0" layoutY="198.0" opacity="0.5" prefHeight="0.0" prefWidth="129.0" text="Price">
+            <Label layoutX="32.0" layoutY="198.0" opacity="0.5" prefHeight="0.0" prefWidth="129.0" text="Cost">
                <font>
                   <Font name="Share Tech Mono" size="17.0" />
                </font>
@@ -36,6 +36,12 @@
             </Label>
             <Button fx:id="okButton" layoutX="448.0" layoutY="324.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Ok" />
             <ComboBox fx:id="itemNameComboBox" layoutX="32.0" layoutY="137.0" prefHeight="38.0" prefWidth="456.0" />
+            <ComboBox fx:id="supplierComboBox" layoutX="161.0" layoutY="224.0" prefHeight="30.0" prefWidth="220.0" />
+            <Label layoutX="161.0" layoutY="198.0" opacity="0.5" prefHeight="0.0" prefWidth="129.0" text="Suppllier">
+               <font>
+                  <Font name="Share Tech Mono" size="17.0" />
+               </font>
+            </Label>
          </children>
       </Pane>
    </content>
