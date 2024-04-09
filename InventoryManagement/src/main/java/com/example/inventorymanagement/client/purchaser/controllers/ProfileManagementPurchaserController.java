@@ -249,4 +249,8 @@ public class ProfileManagementPurchaserController  implements ControllerInterfac
             }
         }
     }
+    private class ProfileManagementChangePassPurchaserController {
+        public ProfileManagementChangePassPurchaserController(Stage stage) {
+        }
+    }
 }
