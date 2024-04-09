@@ -74,7 +74,7 @@ public class StockControlPurchaserController implements ControllerInterface {
             LinkedList<Item> items = stockControlPurchaserModel.fetchItems();
             populateTableView(items);
         } catch (NotLoggedInException e) {
-            // Show Prompt
+            showAlert("Error occurred while fetching items: " + e.getMessage());
         }
     }
 
