@@ -33,6 +33,8 @@ public class ProfileManagementChangePassAdminModel {
             return false;
         }
     }
+
+    @Deprecated
     public LinkedList<User> fetchListOfUsers() throws NotLoggedInException, OutOfRoleException {
         try {
             return fetchListOfUsersService.process(clientCallback, registry);

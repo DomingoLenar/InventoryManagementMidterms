@@ -21,6 +21,7 @@ public class ProfileManagementChangePassPurchaserModel {
         this.registry = registry;
         this.clientCallback = clientCallback;
         this.changePasswordService = new ChangePasswordService();
+        this.fetchListOfUsersService = new FetchListOfUsersService();
     }
 
     public boolean changePassword(User user, String newPassword) throws UserExistenceException, OutOfRoleException, NotLoggedInException {

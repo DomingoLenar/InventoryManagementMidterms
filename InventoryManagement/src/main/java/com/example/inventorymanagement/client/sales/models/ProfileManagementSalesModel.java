@@ -23,6 +23,7 @@ public class ProfileManagementSalesModel {
         this.clientCallback = clientCallback;
         this.changeUserRoleService = new ChangeUserRoleService();
         this.removeUserService = new RemoveUserService();
+        this.fetchListOfUsersService = new FetchListOfUsersService();
     }
 
     public boolean changeUserRole(User user, String newRole) throws UserExistenceException, OutOfRoleException, NotLoggedInException {
