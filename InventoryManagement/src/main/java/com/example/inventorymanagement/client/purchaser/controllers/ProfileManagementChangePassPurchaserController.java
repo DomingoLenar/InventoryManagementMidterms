@@ -44,6 +44,10 @@ public class ProfileManagementChangePassPurchaserController extends Application 
     private Registry registry;
     private ProfileManagementChangePassPurchaserModel profileManagementChangePassPurchaserModel;
     private ProfileManagementChangePassPurchaserPanel profileManagementChangePassPurchaserPanel = new ProfileManagementChangePassPurchaserPanel();
+
+    public ProfileManagementChangePassPurchaserController(Stage stage) {
+    }
+
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
