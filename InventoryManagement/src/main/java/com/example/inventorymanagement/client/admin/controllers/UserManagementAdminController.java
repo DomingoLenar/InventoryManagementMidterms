@@ -5,24 +5,29 @@ import com.example.inventorymanagement.client.admin.models.UserManagementAdminMo
 import com.example.inventorymanagement.client.admin.views.DashboardAdminPanel;
 import com.example.inventorymanagement.client.admin.views.UserManagementAdminPanel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.client.microservices.UpdateCallback;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
+import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.objects.User;
 import javafx.application.Application;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 
-public class UserManagementAdminController extends Application implements Initializable, ControllerInterface {
+public class UserManagementAdminController implements ControllerInterface {
 
     @FXML
     private BorderPane borderPaneUserManagement;
@@ -32,18 +37,16 @@ public class UserManagementAdminController extends Application implements Initia
     private TableView<User> userManagementTableView;
     @FXML
     private Button addUserButton;
+    @FXML
+    private TableColumn<User, Integer> idTableColumn;
+    @FXML
+    private TableColumn<User, String> nameTableColumn;
+    @FXML
+    private TableColumn<User, String> roleTableColumn;
     private MainController mainController;
 
-    private ClientCallback clientCallback;
-    private Registry registry;
     private UserManagementAdminModel userManagementAdminModel;
-    private UserManagementAdminPanel userManagementAdminPanel;
     private AddUserAdminController addUserAdminController;
-
-
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
 
 
     public BorderPane getBorderPaneUserManagement() {
@@ -62,47 +65,85 @@ public class UserManagementAdminController extends Application implements Initia
         return userManagementTableView;
     }
 
-    @Override
+
+    boolean initialized = false;
+    public UserManagementAdminController(){
+        // Default constructor
+    }
     public void fetchAndUpdate() throws RemoteException {
+        try {
+            LinkedList<User> users = userManagementAdminModel.fetchListOfUsers();
+            populateTableView(users);
+        }catch (Exception e){
+            showAlert("Error occured while fetching users: "+e.getMessage());
+        }
     }
 
+    private void populateTableView(LinkedList<User> users){
+        if (userManagementTableView != null && idTableColumn != null & nameTableColumn !=null & roleTableColumn!=null){
+            ObservableList<User> observableList = FXCollections.observableArrayList(users);
+            userManagementTableView.setUserData(observableList);
+
+            nameTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUsername()));
+            roleTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRole()));
+        } else {
+            System.out.println("Error:Table or columns are null. Cannot populate table");
+        }
+    }
     @Override
     public String getObjectsUsed() throws RemoteException {
-        return "UserManagementAdmin";
+        return "User";
     }
 
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
-    @Override
+    private void showAlert(String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
     @FXML
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    private void handleAddUser(){
+        //Handle add user button action
+    }
+    @FXML
+    public void initialize() {
         addHoverEffect(addUserButton);
         // initialize the panel and model objects
-        userManagementAdminPanel = new UserManagementAdminPanel();
-        userManagementAdminModel = new UserManagementAdminModel(registry, clientCallback);
 
-        // call the addUserAdminController using the addUserButton
-        addUserButton.setOnAction(event -> {
-            if (addUserAdminController != null) {
-                try {
-                    addUserAdminController.start(new Stage());
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+        addUserButton.setOnAction(event -> handleAddUser());
+        userManagementAdminModel = new UserManagementAdminModel(MainController.registry, MainController.clientCallback);
+        if (!initialized) {
+            initialized = true;
+
+            // check ui components if not null
+            if (userManagementTableView != null & addUserButton != null){
+                addHoverEffect(addUserButton);
+                addUserButton.setOnAction(event -> handleAddUser());
+
+                if(userManagementAdminModel !=null){
+                    populateTableView(userManagementAdminModel.fetchListOfUsers());
+                }else {
+                    System.out.println("User Management Admin Model is null");
                 }
-            } else {
-                System.err.println("AddUserAdminController not injected.");
+            }else {
+                System.out.println("Error: Table or button is null. Cannot initialize.");
             }
-        });
+        }
+        try {
+            MainController.clientCallback.setCurrentPanel(this);
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
+        } catch (NotLoggedInException e){
+            showAlert("User is not logged in");
+        } catch (RemoteException e) {
+            System.out.println(e.getMessage());
+        }
     }
     public void setAddUserAdminController(AddUserAdminController addUserAdminController) {
         this.addUserAdminController = addUserAdminController;
-    }
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        userManagementAdminPanel = new UserManagementAdminPanel();
-        userManagementAdminPanel.start(stage);
     }
 }
