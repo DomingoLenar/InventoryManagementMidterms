@@ -33,11 +33,6 @@
                   <Font name="Share Tech Mono" size="24.0" />
                </font>
             </Label>
-            <Label fx:id="emailLabel" layoutX="281.0" layoutY="122.0" text="marvensheesh@gmail.com">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
             <Button fx:id="saveButton" layoutX="588.0" layoutY="322.0" mnemonicParsing="false" style="-fx-background-color: #FFFFFF;" text="Save">
                <font>
                   <Font name="Share Tech Mono" size="13.0" />
