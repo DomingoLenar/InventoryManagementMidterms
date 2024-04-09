@@ -67,7 +67,17 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
                 showAlert("User does not have required permission.");
             }
         });
+
+        // Fetch and update data from the model
+        try {
+            // Fetch list of items and populate the ComboBox
+            LinkedList<Item> itemList = createSalesInvoiceAdminModel.fetchListOfItems();
+            itemNameComboBox.getItems().addAll(itemList);
+        } catch (NotLoggedInException e) {
+            showAlert("User not logged in.");
+        }
     }
+
 
     @Override
     public String getObjectsUsed() throws RemoteException {
