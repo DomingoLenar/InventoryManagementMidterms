@@ -1,30 +1,31 @@
 package com.example.inventorymanagement.client.sales.controllers;
 
 import com.example.inventorymanagement.client.admin.models.ProfileManagementAdminModel;
-import com.example.inventorymanagement.client.admin.views.ProfileManagementAdminPanel;
+import com.example.inventorymanagement.client.admin.models.ProfileManagementChangePassAdminModel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
-import com.example.inventorymanagement.client.purchaser.models.ProfileManagementPurchaserModel;
-import com.example.inventorymanagement.client.purchaser.views.ProfileManagementPurchaserPanel;
 import com.example.inventorymanagement.client.sales.models.ProfileManagementSalesModel;
-import com.example.inventorymanagement.client.sales.views.ProfileManagementSalesPanel;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
-import javafx.application.Application;
+import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
+import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
+import com.example.inventorymanagement.util.exceptions.UserExistenceException;
+import com.example.inventorymanagement.util.objects.User;
+import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
+import com.example.inventorymanagement.util.requests.ItemRequestInterface;
+import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
-import java.util.ResourceBundle;
+import java.util.LinkedList;
 
-public class ProfileManagementSalesController  extends Application implements Initializable, ControllerInterface {
+import static com.example.inventorymanagement.client.common.controllers.MainController.clientCallback;
+import static com.example.inventorymanagement.client.common.controllers.MainController.registry;
+
+public class ProfileManagementSalesController implements ControllerInterface {
     @FXML
     private BorderPane borderPaneProfileManagement;
     @FXML
@@ -32,86 +33,227 @@ public class ProfileManagementSalesController  extends Application implements In
     @FXML
     private Label usernameLabel;
     @FXML
-    private Label userEmailLabel;
-    @FXML
-    private ComboBox changeUserAccountComboBox;
+    private ComboBox<String> changeUserAccountComboBox;
     @FXML
     private Button changePasswordButton;
     @FXML
     private Button logoutButton;
-    private MainController mainController;
+    private ListView<User> userListView;
 
-    private ClientCallback clientCallback;
-    private Registry registry;
-    private ProfileManagementSalesModel profileManagementSalesModel;
-    private ProfileManagementSalesPanel profileManagementSalesPanel;
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
+    // Getters for FXML components
 
-    public void fetchAndUpdate() throws RemoteException {
-        // No implementation needed yet in this controller
-    }
-
-    @Override
-    public String getObjectsUsed() throws RemoteException {
-        return null;
-    }
-
-    public String getCurrentPanel() throws RemoteException {
-        return "ProfileManagementSales"; // Return the name of this panel
-    }
-    public BorderPane getBorderPaneProfileManagement(){
+    @FXML
+    public BorderPane getBorderPaneProfileManagement() {
         return borderPaneProfileManagement;
     }
-    public Label getProfileManagementLabel(){
+
+    @FXML
+    public Label getProfileManagementLabel() {
         return profileManagementLabel;
     }
-    public Label getUsernameLabel(){
+
+    @FXML
+    public Label getUsernameLabel() {
         return usernameLabel;
     }
-    public Label getUserEmailLabel(){
-        return userEmailLabel;
-    }
-    public ComboBox getChangeUserAccountComboBox(){
+
+    @FXML
+    public ComboBox<String> getChangeUserAccountComboBox() {
         return changeUserAccountComboBox;
     }
-    public Button getLogoutButton(){
+
+    @FXML
+    public Button getChangePasswordButton() {
+        return changePasswordButton;
+    }
+
+    @FXML
+    public Button getLogoutButton() {
         return logoutButton;
     }
-    public Button getChangePasswordButton(){
-        return changePasswordButton;
+
+    private ProfileManagementSalesModel profileManagementSalesModel;
+
+    private MainController mainController;
+
+    public ProfileManagementSalesController() {
+        //Default constructor
+    }
+
+    public ProfileManagementSalesController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
+        this.profileManagementSalesModel = new ProfileManagementSalesModel(registry, clientCallback);
+    }
+
+    boolean initialized = false;
+
+    public void fetchAndUpdate() throws RemoteException {
+        try {
+            // Fetch user data from the model
+            updateUsernameLabel();
+            LinkedList<User> userList = profileManagementSalesModel.fetchListOfUsers(); // Fetch list of users from the model
+            if (userList != null && !userList.isEmpty()) {
+                // Assuming you want to display the first user in the list
+                User user = userList.getFirst();
+
+                // Update UI components with user data
+                if (user != null) {
+                    usernameLabel.setText(user.getUsername());
+                    // You can update other UI components as needed
+                } else {
+                    System.out.println("User data not available.");
+                }
+            } else {
+                // Handle the case where user list is empty or null
+                System.out.println("User list is empty or null.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void changeUserRole() {
+        String newRole = changeUserAccountComboBox.getValue();
+        User selectedUser = userListView.getSelectionModel().getSelectedItem();
+        try {
+            boolean success = profileManagementSalesModel.changeUserRole(selectedUser, newRole);
+            if (success) {
+                // Handle successful role change
+                showAlert(Alert.AlertType.INFORMATION, "Role Change", "Role changed successfully.");
+            } else {
+                // Handle unsuccessful role change
+                showAlert(Alert.AlertType.ERROR, "Role Change Error", "Failed to change role.");
+            }
+        } catch (UserExistenceException | OutOfRoleException | NotLoggedInException e) {
+            // Handle specific exceptions
+            showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
+        }
+    }
+
+    @FXML
+    private void removeUser() {
+        User selectedUser = userListView.getSelectionModel().getSelectedItem();
+        if (selectedUser == null) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Please select a user to remove.");
+            return;
+        }
+
+        try {
+            boolean success = profileManagementSalesModel.removeUser(selectedUser);
+            if (success) {
+                // Handle successful user removal
+                showAlert(Alert.AlertType.INFORMATION, "User Removal", "User removed successfully.");
+            } else {
+                // Handle unsuccessful user removal
+                showAlert(Alert.AlertType.ERROR, "User Removal Error", "Failed to remove user.");
+            }
+        } catch (UserExistenceException | OutOfRoleException | NotLoggedInException e) {
+            // Handle specific exceptions
+            showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
+        }
+    }
+
+    // Helper method to display alerts
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+
+    public String getObjectsUsed() throws RemoteException {
+        return "user";
     }
 
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
-    public void initialize(URL location, ResourceBundle resources) {
-        changeUserAccountComboBox.setPromptText("Change Role...");
-        Font font = new Font("Share Tech Mono", 15);
-        changeUserAccountComboBox.setStyle("-fx-font-family: '" + font.getFamily() + "'; -fx-font-size: " + font.getSize() + "px;");
-        addHoverEffect(logoutButton);
-        addHoverEffect(changePasswordButton);
-        // initialize the model and panel objects
-        profileManagementSalesPanel = new ProfileManagementSalesPanel();
-        profileManagementSalesModel = new ProfileManagementSalesModel(registry, clientCallback);
 
-        // Set up event handler for the changePasswordButton
-        changePasswordButton.setOnAction(event -> {
-            try {
-                // Launch the ProfileManagementChangePassAdminController
-                ProfileManagementChangePassSalesController profileManagementChangePassSalesController = new ProfileManagementChangePassSalesController();
-                profileManagementChangePassSalesController.start(new Stage());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
+    // Action handlers
+    @FXML
+    private void handleChangePassword() {
+        ProfileManagementChangePassAdminModel pManagementCPAC = new ProfileManagementChangePassAdminModel(MainController.registry, clientCallback);
+        try {
+            new ProfileManagementChangePassSalesController(new Stage());
+        } catch (Exception e) {
+            // Show an error dialog to the user
+            showErrorDialog("Error", "Failed to open change password window.");
+            e.printStackTrace();
+        }
     }
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        profileManagementSalesPanel = new ProfileManagementSalesPanel();
-        profileManagementSalesPanel.start(stage);
+    // Helper method to display an error dialog
+    private void showErrorDialog(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void handleLogout() {
+        // Handle logout action
+    }
+
+    @FXML
+    public void updateUsernameLabel() {
+        try {
+            usernameLabel.setText(clientCallback.getUser().getUsername());
+        } catch (RemoteException e) {
+            //Prompt user unable to fetch User object
+        }
+    }
+    // Initialization method
+
+    @FXML
+    public void initialize() {
+        // Combo box choices
+        changeUserAccountComboBox.setPromptText("Change User Account");
+        changeUserAccountComboBox.getItems().addAll("Sales", "Purchaser");
+
+        //sout initialize
+        System.out.println("initialize");
+        addHoverEffect(changePasswordButton);
+        addHoverEffect(logoutButton);
+
+        // Add action handlers
+        changePasswordButton.setOnAction(event -> handleChangePassword());
+        logoutButton.setOnAction(event -> handleLogout());
+        profileManagementSalesModel = new ProfileManagementSalesModel(registry, clientCallback);
+        if (!initialized) { // Check if already initialized
+            initialized = true; // Set the flag to true
+
+            // Check if UI components are not null
+            if (changeUserAccountComboBox != null && changePasswordButton != null && logoutButton != null) {
+                addHoverEffect(changePasswordButton);
+                addHoverEffect(logoutButton);
+                changePasswordButton.setOnAction(event -> handleChangePassword());
+                logoutButton.setOnAction(event -> handleLogout());
+
+                try {
+                    if (profileManagementSalesModel != null) {
+                        fetchAndUpdate();
+                    } else {
+                        // Handle the case where profileManagementAdminModel is null
+                        System.out.println("Profile Management Admin Model is null.");
+                    }
+                } catch (RemoteException e) {
+                    // Show prompt to user not logged in
+                    System.out.println("User is not logged in.");
+                }
+            } else {
+                // Handle the case where UI components are null
+                System.out.println("Error: ComboBox or Button is null. Cannot initialize.");
+            }
+        }
+    }
+
+    private class ProfileManagementChangePassSalesController {
+        public ProfileManagementChangePassSalesController(Stage stage) {
+        }
     }
 }
+
+
