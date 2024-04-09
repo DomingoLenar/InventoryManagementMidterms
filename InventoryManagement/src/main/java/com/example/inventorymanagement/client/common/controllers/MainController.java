@@ -7,6 +7,8 @@ import com.example.inventorymanagement.client.purchaser.controllers.NavigationBa
 import com.example.inventorymanagement.client.purchaser.controllers.StockControlPurchaserController;
 import com.example.inventorymanagement.client.admin.controllers.NavigationBarAdminController;
 import com.example.inventorymanagement.client.admin.controllers.StockControlAdminController;
+import com.example.inventorymanagement.client.sales.controllers.NavigationBarSalesController;
+import com.example.inventorymanagement.client.sales.controllers.StockControlSalesController;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
@@ -46,6 +48,10 @@ public class MainController implements ControllerInterface {
     static StockControlPurchaserController stockControlPurchaserController;
     NavigationBarPurchaserController navigationBarPurchaserController;
     static BorderPane stockControlPurchaserPanel;
+
+    static StockControlSalesController stockControlSalesController;
+    NavigationBarSalesController navigationBarSalesController;
+    static BorderPane stockControlSalesPanel;
 
 
     public MainController(UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry) throws RemoteException {
@@ -135,6 +141,10 @@ public class MainController implements ControllerInterface {
         return stockControlAdminPanel;
     }
 
+    public static BorderPane getStockControlSalesPanel() {
+        return stockControlSalesPanel;
+    }
+
     public void displayAdminMainMenu() throws IOException {
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
 
@@ -209,7 +219,41 @@ public class MainController implements ControllerInterface {
         navigationBarPurchaserController.setMainPane(root);
     }
 
-    public void displaySalesMainMenu() { // TODO: load sales view
+    public void displaySalesMainMenu() throws IOException {
+        Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
+        FXMLLoader navLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/navigationBar/navigationBarSales-view.fxml"));
+        BorderPane navigationBar = navLoader.load(); // convert .fxml components into borderPane/panel
+        navigationBarSalesController = navLoader.getController(); // initialize obj of navbarsalescontroller
+
+        // same process below
+
+        // Create the stock control panel
+        FXMLLoader stockSalesLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlSales-view.fxml"));
+        stockControlSalesPanel = stockSalesLoader.load();
+        stockControlSalesController = stockSalesLoader.getController();
+
+        InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+
+        if (inputStream != null) {
+            Image image = new Image(inputStream);
+            stage.getIcons().add(image);
+        } else {
+            System.err.println("Failed to load image: logo.png");
+        }
+
+        BorderPane root = new BorderPane(); // create pane to insert components
+        root.setLeft(navigationBar); // set to left
+        root.setRight(stockControlSalesPanel); // set to right
+
+        Scene scene = new Scene(root, 1080, 650); // create a container place the pane
+        stage.setScene(scene); // kind of like jframe -> place it into jframe
+        stage.setTitle("Stock Pilot");
+        stage.setResizable(false);
+        stage.show(); // then show
+
+        // Set the main BorderPane reference in the navigation bar controller
+        navigationBarSalesController.setMainPane(root);
     }
 
     @Override
@@ -222,8 +266,16 @@ public class MainController implements ControllerInterface {
         return "user";
     }
 
+    public NavigationBarAdminController getNavigationBarAdminController() {
+        return navigationBarAdminController;
+    }
+
     public NavigationBarPurchaserController getNavigationBarPurchaserController() {
         return navigationBarPurchaserController;
+    }
+
+    public NavigationBarSalesController getNavigationBarSalesController() {
+        return navigationBarSalesController;
     }
 
     public static StockControlPurchaserController getStockControlPurchaserController() {
@@ -232,6 +284,10 @@ public class MainController implements ControllerInterface {
 
     public static StockControlAdminController getStockControlAdminController() {
         return stockControlAdminController;
+    }
+
+    public static StockControlSalesController getStockControlSalesController() {
+        return stockControlSalesController;
     }
 
     public AddItemAdminController getAddItemAdminController() {

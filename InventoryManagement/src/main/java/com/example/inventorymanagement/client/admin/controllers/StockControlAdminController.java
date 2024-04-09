@@ -2,8 +2,6 @@ package com.example.inventorymanagement.client.admin.controllers;
 
 import com.example.inventorymanagement.client.admin.models.StockControlAdminModel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
-import com.example.inventorymanagement.client.purchaser.models.StockControlPurchaserModel;
-import com.example.inventorymanagement.client.purchaser.views.StockControlPurchaserPanel;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
@@ -11,25 +9,20 @@ import com.example.inventorymanagement.util.objects.Item;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
-import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 
-import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.LinkedList;
-import java.util.ResourceBundle;
 
 public class StockControlAdminController implements ControllerInterface {
     @FXML
@@ -112,7 +105,7 @@ public class StockControlAdminController implements ControllerInterface {
 
     @Override
     public String getObjectsUsed() throws RemoteException {
-        return "items";
+        return "Item";
     }
 
     private void addHoverEffect(Button button) {
@@ -141,7 +134,6 @@ public class StockControlAdminController implements ControllerInterface {
     }
     @FXML
     public void initialize() { // initialize components -> better approach is to initialize just the components and let nav___bar buttons handle the population of data/realtime
-        System.out.println("initialize");
         addHoverEffect(lowStocksButtonAdmin);
         addHoverEffect(addItemButtonAdmin);
         addHoverEffect(addListingButtonAdmin);
@@ -183,5 +175,12 @@ public class StockControlAdminController implements ControllerInterface {
                 System.out.println("Error: Table or button is null. Cannot initialize.");
             }
         }
+
+        try {
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
+        }catch(NotLoggedInException e){
+            //prompt user not logged in
+        }
+
     }
 }

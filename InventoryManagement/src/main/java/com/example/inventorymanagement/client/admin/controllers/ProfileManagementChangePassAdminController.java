@@ -11,13 +11,12 @@ import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
 import com.example.inventorymanagement.util.exceptions.UserExistenceException;
 import com.example.inventorymanagement.util.objects.User;
-import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
-import com.example.inventorymanagement.util.requests.ItemRequestInterface;
-import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -26,19 +25,18 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.LinkedList;
 import java.util.ResourceBundle;
 
-import static com.example.inventorymanagement.client.common.controllers.MainController.clientCallback;
-import static com.example.inventorymanagement.client.common.controllers.MainController.registry;
-
-public class ProfileManagementChangePassAdminController  implements ControllerInterface {
+// todo: handle action event and submit it to rmi server
+public class ProfileManagementChangePassAdminController extends Application implements Initializable, ControllerInterface {
     @FXML
     private BorderPane borderPaneProfileManagementChangePass;
     @FXML
     private ImageView personIconImage;
     @FXML
     private Label usernameLabel;
+    @FXML
+    private Label emailLabel;
     @FXML
     private Label changePasswordLabel;
     @FXML
@@ -47,28 +45,49 @@ public class ProfileManagementChangePassAdminController  implements ControllerIn
     private TextField newPasswordTextField;
     @FXML
     private Button saveButton;
-    private ListView<User> userListView;
+    private MainController mainController;
 
-    // Getter methods of FXMl components
+    private ClientCallback clientCallback;
+    private Registry registry;
+    private ProfileManagementChangePassAdminModel profileManagementChangePassAdminModel;
+    private ProfileManagementChangePassAdminPanel profileManagementChangePassAdminPanel = new ProfileManagementChangePassAdminPanel();
+
+    public ProfileManagementChangePassAdminController(){
+
+    }
+
+    public ProfileManagementChangePassAdminController(ClientCallback callback, Registry registry){
+        this.clientCallback = callback;
+        this.registry = registry;
+    }
+
+    public void setProfileManagementChangePassAdminModel(ProfileManagementChangePassAdminModel model){
+        this.profileManagementChangePassAdminModel = model;
+    }
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
 
     public BorderPane getBorderPaneProfileManagementChangePass() {
         return borderPaneProfileManagementChangePass;
     }
-
-    public ImageView getPersonIconImage() {
+    public ImageView getPersonIconImage(){
         return personIconImage;
     }
 
     public Label getChangePasswordLabel() {
         return changePasswordLabel;
     }
-
-    public TextField getOldPasswordTextField() {
+    public TextField getOldPasswordTextField(){
         return oldPasswordTextField;
     }
-
-    public TextField getNewPasswordTextField() {
+    public TextField getNewPasswordTextField(){
         return newPasswordTextField;
+    }
+
+    public Label getEmailLabel() {
+        return emailLabel;
     }
 
     public Label getUsernameLabel() {
@@ -78,142 +97,66 @@ public class ProfileManagementChangePassAdminController  implements ControllerIn
     public Button getSaveButton() {
         return saveButton;
     }
-    private ProfileManagementChangePassAdminModel profileManagementChangePassAdminModel;
-    private MainController mainController;
 
-    public ProfileManagementChangePassAdminController(){
-        // Default Constructor
-    }
-
-    public ProfileManagementChangePassAdminController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
-        this.profileManagementChangePassAdminModel = new ProfileManagementChangePassAdminModel(registry, clientCallback);
-    }
-
-    boolean initialized = false;
     public void fetchAndUpdate() throws RemoteException {
-        try {
-            // Fetch user data from the model
-            updateUsernameLabel();
-            LinkedList<User> userList = profileManagementChangePassAdminModel.fetchListOfUsers(); // Fetch list of users from the model
-            if (userList != null && !userList.isEmpty()) {
-                // Assuming you want to display the first user in the list
-                User user = userList.getFirst();
-
-                // Update UI components with user data
-                if (user != null) {
-                    usernameLabel.setText(user.getUsername());
-                    // You can update other UI components as needed
-                } else {
-                    System.out.println("User data not available.");
-                }
-            } else {
-                // Handle the case where user list is empty or null
-                System.out.println("User list is empty or null.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
-
-
 
     public String getObjectsUsed() throws RemoteException {
-        return "User";
+        return "user"; // Return the name of this panel
     }
 
-    private void addHoverEffect (Button button){
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
-    }
-    @FXML
-    private void handleSave() {
-        String newPassword = newPasswordTextField.getText();
-
-        try {
-            // Fetch the list of users
-            LinkedList<User> userList = profileManagementChangePassAdminModel.fetchListOfUsers();
-
-            // Check if the user list is not null and not empty
-            if (userList != null && !userList.isEmpty()) {
-                // Get the first user from the list
-                User user = userList.getFirst();
-
-                // Call the changePassword method from the model
-                try {
-                    boolean success = profileManagementChangePassAdminModel.changePassword(user, newPassword);
-                    if (success) {
-                        // Password change was successful
-                        showInformationDialog("Success", "Password changed successfully.");
-                    } else {
-                        // Password change failed
-                        showErrorDialog("Error", "Failed to change password.");
-                    }
-                } catch (UserExistenceException | OutOfRoleException | NotLoggedInException e) {
-                    // Handle specific exceptions
-                    e.printStackTrace();
-                    showErrorDialog("Error", e.getMessage());
-                }
-            } else {
-                // Handle the case where user list is empty or null
-                showErrorDialog("Error", "No users found.");
-            }
-        } catch (NotLoggedInException | OutOfRoleException e) {
-            // Handle exceptions related to user authentication and authorization
-            e.printStackTrace();
-            showErrorDialog("Error", e.getMessage());
-        }
+    @Override
+    public void start(Stage stage) throws Exception {
+        populateTestVariables();
+        profileManagementChangePassAdminPanel = new ProfileManagementChangePassAdminPanel();
+//        profileManagementChangePassAdminPanel.start(stage, this);
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        // initialize the model and panel objects
+        profileManagementChangePassAdminPanel = new ProfileManagementChangePassAdminPanel();
+        profileManagementChangePassAdminModel = new ProfileManagementChangePassAdminModel(registry, clientCallback);
 
-    // Helper method to show an information dialog
-    private void showInformationDialog(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
+        saveButton.setOnAction(actionEvent -> {
+            handleSave();
+        });
 
-    // Helper method to show an error dialog
-    private void showErrorDialog(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
-    public void updateUsernameLabel() {
         try {
             usernameLabel.setText(clientCallback.getUser().getUsername());
         } catch (RemoteException e) {
-            //Prompt user unable to fetch User object
+            throw new RuntimeException(e);
         }
     }
 
-    public void initialize() {
-        // sout initialize
-        System.out.println("initialize");
-        addHoverEffect(saveButton);
-
-        //add action handlers
-        saveButton.setOnAction(event -> handleSave());
-        profileManagementChangePassAdminModel = new ProfileManagementChangePassAdminModel(registry, clientCallback);
-        if (!initialized) {
-            initialized = true;
-            try {
-                if (profileManagementChangePassAdminModel != null) {
-                    fetchAndUpdate();
+    public void handleSave(){
+        try{
+            User currentUser = clientCallback.getUser();
+            if(currentUser.getPassword().equals(oldPasswordTextField.getText())){
+                try {
+                    System.out.println(profileManagementChangePassAdminModel.changePassword(currentUser, newPasswordTextField.getText()));
+                }catch(OutOfRoleException e){
+                    //Prompt user with the message of e.getMessage();
+                }catch (NotLoggedInException e){
+                    //Refer to outofroleexception
+                }catch (UserExistenceException e){
+                    //Refer to outofroleexception
                 }
-                else {
-                    System.out.println("Profile Management Change Pass Admin Model is null");
-                }
-            } catch (RemoteException e) {
-                System.out.println("User is not logged in");
             }
-        }else {
-            System.out.println("Error: Save button is null. Cannot Initialize");
+        }catch (RemoteException e){
+            //Prompt error fetching current session user
+        }
+    }
+
+    public void populateTestVariables(){
+        try {
+            Registry reg = LocateRegistry.getRegistry("localhost", 2018);
+            ClientCallbackImpl callback = new ClientCallbackImpl(new User("testadmin", "admintest", "admin"));
+            this.registry = reg;
+            this.clientCallback = callback;
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
         }
     }
 }
-
-
-
 
