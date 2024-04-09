@@ -14,7 +14,6 @@ public class ProfileManagementAdminModel {
     private ChangeUserRoleService changeUserRoleService;
     private RemoveUserService removeUserService;
     private FetchListOfUsersService fetchListOfUsersService; // New service
-    private ChangePasswordService changePasswordService;
     private Registry registry;
     private ClientCallback clientCallback;
 
