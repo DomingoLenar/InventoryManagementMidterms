@@ -84,6 +84,7 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
         return "Item";
     }
 
+    @FXML
     private void handleOkButton(ActionEvent actionEvent) throws NotLoggedInException, OutOfRoleException {
         try {
             validateAndProcessSalesInvoice();
@@ -184,6 +185,7 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
         alert.showAndWait();
     }
 
+    @FXML
     public void initialize() {
         if (!initialized) {
             addHoverEffect(okButton);
