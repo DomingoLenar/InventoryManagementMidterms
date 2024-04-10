@@ -50,6 +50,12 @@ public class ItemRequestImpl implements ItemRequestInterface, Serializable {
         return success;
     }
 
+    public Item fetchItem(ClientCallback clientCallback,int id) throws RemoteException, NotLoggedInException{
+        checkIfLoggedIn(clientCallback);
+
+        return GSONProcessing.fetchItem(id);
+    }
+
     @Override
     public void checkIfLoggedIn(ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
         try{
