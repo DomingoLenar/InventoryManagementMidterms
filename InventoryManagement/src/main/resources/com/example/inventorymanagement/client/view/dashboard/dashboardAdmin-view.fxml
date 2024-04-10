@@ -5,6 +5,8 @@
 <?import javafx.scene.chart.StackedBarChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -31,66 +33,6 @@
             <Label fx:id="usersActive" layoutX="29.0" layoutY="21.0" text="Users Active">
                <font>
                   <Font name="Share Tech Mono" size="24.0" />
-               </font>
-            </Label>
-            <Label layoutX="38.0" layoutY="65.0" text="Marven Luis">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="221.0" layoutY="65.0" text="Sales Person">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="39.0" layoutY="100.0" text="Lenar Domingo">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="221.0" layoutY="100.0" text="Sales Person">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="223.0" layoutY="138.0" text="Purchaser">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="39.0" layoutY="136.0" text="Lestat Agustin">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="40.0" layoutY="172.0" text="Gebreyl Isaac">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="41.0" layoutY="207.0" text="Lou Diamond">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="41.0" layoutY="244.0" text="Arjie Salgado">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="223.0" layoutY="207.0" text="Purchaser">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="221.0" layoutY="172.0" text="Sales Person">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="221.0" layoutY="244.0" text="Sales Person">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
                </font>
             </Label>
             <StackedBarChart fx:id="monthRevChart" layoutX="338.0" layoutY="14.0" prefHeight="254.0" prefWidth="358.0" title="Month's Revenue">
@@ -130,6 +72,12 @@
                   <Image url="@../../../../../../icons/addUserButton.png" />
                </image>
             </ImageView>
+            <TableView fx:id="usersActiveTableView" layoutX="16.0" layoutY="59.0" prefHeight="200.0" prefWidth="304.0">
+              <columns>
+                <TableColumn fx:id="usernameTableColumn" prefWidth="145.5999813079834" text="Username" />
+                <TableColumn fx:id="roleTableColumn" minWidth="0.0" prefWidth="157.60000610351562" text="Role" />
+              </columns>
+            </TableView>
          </children>
       </AnchorPane>
    </center>
@@ -145,178 +93,27 @@
                   <Font name="Share Tech Mono" size="18.0" />
                </font>
             </Label>
-            <Label layoutX="24.0" layoutY="54.0" text="- Milk">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
             <Label fx:id="todayTransactionLabel" layoutX="315.0" layoutY="14.0" text="Today's Transactions">
                <font>
                   <Font name="Share Tech Mono" size="18.0" />
                </font>
             </Label>
-            <Button layoutX="230.0" layoutY="45.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="392.0" style="-fx-background-color: EFD1D1;" />
+            <Button layoutX="230.0" layoutY="45.0" mnemonicParsing="false" prefHeight="255.0" prefWidth="392.0" style="-fx-background-color: EFD1D1;" />
             <Label fx:id="topProductsLabel" layoutX="687.0" layoutY="14.0" text="Top Products">
                <font>
                   <Font name="Share Tech Mono" size="18.0" />
                </font>
             </Label>
             <Button layoutX="642.0" layoutY="45.0" mnemonicParsing="false" prefHeight="259.0" prefWidth="194.0" style="-fx-background-color: EFD1D1;" />
-            <Label layoutX="24.0" layoutY="81.0" text="- Butter">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="24.0" layoutY="110.0" text="- Chicken Thighs">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="24.0" layoutY="139.0" text="- Macbook Air">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="24.0" layoutY="165.0" text="- Iphone 14 1TB">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="24.0" layoutY="194.0" text="- Gaming Chair">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="650.0" layoutY="54.0" text="- Macbook Air">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="650.0" layoutY="81.0" text="- Razer Mouse">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="243.0" layoutY="54.0" text="Transaction ID">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="426.0" layoutY="54.0" text="Date">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="524.0" layoutY="54.0" text="Total amount">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="250.0" layoutY="90.0" text="0001258">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="250.0" layoutY="115.0" text="0001238">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="250.0" layoutY="139.0" text="0001248">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="250.0" layoutY="162.0" text="0001258">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="250.0" layoutY="185.0" text="0003458">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="252.0" layoutY="207.0" text="0023902">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="411.0" layoutY="90.0" text="03/09/24">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="411.0" layoutY="115.0" text="03/09/24">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="411.0" layoutY="139.0" text="03/09/24">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="411.0" layoutY="162.0" text="03/09/24">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="411.0" layoutY="185.0" text="03/09/24">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="411.0" layoutY="207.0" text="03/09/24">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="533.0" layoutY="90.0" text="P 834.00">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="533.0" layoutY="115.0" text="P 8,349.00">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="533.0" layoutY="139.0" text="P 3,283.00">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="533.0" layoutY="162.0" text="P 234.00">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="533.0" layoutY="185.0" text="P 9,367.00">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="533.0" layoutY="207.0" text="P 83,928.00">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="650.0" layoutY="110.0" text="- Knorr Cubes">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="650.0" layoutY="139.0" text="- Apple Pen">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="652.0" layoutY="165.0" text="- Creatine">
-               <font>
-                  <Font name="Share Tech Mono" size="14.0" />
-               </font>
-            </Label>
+            <TableView fx:id="lowStockProductsTableView" layoutX="18.0" layoutY="52.0" prefHeight="248.0" prefWidth="182.0" />
+            <TableView fx:id="topProductsTableView" layoutX="648.0" layoutY="52.0" prefHeight="248.0" prefWidth="182.0" />
+            <TableView fx:id="transTodayTableView" layoutX="237.0" layoutY="55.0" prefHeight="238.0" prefWidth="379.0">
+              <columns>
+                <TableColumn fx:id="transactionIDTableColumn" prefWidth="150.4000244140625" text="Transaction ID" />
+                <TableColumn fx:id="dateTableColumn" prefWidth="103.99993896484375" text="Date" />
+                  <TableColumn fx:id="amountTableColumn" prefWidth="123.99996948242188" text="Amount" />
+              </columns>
+            </TableView>
          </children>
       </AnchorPane>
    </bottom>
