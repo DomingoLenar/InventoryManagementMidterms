@@ -105,8 +105,16 @@
                </font>
             </Label>
             <Button layoutX="642.0" layoutY="45.0" mnemonicParsing="false" prefHeight="259.0" prefWidth="194.0" style="-fx-background-color: EFD1D1;" />
-            <TableView fx:id="lowStockProductsTableView" layoutX="18.0" layoutY="52.0" prefHeight="248.0" prefWidth="182.0" />
-            <TableView fx:id="topProductsTableView" layoutX="648.0" layoutY="52.0" prefHeight="248.0" prefWidth="182.0" />
+            <TableView fx:id="lowStockProductsTableView" layoutX="18.0" layoutY="52.0" prefHeight="248.0" prefWidth="182.0">
+               <columns>
+                  <TableColumn fx:id="lowStockProductTableColumn" prefWidth="181.59998741149903" text="Products" />
+               </columns>
+            </TableView>
+            <TableView fx:id="topProductsTableView" layoutX="648.0" layoutY="52.0" prefHeight="248.0" prefWidth="182.0">
+               <columns>
+                  <TableColumn fx:id="topProductsTableColumn" prefWidth="181.60001220703126" text="Products" />
+               </columns>
+            </TableView>
             <TableView fx:id="transTodayTableView" layoutX="237.0" layoutY="55.0" prefHeight="238.0" prefWidth="379.0">
               <columns>
                 <TableColumn fx:id="transactionIDTableColumn" prefWidth="150.4000244140625" text="Transaction ID" />
