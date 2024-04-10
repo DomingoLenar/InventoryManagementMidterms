@@ -4,6 +4,7 @@ import com.example.inventorymanagement.client.admin.models.ProfileManagementAdmi
 import com.example.inventorymanagement.client.admin.models.ProfileManagementChangePassAdminModel;
 import com.example.inventorymanagement.client.admin.views.ProfileManagementChangePassAdminPanel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.client.microservices.UpdateCallback;
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
@@ -23,6 +24,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -90,31 +92,15 @@ public class ProfileManagementChangePassAdminController  implements ControllerIn
     }
 
     boolean initialized = false;
-    public void fetchAndUpdate() throws RemoteException {
+    public void fetchAndUpdate() {
         try {
-            // Fetch user data from the model
+            // Update UI components with current user's username
             updateUsernameLabel();
-            LinkedList<User> userList = profileManagementChangePassAdminModel.fetchListOfUsers(); // Fetch list of users from the model
-            if (userList != null && !userList.isEmpty()) {
-                // Assuming you want to display the first user in the list
-                User user = userList.getFirst();
-
-                // Update UI components with user data
-                if (user != null) {
-                    usernameLabel.setText(user.getUsername());
-                    // You can update other UI components as needed
-                } else {
-                    System.out.println("User data not available.");
-                }
-            } else {
-                // Handle the case where user list is empty or null
-                System.out.println("User list is empty or null.");
-            }
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Error fetching current user information.");
         }
     }
-
 
 
     public String getObjectsUsed() throws RemoteException {
@@ -127,50 +113,28 @@ public class ProfileManagementChangePassAdminController  implements ControllerIn
     }
     @FXML
     private void handleSave() {
+        String oldPassword = oldPasswordTextField.getText();
         String newPassword = newPasswordTextField.getText();
 
-        try {
-            // Fetch the list of users
-            LinkedList<User> userList = profileManagementChangePassAdminModel.fetchListOfUsers();
+        try{
+            User currentUser = MainController.clientCallback.getUser();
+            if(!(currentUser.getPassword().equals(oldPassword))) throw new RuntimeException("Incorrect Password");
 
-            // Check if the user list is not null and not empty
-            if (userList != null && !userList.isEmpty()) {
-                // Get the first user from the list
-                User user = userList.getFirst();
+            if(!(newPassword.equals(null))) profileManagementChangePassAdminModel.changePassword(currentUser,newPassword);
+            showErrorDialog("Error", "Please fill in new password field.");
+        }catch(RemoteException  e){
 
-                // Call the changePassword method from the model
-                try {
-                    boolean success = profileManagementChangePassAdminModel.changePassword(user, newPassword);
-                    if (success) {
-                        // Password change was successful
-                        showInformationDialog("Success", "Password changed successfully.");
-                    } else {
-                        // Password change failed
-                        showErrorDialog("Error", "Failed to change password.");
-                    }
-                } catch (UserExistenceException | OutOfRoleException | NotLoggedInException e) {
-                    // Handle specific exceptions
-                    e.printStackTrace();
-                    showErrorDialog("Error", e.getMessage());
-                }
-            } else {
-                // Handle the case where user list is empty or null
-                showErrorDialog("Error", "No users found.");
+        } catch (UserExistenceException e) {
+            throw new RuntimeException(e);
+        } catch (OutOfRoleException e) {
+            throw new RuntimeException(e);
+        } catch (NotLoggedInException e) {
+            throw new RuntimeException(e);
+        }catch(RuntimeException e){
+            if(e.getMessage().equals("Incorrect Password")){
+                showAlert("Incorrect Password" + e.getMessage());
             }
-        } catch (NotLoggedInException | OutOfRoleException e) {
-            // Handle exceptions related to user authentication and authorization
-            e.printStackTrace();
-            showErrorDialog("Error", e.getMessage());
         }
-    }
-
-
-    // Helper method to show an information dialog
-    private void showInformationDialog(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setContentText(content);
-        alert.showAndWait();
     }
 
     // Helper method to show an error dialog
@@ -178,6 +142,13 @@ public class ProfileManagementChangePassAdminController  implements ControllerIn
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setContentText(content);
+        alert.showAndWait();
+    }
+    private void showAlert(String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
         alert.showAndWait();
     }
     public void updateUsernameLabel() {
@@ -205,11 +176,19 @@ public class ProfileManagementChangePassAdminController  implements ControllerIn
                 else {
                     System.out.println("Profile Management Change Pass Admin Model is null");
                 }
-            } catch (RemoteException e) {
+            } catch (Exception e) {
                 System.out.println("User is not logged in");
             }
         }else {
             System.out.println("Error: Save button is null. Cannot Initialize");
+        }
+        try {
+            MainController.clientCallback.setCurrentPanel(this);
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
+        } catch (NotLoggedInException e){
+            showAlert("User is not logged in");
+        } catch (RemoteException e) {
+            System.out.println(e.getMessage());
         }
     }
 }

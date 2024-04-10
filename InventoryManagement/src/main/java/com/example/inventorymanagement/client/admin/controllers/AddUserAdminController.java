@@ -2,8 +2,10 @@ package com.example.inventorymanagement.client.admin.controllers;
 
 import com.example.inventorymanagement.client.admin.models.AddUserAdminModel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.client.microservices.UpdateCallback;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
+import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.objects.User;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
@@ -115,7 +117,13 @@ public class AddUserAdminController implements ControllerInterface {
         alert.setContentText(content);
         alert.showAndWait();
     }
-
+    private void showAlert(String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
     public void initialize() {
         // Create a list of choices
         ObservableList<String> choices = FXCollections.observableArrayList("Sales", "Purchaser");
@@ -147,6 +155,14 @@ public class AddUserAdminController implements ControllerInterface {
             }
         }else {
             System.out.println("Error: Save button is null. Cannot Initialize");
+        }
+        try {
+            MainController.clientCallback.setCurrentPanel(this);
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
+        } catch (NotLoggedInException e){
+            showAlert("User is not logged in");
+        } catch (RemoteException e) {
+            System.out.println(e.getMessage());
         }
 
     }

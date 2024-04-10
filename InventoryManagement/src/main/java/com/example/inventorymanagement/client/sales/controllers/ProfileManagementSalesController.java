@@ -3,6 +3,7 @@ package com.example.inventorymanagement.client.sales.controllers;
 import com.example.inventorymanagement.client.admin.models.ProfileManagementAdminModel;
 import com.example.inventorymanagement.client.admin.models.ProfileManagementChangePassAdminModel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.client.microservices.UpdateCallback;
 import com.example.inventorymanagement.client.sales.models.ProfileManagementSalesModel;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
@@ -86,28 +87,13 @@ public class ProfileManagementSalesController implements ControllerInterface {
 
     boolean initialized = false;
 
-    public void fetchAndUpdate() throws RemoteException {
+    public void fetchAndUpdate() {
         try {
-            // Fetch user data from the model
+            // Update UI components with current user's username
             updateUsernameLabel();
-            LinkedList<User> userList = profileManagementSalesModel.fetchListOfUsers(); // Fetch list of users from the model
-            if (userList != null && !userList.isEmpty()) {
-                // Assuming you want to display the first user in the list
-                User user = userList.getFirst();
-
-                // Update UI components with user data
-                if (user != null) {
-                    usernameLabel.setText(user.getUsername());
-                    // You can update other UI components as needed
-                } else {
-                    System.out.println("User data not available.");
-                }
-            } else {
-                // Handle the case where user list is empty or null
-                System.out.println("User list is empty or null.");
-            }
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Error fetching current user information.");
         }
     }
 
@@ -191,6 +177,13 @@ public class ProfileManagementSalesController implements ControllerInterface {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    private void showAlert(String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
     @FXML
     private void handleLogout() {
@@ -239,7 +232,7 @@ public class ProfileManagementSalesController implements ControllerInterface {
                         // Handle the case where profileManagementAdminModel is null
                         System.out.println("Profile Management Admin Model is null.");
                     }
-                } catch (RemoteException e) {
+                } catch (Exception e) {
                     // Show prompt to user not logged in
                     System.out.println("User is not logged in.");
                 }
@@ -247,6 +240,14 @@ public class ProfileManagementSalesController implements ControllerInterface {
                 // Handle the case where UI components are null
                 System.out.println("Error: ComboBox or Button is null. Cannot initialize.");
             }
+        }
+        try {
+            MainController.clientCallback.setCurrentPanel(this);
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
+        } catch (NotLoggedInException e){
+            showAlert("User is not logged in");
+        } catch (RemoteException e) {
+            System.out.println(e.getMessage());
         }
     }
 

@@ -4,6 +4,7 @@ import com.example.inventorymanagement.client.admin.models.ProfileManagementAdmi
 import com.example.inventorymanagement.client.admin.models.ProfileManagementChangePassAdminModel;
 import com.example.inventorymanagement.client.admin.views.ProfileManagementChangePassAdminPanel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.client.microservices.UpdateCallback;
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.client.purchaser.models.ProfileManagementChangePassPurchaserModel;
 import com.example.inventorymanagement.client.sales.models.ProfileManagementChangePassSalesModel;
@@ -92,32 +93,15 @@ public class ProfileManagementChangePassSalesController  implements ControllerIn
     }
 
     boolean initialized = false;
-    public void fetchAndUpdate() throws RemoteException {
+    public void fetchAndUpdate() {
         try {
-            // Fetch user data from the model
+            // Update UI components with current user's username
             updateUsernameLabel();
-            LinkedList<User> userList = profileManagementChangePassSalesModel.fetchListOfUsers(); // Fetch list of users from the model
-            if (userList != null && !userList.isEmpty()) {
-                // Assuming you want to display the first user in the list
-                User user = userList.getFirst();
-
-                // Update UI components with user data
-                if (user != null) {
-                    usernameLabel.setText(user.getUsername());
-                    // You can update other UI components as needed
-                } else {
-                    System.out.println("User data not available.");
-                }
-            } else {
-                // Handle the case where user list is empty or null
-                System.out.println("User list is empty or null.");
-            }
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Error fetching current user information.");
         }
     }
-
-
 
     public String getObjectsUsed() throws RemoteException {
         return "User";
@@ -182,6 +166,13 @@ public class ProfileManagementChangePassSalesController  implements ControllerIn
         alert.setContentText(content);
         alert.showAndWait();
     }
+    private void showAlert(String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
     public void updateUsernameLabel() {
         try {
             usernameLabel.setText(clientCallback.getUser().getUsername());
@@ -207,11 +198,19 @@ public class ProfileManagementChangePassSalesController  implements ControllerIn
                 else {
                     System.out.println("Profile Management Change Pass Admin Model is null");
                 }
-            } catch (RemoteException e) {
+            } catch (Exception e) {
                 System.out.println("User is not logged in");
             }
         }else {
             System.out.println("Error: Save button is null. Cannot Initialize");
+        }
+        try {
+            MainController.clientCallback.setCurrentPanel(this);
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
+        } catch (NotLoggedInException e){
+            showAlert("User is not logged in");
+        } catch (RemoteException e) {
+            System.out.println(e.getMessage());
         }
     }
 }
