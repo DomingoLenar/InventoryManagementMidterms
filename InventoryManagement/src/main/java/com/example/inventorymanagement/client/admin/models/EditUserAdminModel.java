@@ -36,14 +36,24 @@ public class EditUserAdminModel {
     }
 
     public boolean changeUserRole(User user, String newRole) throws RemoteException {
-        ChangeUserRoleService changeUserRoleService = new ChangeUserRoleService();
         try {
-            return changeUserRoleService.process(registry, clientCallback, user, newRole);
-        } catch (UserExistenceException | OutOfRoleException | NotLoggedInException e) {
-            e.printStackTrace(); // Handle exception appropriately
+            // Check if the user has the necessary role to change another user's role
+            if (!clientCallback.getUser().getRole().equals("admin")) {
+                throw new OutOfRoleException("Insufficient permission to change user role");
+            }
+
+            // Call the method from the microservice to change the user's role
+            boolean success = ChangeUserRoleService.process(registry, clientCallback, user, newRole);
+            return success;
+        } catch (RemoteException | OutOfRoleException | NotLoggedInException e) {
+            // Handle exceptions appropriately
+            e.printStackTrace(); // Log or handle the exception appropriately
             return false;
+        } catch (UserExistenceException e) {
+            throw new RuntimeException(e);
         }
     }
+
     public boolean removeUser(User userToRemove) throws RemoteException {
         try {
             // Check if the user has the necessary role to remove a user
