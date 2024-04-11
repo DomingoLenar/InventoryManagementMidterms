@@ -2,10 +2,7 @@ package com.example.inventorymanagement.client.common.controllers;
 
 import com.example.inventorymanagement.client.admin.controllers.*;
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
-import com.example.inventorymanagement.client.purchaser.controllers.AddItemPurchaserController;
-import com.example.inventorymanagement.client.purchaser.controllers.NavigationBarPurchaserController;
-import com.example.inventorymanagement.client.purchaser.controllers.ProfileManagementPurchaserController;
-import com.example.inventorymanagement.client.purchaser.controllers.StockControlPurchaserController;
+import com.example.inventorymanagement.client.purchaser.controllers.*;
 import com.example.inventorymanagement.client.admin.controllers.StockControlAdminController;
 import com.example.inventorymanagement.client.sales.controllers.*;
 import com.example.inventorymanagement.util.ClientCallback;
@@ -42,59 +39,155 @@ public class MainController implements ControllerInterface {
     public static ItemRequestInterface itemService;
     public static Registry registry;
 
-    static StockControlAdminController stockControlAdminController;
+    /**
+     * Admin Controller and Panel Variables
+     */
     NavigationBarAdminController navigationBarAdminController;
+
+    static StockControlAdminController stockControlAdminController;
     static BorderPane stockControlAdminPanel;
+
     static SalesHistoryAdminController salesHistoryAdminController;
     static BorderPane salesHistoryAdminPanel;
+
     static ProfileManagementAdminController profileManagementAdminController;
     static BorderPane profileManagementAdminPanel;
+
     static CreateSalesInvoiceAdminController createSalesInvoiceAdminController;
     static DialogPane createSalesInvoiceAdminPanel;
+
     static AddItemAdminController addItemAdminController;
     static DialogPane addItemAdminPanel;
 
+    static LowStocksAdminController lowStocksAdminController;
+    static BorderPane lowStocksAdminPanel;
+
+    /**
+     * Purchaser Controller and Panel Variables
+     */
+    NavigationBarPurchaserController navigationBarPurchaserController;
 
     static StockControlPurchaserController stockControlPurchaserController;
-    NavigationBarPurchaserController navigationBarPurchaserController;
     static BorderPane stockControlPurchaserPanel;
+
     static ProfileManagementPurchaserController profileManagementPurchaserController;
     static BorderPane profileManagementPurchaserPanel;
+
     static AddItemPurchaserController addItemPurchaserController;
     static DialogPane addItemPurchaserPanel;
 
-    static StockControlSalesController stockControlSalesController;
+    static LowStocksPurchaserController lowStocksPurchaserController;
+    static BorderPane lowStocksPurchaserPanel;
+
+    /**
+     * Sales Controller and Panel Variables
+     */
     NavigationBarSalesController navigationBarSalesController;
+
+    static StockControlSalesController stockControlSalesController;
     static BorderPane stockControlSalesPanel;
+
     static SalesHistorySalesController salesHistorySalesController;
     static BorderPane salesHistorySalesPanel;
+
     static ProfileManagementSalesController profileManagementSalesController;
     static BorderPane profileManagementSalesPanel;
+
     static CreateSalesInvoiceSalesController createSalesInvoiceSalesController;
     static DialogPane createSalesInvoiceSalesPanel;
 
+    /**
+     * Getters of all Panels
+     */
+    public static BorderPane getStockControlPurchaserPanel() {return stockControlPurchaserPanel;}
+    public static BorderPane getStockControlAdminPanel() {return stockControlAdminPanel;}
+    public static BorderPane getStockControlSalesPanel() {return stockControlSalesPanel;}
 
+    public static BorderPane getSalesHistorySalesPanel() {return salesHistorySalesPanel;}
+    public static BorderPane getSalesHistoryAdminPanel() {return salesHistoryAdminPanel;}
+
+    public static BorderPane getProfileManagementSalesPanel() {return profileManagementSalesPanel;}
+    public static BorderPane getProfileManagementPurchaserPanel() {return profileManagementPurchaserPanel;}
+    public static BorderPane getProfileManagementAdminPanel() { return profileManagementAdminPanel;}
+
+    public static DialogPane getCreateSalesInvoiceSalesPanel() { return createSalesInvoiceSalesPanel;}
+    public static DialogPane getCreateSalesInvoiceAdminPanel() { return createSalesInvoiceAdminPanel;}
+
+    public static DialogPane getAddItemPurchaserPanel() {return addItemPurchaserPanel;}
+    public static DialogPane getAddItemAdminPanel() { return addItemAdminPanel;}
+
+    public static BorderPane getLowStocksPurchaserPanel() { return lowStocksPurchaserPanel;}
+    public static BorderPane getLowStocksAdminPanel() { return lowStocksAdminPanel;}
+
+    /**
+     * Getters of all Controllers
+     */
+    public NavigationBarAdminController getNavigationBarAdminController() { return navigationBarAdminController;}
+    public NavigationBarPurchaserController getNavigationBarPurchaserController() { return navigationBarPurchaserController;}
+    public NavigationBarSalesController getNavigationBarSalesController() { return navigationBarSalesController;}
+
+    public static StockControlPurchaserController getStockControlPurchaserController() { return stockControlPurchaserController;}
+    public static StockControlAdminController getStockControlAdminController() { return stockControlAdminController;}
+    public static StockControlSalesController getStockControlSalesController() { return stockControlSalesController;}
+
+    public static SalesHistorySalesController getSalesHistorySalesController() { return salesHistorySalesController;}
+    public static SalesHistoryAdminController getSalesHistoryAdminController() { return salesHistoryAdminController;}
+
+    public static ProfileManagementSalesController getProfileManagementSalesController() { return profileManagementSalesController;}
+    public static ProfileManagementPurchaserController getProfileManagementPurchaserController() { return profileManagementPurchaserController;}
+    public static ProfileManagementAdminController getProfileManagementAdminController() { return profileManagementAdminController;}
+
+    public static CreateSalesInvoiceSalesController getCreateSalesInvoiceSalesController() { return createSalesInvoiceSalesController;}
+    public static CreateSalesInvoiceAdminController getCreateSalesInvoiceAdminController() { return createSalesInvoiceAdminController;}
+
+    public static AddItemPurchaserController getAddItemPurchaserController() { return addItemPurchaserController;}
+    public static AddItemAdminController getAddItemAdminController() { return addItemAdminController;}
+
+    public static LowStocksPurchaserController getLowStocksPurchaserController() {return lowStocksPurchaserController;}
+    public static LowStocksAdminController getLowStocksAdminController() {return lowStocksAdminController;}
+
+    public ClientCallback getClientCallback() { return clientCallback;}
+
+    public void setClientCallback(ClientCallback clientCallback) { this.clientCallback = clientCallback;}
+
+    public UserRequestInterface getUserService() { return userService;}
+
+    public void setStage(Stage stage) { this.stage = stage;}
+
+    public Registry getRegistry() { return registry;}
+
+    /**
+     * Constructor for MainController.
+     * Initializes the MainController with the necessary services and sets up the client callback for server communication.
+     *
+     * @param userService The user service interface.
+     * @param iOService The item order service interface.
+     * @param itemService The item service interface.
+     * @param registry The RMI registry.
+     * @throws RemoteException If a remote communication error occurs.
+     */
     public MainController(UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry) throws RemoteException {
         MainController.userService = userService;
         MainController.iOService = iOService;
         MainController.itemService = itemService;
         MainController.registry = registry;
         clientCallback = new ClientCallbackImpl(null);
-
-//        initControllers();
     }
 
-    // for future ref.
-//    private void initControllers() {
-//        stockControlAdminController = new StockControlAdminController(clientCallback, userService, iOService, itemService, registry, this);
-//        stockControlAdminController.setMainController(this);
-//        addItemAdminController = new AddItemAdminController(clientCallback, userService, iOService, itemService, registry, this);
-//        addItemAdminController.setMainController(this);
-////        stockControlPurchaserController = new StockControlPurchaserController(clientCallback, userService, iOService, itemService, registry, this);
-////        navigationBarPurchaserController = new NavigationBarPurchaserController(clientCallback, userService, iOService, itemService, registry, this);
-//
-//    }
+    /** For Future References:
+    private void initControllers() {
+        stockControlAdminController = new StockControlAdminController(clientCallback, userService, iOService, itemService, registry, this);
+        stockControlAdminController.setMainController(this);
+        addItemAdminController = new AddItemAdminController(clientCallback, userService, iOService, itemService, registry, this);
+        addItemAdminController.setMainController(this);
+        stockControlPurchaserController = new StockControlPurchaserController(clientCallback, userService, iOService, itemService, registry, this);
+        navigationBarPurchaserController = new NavigationBarPurchaserController(clientCallback, userService, iOService, itemService, registry, this);
+    }
+     */
 
+    /**
+     * Loads and displays the welcome view.
+     */
     public void loadWelcomeView() { // load welcome/index view
         try {
             Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
@@ -121,6 +214,9 @@ public class MainController implements ControllerInterface {
         }
     }
 
+    /**
+     * Loads and displays the login view.
+     */
     public void loadLoginView() { // load login view
         try {
             Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
@@ -153,30 +249,12 @@ public class MainController implements ControllerInterface {
         }
     }
 
-    public static BorderPane getStockControlPurchaserPanel() {return stockControlPurchaserPanel;}
-
-    public static BorderPane getStockControlAdminPanel() {return stockControlAdminPanel;}
-
-    public static BorderPane getStockControlSalesPanel() {return stockControlSalesPanel;}
-
-    public static BorderPane getSalesHistorySalesPanel() {return salesHistorySalesPanel;}
-
-    public static BorderPane getSalesHistoryAdminPanel() {return salesHistoryAdminPanel;}
-
-    public static BorderPane getProfileManagementSalesPanel() {return profileManagementSalesPanel;}
-
-    public static BorderPane getProfileManagementPurchaserPanel() {return profileManagementPurchaserPanel;}
-
-    public static BorderPane getProfileManagementAdminPanel() { return profileManagementAdminPanel;}
-
-    public static DialogPane getCreateSalesInvoiceSalesPanel() { return createSalesInvoiceSalesPanel;}
-
-    public static DialogPane getCreateSalesInvoiceAdminPanel() { return createSalesInvoiceAdminPanel;}
-
-    public static DialogPane getAddItemPurchaserPanel() {return addItemPurchaserPanel;}
-
-    public static DialogPane getAddItemAdminPanel() { return addItemAdminPanel;}
-
+    /**
+     * Displays the main menu for the admin user.
+     * This method sets up the UI components for the admin user.
+     *
+     * @throws IOException If an I/O error occurs.
+     */
     public void displayAdminMainMenu() throws IOException {
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
 
@@ -222,6 +300,12 @@ public class MainController implements ControllerInterface {
         navigationBarAdminController.setMainPane(root);
     }
 
+    /**
+     * Displays the main menu for the purchaser user.
+     * This method sets up the UI components for the purchaser user.
+     *
+     * @throws Exception If an error occurs.
+     */
     public void displayPurchaserMainMenu() throws Exception {
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
 
@@ -263,6 +347,12 @@ public class MainController implements ControllerInterface {
         navigationBarPurchaserController.setMainPane(root);
     }
 
+    /**
+     * Displays the main menu for the sales user.
+     * This method sets up the UI components for the sales user.
+     *
+     * @throws IOException If an I/O error occurs.
+     */
     public void displaySalesMainMenu() throws IOException {
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
 
@@ -307,6 +397,10 @@ public class MainController implements ControllerInterface {
         navigationBarSalesController.setMainPane(root);
     }
 
+    /**
+     * Opens the sales invoice panel for the sales user.
+     * This method displays a dialog for creating a sales invoice.
+     */
     public void openSalesInvoiceSalesPanel() {
         try {
             Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
@@ -339,6 +433,10 @@ public class MainController implements ControllerInterface {
         }
     }
 
+    /**
+     * Opens the sales invoice panel for the admin user.
+     * This method displays a dialog for creating a sales invoice.
+     */
     public void openSalesInvoiceAdminPanel() {
         try {
             Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
@@ -371,6 +469,10 @@ public class MainController implements ControllerInterface {
         }
     }
 
+    /**
+     * Opens the add item panel for the purchaser user.
+     * This method displays a dialog for adding an item to the inventory.
+     */
     public void openAddItemPurchaserPanel() {
         try {
             Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
@@ -403,6 +505,10 @@ public class MainController implements ControllerInterface {
         }
     }
 
+    /**
+     * Opens the add item panel for the admin user.
+     * This method displays a dialog for adding an item to the inventory.
+     */
     public void openAddItemAdminPanel() {
         try {
             Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
@@ -419,11 +525,47 @@ public class MainController implements ControllerInterface {
                 System.err.println("Failed to load image: logo.png");
             }
 
+            Stage stage = new Stage();
+            stage.initOwner(stage);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Add Item");
+            Scene scene = new Scene(addItemAdminPanel);
+            stage.setScene(scene);
+
+            // Set the stage not resizable
+            stage.setResizable(false);
+
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Opens the low stocks panel for the purchaser user.
+     * This method displays a dialog showing items with low stock levels.
+     */
+    public void openLowStocksPurchaserPanel() {
+        try {
+            Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
+            FXMLLoader lowStocksLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/lowStocksPurchaser-view.fxml"));
+            lowStocksPurchaserPanel = lowStocksLoader.load();
+            lowStocksPurchaserController = lowStocksLoader.getController();
+
+            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                stage.getIcons().add(image);
+            } else {
+                System.err.println("Failed to load image: logo.png");
+            }
+
             Stage dialogStage = new Stage();
             dialogStage.initOwner(stage);
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.setTitle("Add Item");
-            Scene scene = new Scene(addItemAdminPanel);
+            Scene scene = new Scene(lowStocksPurchaserPanel);
             dialogStage.setScene(scene);
 
             // Set the stage not resizable
@@ -435,66 +577,62 @@ public class MainController implements ControllerInterface {
         }
     }
 
+    /**
+     * Opens the low stocks panel for the admin user.
+     * This method displays a dialog showing items with low stock levels.
+     */
+    public void openLowStocksAdminPanel() {
+        try {
+            Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
+            FXMLLoader lowStocksLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/lowStocksAdmin-view.fxml"));
+            lowStocksAdminPanel = lowStocksLoader.load();
+            lowStocksAdminController = lowStocksLoader.getController();
+
+            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                stage.getIcons().add(image);
+            } else {
+                System.err.println("Failed to load image: logo.png");
+            }
+
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(stage);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setTitle("Add Item");
+            Scene scene = new Scene(lowStocksAdminPanel);
+            dialogStage.setScene(scene);
+
+            // Set the stage not resizable
+            dialogStage.setResizable(false);
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Fetches and updates data remotely.
+     * This method is called to update the data displayed in the UI.
+     *
+     * @throws RemoteException If a remote communication error occurs.
+     */
     @Override
     public void fetchAndUpdate() throws RemoteException {
 
     }
 
+    /**
+     * Gets the objects used.
+     * This method returns a string indicating the type of objects used by the controller.
+     *
+     * @return A string representing the objects used.
+     * @throws RemoteException If a remote communication error occurs.
+     */
     @Override
     public String getObjectsUsed() throws RemoteException {
         return "user";
-    }
-
-    public NavigationBarAdminController getNavigationBarAdminController() {
-        return navigationBarAdminController;
-    }
-
-    public NavigationBarPurchaserController getNavigationBarPurchaserController() { return navigationBarPurchaserController;}
-
-    public NavigationBarSalesController getNavigationBarSalesController() {
-        return navigationBarSalesController;
-    }
-
-    public static StockControlPurchaserController getStockControlPurchaserController() { return stockControlPurchaserController;}
-
-    public static StockControlAdminController getStockControlAdminController() { return stockControlAdminController;}
-
-    public static StockControlSalesController getStockControlSalesController() { return stockControlSalesController;}
-
-    public static SalesHistorySalesController getSalesHistorySalesController() { return salesHistorySalesController;}
-
-    public static SalesHistoryAdminController getSalesHistoryAdminController() { return salesHistoryAdminController;}
-
-    public static ProfileManagementSalesController getProfileManagementSalesController() { return profileManagementSalesController;}
-
-    public static ProfileManagementPurchaserController getProfileManagementPurchaserController() { return profileManagementPurchaserController;}
-
-    public static ProfileManagementAdminController getProfileManagementAdminController() { return profileManagementAdminController;}
-
-    public static CreateSalesInvoiceSalesController getCreateSalesInvoiceSalesController() { return createSalesInvoiceSalesController;}
-
-    public static CreateSalesInvoiceAdminController getCreateSalesInvoiceAdminController() { return createSalesInvoiceAdminController;}
-
-    public static AddItemPurchaserController getAddItemPurchaserController() { return addItemPurchaserController;}
-
-    public static AddItemAdminController getAddItemAdminController() { return addItemAdminController;}
-
-    public ClientCallback getClientCallback() {
-        return clientCallback;
-    }
-
-    public void setClientCallback(ClientCallback clientCallback) {
-        this.clientCallback = clientCallback;
-    }
-
-    public UserRequestInterface getUserService() {
-        return userService;
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-    public Registry getRegistry() {
-        return registry;
     }
 }
