@@ -5,6 +5,7 @@ import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
 import com.example.inventorymanagement.util.objects.Item;
 import com.example.inventorymanagement.util.objects.ItemOrder;
+import com.example.inventorymanagement.util.objects.OrderDetail;
 import com.example.inventorymanagement.util.objects.User;
 
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
@@ -116,7 +117,11 @@ public class ServicesTest implements ControllerInterface{
 
    @Test
    public void testCreatePurchaseOrderService() {
-      ItemOrder purchaseOrder = new ItemOrder(223,"Marven","2/20/23",new LinkedList<>());
+      OrderDetail orderDetail = new OrderDetail(1, 2, 200, "FeatherFarms_2023-12-29_200.00");
+
+      LinkedList<OrderDetail> orderDetails = new LinkedList<>();
+      orderDetails.add(orderDetail);
+      ItemOrder purchaseOrder = new ItemOrder(223, "Marven", "2/20/23", orderDetails);
 
       boolean result = false;
       try {
@@ -130,7 +135,11 @@ public class ServicesTest implements ControllerInterface{
 
    @Test
    public void testCreateSalesInvoiceService() {
-      ItemOrder salesInvoice = new ItemOrder(223,"Marven","2/20/23",new LinkedList<>());
+      OrderDetail orderDetail = new OrderDetail(1, 2, 200, "FeatherFarms_2023-12-29_200.00");
+
+      LinkedList<OrderDetail> orderDetails = new LinkedList<>();
+      orderDetails.add(orderDetail);
+      ItemOrder salesInvoice = new ItemOrder(123,"Marven","2/20/23",orderDetails);
 
       boolean result = false;
       try {
@@ -270,7 +279,6 @@ public class ServicesTest implements ControllerInterface{
 
       Assertions.assertTrue(result);
    }
-
    @AfterAll
    public static void logout(){
       try {
