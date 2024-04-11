@@ -109,16 +109,16 @@
          <children>
             <StackedBarChart fx:id="revenueCostChart" focusTraversable="true" layoutX="20.0" layoutY="45.0" legendSide="LEFT" prefHeight="282.0" prefWidth="679.0" title="Revenue vs. Cost for this month">
               <xAxis>
-                <CategoryAxis label="                                                                       " prefHeight="28.0" prefWidth="410.0" side="BOTTOM" tickLabelFill="#a91292" />
+                <CategoryAxis prefHeight="43.0" prefWidth="602.0" side="BOTTOM" tickLabelFill="#941681" tickLabelGap="7.0" />
               </xAxis>
               <yAxis>
-                <NumberAxis side="LEFT" tickLabelFill="#a91292" upperBound="10000.0" />
+                <NumberAxis side="LEFT" tickLabelFill="#941681" upperBound="10000.0" />
               </yAxis>
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
                <cursor>
-                  <Cursor fx:constant="DISAPPEAR" />
+                  <Cursor fx:constant="OPEN_HAND" />
                </cursor>
                <effect>
                   <Glow />
