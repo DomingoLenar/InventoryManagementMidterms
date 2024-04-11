@@ -73,10 +73,9 @@ public class NavigationBarPurchaserController implements ControllerInterface {
     }
 
     private void loadProfileManagementPanel() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagement-view.fxml"));
-            BorderPane profileManagementPane = loader.load();
-            mainPane.setRight(profileManagementPane);
+        try{
+        MainController.getProfileManagementPurchaserController().fetchAndUpdate();
+        mainPane.setRight(MainController.getProfileManagementPurchaserPanel());
         } catch (IOException e) {
             e.printStackTrace();
         }
