@@ -53,14 +53,21 @@ public class StockControlSalesController implements ControllerInterface {
     private StockControlSalesModel stockControlSalesModel;
 
     private MainController mainController;
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
     public StockControlSalesController(){
 
     }
 
     public StockControlSalesController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
         this.stockControlSalesModel = new StockControlSalesModel(registry, clientCallback);
+        this.mainController = mainController;
     }
     boolean initialized = false;
+
     @Override
     public void fetchAndUpdate() throws RemoteException {
         try {
@@ -104,7 +111,11 @@ public class StockControlSalesController implements ControllerInterface {
 
     @FXML
     private void handleCreateSalesInvoice() {
-        // Handle sales invoice button action
+        if (mainController != null) {
+            mainController.openSalesInvoicePanel();
+        } else {
+            System.out.println("MainController is not set.");
+        }
     }
 
     @FXML
