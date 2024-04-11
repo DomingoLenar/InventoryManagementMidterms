@@ -48,6 +48,8 @@ public class MainController implements ControllerInterface {
     static BorderPane salesHistoryAdminPanel;
     static ProfileManagementAdminController profileManagementAdminController;
     static BorderPane profileManagementAdminPanel;
+    static CreateSalesInvoiceAdminController createSalesInvoiceAdminController;
+    static DialogPane createSalesInvoiceAdminPanel;
 
     static StockControlPurchaserController stockControlPurchaserController;
     NavigationBarPurchaserController navigationBarPurchaserController;
@@ -163,6 +165,8 @@ public class MainController implements ControllerInterface {
 
     public static DialogPane getCreateSalesInvoiceSalesPanel() { return createSalesInvoiceSalesPanel;}
 
+    public static DialogPane getCreateSalesInvoiceAdminPanel() { return createSalesInvoiceAdminPanel;}
+
     public void displayAdminMainMenu() throws IOException {
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
 
@@ -173,6 +177,7 @@ public class MainController implements ControllerInterface {
         FXMLLoader stockAdminLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlAdmin-view.fxml"));
         stockControlAdminPanel = stockAdminLoader.load();
         stockControlAdminController = stockAdminLoader.getController();
+        stockControlAdminController.setMainController(this);
 
         FXMLLoader salesHistoryLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/salesHistory/salesHistoryAdmin-view.fxml"));
         salesHistoryAdminPanel = salesHistoryLoader.load();
@@ -291,7 +296,7 @@ public class MainController implements ControllerInterface {
         navigationBarSalesController.setMainPane(root);
     }
 
-    public void openSalesInvoicePanel() {
+    public void openSalesInvoiceSalesPanel() {
         try {
             Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
 
@@ -322,6 +327,39 @@ public class MainController implements ControllerInterface {
             e.printStackTrace();
         }
     }
+
+    public void openSalesInvoiceAdminPanel() {
+        try {
+            Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
+            FXMLLoader createSalesInvoiceLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/createSalesInvoiceAdmin-view.fxml"));
+            createSalesInvoiceAdminPanel = createSalesInvoiceLoader.load();
+            createSalesInvoiceAdminController = createSalesInvoiceLoader.getController();
+
+            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                stage.getIcons().add(image);
+            } else {
+                System.err.println("Failed to load image: logo.png");
+            }
+
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(stage);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setTitle("Sales Invoice");
+            Scene scene = new Scene(createSalesInvoiceAdminPanel);
+            dialogStage.setScene(scene);
+
+            // Set the stage not resizable
+            dialogStage.setResizable(false);
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void fetchAndUpdate() throws RemoteException {
@@ -364,6 +402,8 @@ public class MainController implements ControllerInterface {
     public static ProfileManagementAdminController getProfileManagementAdminController() { return profileManagementAdminController;}
 
     public static CreateSalesInvoiceSalesController getCreateSalesInvoiceSalesController() { return createSalesInvoiceSalesController;}
+
+    public static CreateSalesInvoiceAdminController getCreateSalesInvoiceAdminController() { return createSalesInvoiceAdminController;}
 
     public ClientCallback getClientCallback() {
         return clientCallback;

@@ -112,7 +112,7 @@ public class StockControlSalesController implements ControllerInterface {
     @FXML
     private void handleCreateSalesInvoice() {
         if (mainController != null) {
-            mainController.openSalesInvoicePanel();
+            mainController.openSalesInvoiceSalesPanel();
         } else {
             System.out.println("MainController is not set.");
         }

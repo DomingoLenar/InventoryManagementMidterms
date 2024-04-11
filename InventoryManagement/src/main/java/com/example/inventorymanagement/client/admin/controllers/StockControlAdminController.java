@@ -70,14 +70,21 @@ public class StockControlAdminController implements ControllerInterface {
     private StockControlAdminModel stockControlAdminModel;
 
     private MainController mainController;
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
     public StockControlAdminController(){
 
     }
 
     public StockControlAdminController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
         this.stockControlAdminModel = new StockControlAdminModel(registry, clientCallback);
+        this.mainController = mainController;
     }
     boolean initialized = false;
+
     @Override
     public void fetchAndUpdate() throws RemoteException {
         try {
@@ -136,8 +143,13 @@ public class StockControlAdminController implements ControllerInterface {
 
     @FXML
     private void handleCreateSalesInvoice() {
-        // Handle create sales invoice button action
+        if (mainController != null) {
+            mainController.openSalesInvoiceAdminPanel();
+        } else {
+            System.out.println("MainController is not set.");
+        }
     }
+
     @FXML
     public void initialize() { // initialize components -> better approach is to initialize just the components and let nav___bar buttons handle the population of data/realtime
         addHoverEffect(lowStocksButtonAdmin);
