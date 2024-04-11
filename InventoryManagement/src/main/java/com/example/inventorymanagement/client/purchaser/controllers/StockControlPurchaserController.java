@@ -60,14 +60,21 @@ public class StockControlPurchaserController implements ControllerInterface {
     private StockControlPurchaserModel stockControlPurchaserModel;
 
     private MainController mainController;
-    public StockControlPurchaserController(){
 
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
+    public StockControlPurchaserController() {
+        // Default Constructor
     }
 
     public StockControlPurchaserController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
         this.stockControlPurchaserModel = new StockControlPurchaserModel(registry, clientCallback);
+        this.mainController = mainController;
     }
     boolean initialized = false;
+
     @Override
     public void fetchAndUpdate() throws RemoteException {
         try {
@@ -111,7 +118,11 @@ public class StockControlPurchaserController implements ControllerInterface {
 
     @FXML
     private void handleAddItem() {
-        // Handle sales invoice button action
+        if (mainController != null) {
+            mainController.openAddItemPurchaserPanel();
+        } else {
+            System.out.println("MainController is not set.");
+        }
     }
 
     @FXML
