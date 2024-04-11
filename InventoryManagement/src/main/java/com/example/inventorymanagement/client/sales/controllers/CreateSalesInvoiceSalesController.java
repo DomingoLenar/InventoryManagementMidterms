@@ -172,6 +172,58 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
         }
     }
 
+    @FXML
+    private void handleCreateSalesInvoice(ActionEvent event) {
+        try {
+            // Retrieve selected item from the ComboBox
+            Item selectedItem = itemNameComboBox.getValue();
+            if (selectedItem == null) {
+                showAlert("Please select an item.");
+                return;
+            }
+
+            // Retrieve quantity from the TextField
+            int quantity;
+            try {
+                quantity = Integer.parseInt(itemQuantityField.getText().trim());
+                if (quantity <= 0) {
+                    showAlert("Quantity must be greater than zero.");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                showAlert("Please enter a valid quantity.");
+                return;
+            }
+
+            // Create ItemOrder
+            OrderDetail orderDetail = new OrderDetail(selectedItem.getItemId(), quantity, selectedItem.getStocks().get(0).getPrice(), "");
+            ItemOrder itemOrder = new ItemOrder();
+            itemOrder.addOrderDetail(orderDetail);
+
+            // Create sales invoice using the model
+            boolean success = createSalesInvoiceSalesModel.createSalesInvoice(itemOrder);
+            if (success) {
+                showAlert("Sales invoice created successfully.");
+
+                // Update stock control table
+                updateStockControlTable();
+            } else {
+                showAlert("Failed to create sales invoice.");
+            }
+        } catch (NotLoggedInException | OutOfRoleException e) {
+            showAlert("Error: " + e.getMessage());
+        }
+    }
+
+    private void updateStockControlTable() {
+        try {
+            // Call fetchAndUpdate method of StockControlSalesController to update the table
+            MainController.getStockControlSalesController().fetchAndUpdate();
+        } catch (RemoteException e) {
+            showAlert("Error updating stock control table: " + e.getMessage());
+        }
+    }
+
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
@@ -187,6 +239,9 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
 
     @FXML
     public void initialize() {
+
+        createSalesInvoiceSalesModel = new CreateSalesInvoiceSalesModel(MainController.registry, MainController.clientCallback);
+
         if (!initialized) {
             addHoverEffect(okButton);
             initialized = true; // Set initialized to true after initialization
