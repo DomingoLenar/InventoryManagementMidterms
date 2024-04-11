@@ -112,7 +112,7 @@ public class ProfileManagementChangePassAdminController  implements ControllerIn
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
     @FXML
-    private void handleSave() {
+    public void handleSave() {
         String oldPassword = oldPasswordTextField.getText();
         String newPassword = newPasswordTextField.getText();
 
