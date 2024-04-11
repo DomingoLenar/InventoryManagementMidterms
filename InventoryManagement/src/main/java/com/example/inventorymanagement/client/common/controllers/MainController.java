@@ -49,6 +49,8 @@ public class MainController implements ControllerInterface {
     static BorderPane salesHistoryAdminPanel;
     static ProfileManagementAdminController profileManagementAdminController;
     static BorderPane profileManagementAdminPanel;
+    static DashboardAdminController dashboardAdminController;
+    static BorderPane dashboardAdminPanel;
 
     static StockControlPurchaserController stockControlPurchaserController;
     NavigationBarPurchaserController navigationBarPurchaserController;
@@ -159,6 +161,7 @@ public class MainController implements ControllerInterface {
     public static BorderPane getProfileManagementPurchaserPanel() {return profileManagementPurchaserPanel;}
 
     public static BorderPane getProfileManagementAdminPanel() { return profileManagementAdminPanel;}
+    public static BorderPane getDashboardAdminPanel(){ return dashboardAdminPanel;}
 
     public void displayAdminMainMenu() throws IOException {
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
@@ -179,6 +182,10 @@ public class MainController implements ControllerInterface {
         profileManagementAdminPanel = profileManagementLoader.load();
         profileManagementAdminController = profileManagementLoader.getController();
 
+        FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/dashboard/dashboardAdmin-view.fxml"));
+        dashboardAdminPanel = dashboardLoader.load();
+        dashboardAdminController = dashboardLoader.getController();
+
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
 
         if (inputStream != null) {
@@ -189,7 +196,7 @@ public class MainController implements ControllerInterface {
         }
 
         VBox rightComponents = new VBox();
-        rightComponents.getChildren().addAll(stockControlAdminPanel, salesHistoryAdminPanel, profileManagementAdminPanel);
+        rightComponents.getChildren().addAll(stockControlAdminPanel, salesHistoryAdminPanel, profileManagementAdminPanel, dashboardAdminPanel);
 
         BorderPane root = new BorderPane();
         root.setLeft(navigationBar);
@@ -311,6 +318,9 @@ public class MainController implements ControllerInterface {
 
     public static StockControlAdminController getStockControlAdminController() {
         return stockControlAdminController;
+    }
+    public static DashboardAdminController getDashboardAdminController(){
+        return dashboardAdminController;
     }
 
     public static StockControlSalesController getStockControlSalesController() {
