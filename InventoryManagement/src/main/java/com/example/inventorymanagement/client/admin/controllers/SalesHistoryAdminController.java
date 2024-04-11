@@ -36,17 +36,15 @@ public class SalesHistoryAdminController implements ControllerInterface {
     @FXML
     private TableView salesHistoryAdminTable;
     @FXML
-    private TableColumn<ItemOrder, String> productColumn;
+    private TableColumn<ItemOrder, String> dateColumn;
     @FXML
-    private TableColumn<ItemOrder, Integer> quantityColumn;
+    private TableColumn<ItemOrder, String> productColumn;
     @FXML
     private TableColumn<ItemOrder, Float> priceColumn;
     @FXML
-    private TableColumn<ItemOrder, Float> costColumn;
+    private TableColumn<ItemOrder, Integer> quantityColumn;
     @FXML
-    private TableColumn<ItemOrder, String> supplierColumn;
-    @FXML
-    private TableColumn<ItemOrder, String> dateColumn;
+    private TableColumn<ItemOrder, Float> totalSalesColumn;
 
     @FXML
     public BorderPane getBorderPaneSalesHistoryAdmin() {
@@ -68,28 +66,24 @@ public class SalesHistoryAdminController implements ControllerInterface {
         return salesHistoryAdminTable;
     }
 
-    public TableColumn getProductColumn() {
-        return productColumn;
+    public TableColumn getDateColumn() {
+        return dateColumn;
     }
 
-    public TableColumn getQuantityColumn() {
-        return quantityColumn;
+    public TableColumn getProductColumn() {
+        return productColumn;
     }
 
     public TableColumn getPriceColumn() {
         return priceColumn;
     }
 
-    public TableColumn getCostColumn() {
-        return costColumn;
+    public TableColumn getQuantityColumn() {
+        return quantityColumn;
     }
 
-    public TableColumn getSupplierColumn() {
-        return supplierColumn;
-    }
-
-    public TableColumn getDateColumn() {
-        return dateColumn;
+    public TableColumn getTotalSalesColumn() {
+        return totalSalesColumn;
     }
 
     private MainController mainController;
@@ -114,27 +108,44 @@ public class SalesHistoryAdminController implements ControllerInterface {
         }
     }
 
+    /**
+     * For populating table view in fxml
+     * @param itemOrders objects to populate table with
+     */
     private void populateTableView(LinkedList<ItemOrder> itemOrders) {
         ObservableList<ItemOrder> observableItems = FXCollections.observableArrayList(itemOrders);
         salesHistoryAdminTable.setItems(observableItems);
 
-        productColumn.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getOrderDetails().get(0).getItemId())));
+        dateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate()));
+        productColumn.setCellValueFactory(cellData -> {
+            ItemOrder itemOrder = cellData.getValue();
+            String itemName = "No Item";
+
+            for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
+                int itemId = orderDetail.getItemId();
+                try {
+                    Item item = salesHistoryAdminModel.fetchItem(itemId);
+                    if (item != null) {
+                        itemName = item.getItemName();
+                        break; // Exit the loop once an item is found
+                    }
+                } catch (NotLoggedInException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return new SimpleStringProperty(itemName);
+        });
         quantityColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getOrderDetails().get(0).getQty()).asObject());
         priceColumn.setCellValueFactory(cellData -> new SimpleFloatProperty(cellData.getValue().getOrderDetails().get(0).getUnitPrice()).asObject());
-        costColumn.setCellValueFactory(cellData -> {
+        totalSalesColumn.setCellValueFactory(cellData -> {
             ItemOrder order = cellData.getValue();
             float totalCost = order.getOrderDetails().stream()
-                    .map(detail -> detail.getQty() * detail.getUnitPrice())
+                    .map(detail -> {
+                        return detail.getQty() * detail.getUnitPrice();
+                    })
                     .reduce(0.0f, Float::sum);
             return new SimpleFloatProperty(totalCost).asObject();
         });
-        supplierColumn.setCellValueFactory(cellData -> {
-            OrderDetail orderDetail = cellData.getValue().getOrderDetails().get(0);
-            String batchNo = orderDetail.getBatchNo();
-            Stock stock = findStockByBatchNo(batchNo);
-            return new SimpleStringProperty(stock != null ? stock.getSupplier() : "Supplier Not Found");
-        });
-        dateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate()));
     }
 
     private Stock findStockByBatchNo(String batchNo) {

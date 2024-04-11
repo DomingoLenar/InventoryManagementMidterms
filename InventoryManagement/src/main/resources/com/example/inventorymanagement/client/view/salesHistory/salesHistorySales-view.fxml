@@ -22,15 +22,17 @@
     <center>
         <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
-                <TableView fx:id="salesHistorySalesTable" layoutX="11.0" layoutY="10.0" prefHeight="510.0" prefWidth="829.0" style="-fx-font-family: 'Share Tech Mono'; -fx-font-size: 15;">
+                <TableView fx:id="salesHistorySalesTable" layoutX="10.0" layoutY="10.0" prefHeight="510.0" prefWidth="830.0" style="-fx-font-family: 'Share Tech Mono'; -fx-font-size: 15;">
                     <columns>
-                        <TableColumn fx:id="productColumn" minWidth="0.0" prefWidth="217.0" text="Product" />
-                        <TableColumn fx:id="quantityColumn" minWidth="0.0" prefWidth="115.0" text="Quantity" />
-                        <TableColumn fx:id="priceColumn" minWidth="0.0" prefWidth="98.0" text="Price" />
-                        <TableColumn fx:id="costColumn" minWidth="0.0" prefWidth="83.0" text="Cost" />
-                        <TableColumn fx:id="supplierColumn" minWidth="0.0" prefWidth="107.0" text="Supplier" />
-                        <TableColumn fx:id="dateColumn" minWidth="0.0" prefWidth="99.0" text="Date" />
+                        <TableColumn fx:id="dateColumn" minWidth="166.0" prefWidth="166.0" text="Date" />
+                        <TableColumn fx:id="productColumn" minWidth="166.0" prefWidth="166.0" text="Product" />
+                        <TableColumn fx:id="priceColumn" minWidth="166.0" prefWidth="166.0" text="Price" />
+                        <TableColumn fx:id="quantityColumn" minWidth="166.0" prefWidth="166.0" text="Quantity" />
+                        <TableColumn fx:id="totalSalesColumn" minWidth="166.0" prefWidth="166.0" text="Total Sales" />
                     </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
                 </TableView>
             </children></AnchorPane>
     </center>
