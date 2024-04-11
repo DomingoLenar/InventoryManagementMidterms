@@ -1,8 +1,6 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
 import com.example.inventorymanagement.client.admin.models.AddListingAdminModel;
-import com.example.inventorymanagement.client.admin.views.AddItemAdminPanel;
-import com.example.inventorymanagement.client.admin.views.AddListingAdminPanel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
@@ -12,25 +10,21 @@ import com.example.inventorymanagement.util.objects.Item;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
-import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
-import java.util.ResourceBundle;
 
 public class AddListingAdminController implements ControllerInterface {
     @FXML
     private TextField itemNameField;
     @FXML
     private Button okButton;
+
     private AddListingAdminModel addListingAdminModel;
     private MainController mainController;
     boolean initialized = false;
@@ -38,13 +32,14 @@ public class AddListingAdminController implements ControllerInterface {
     public TextField getItemNameField() {
         return itemNameField;
     }
-
     public Button getOkButton() {
         return okButton;
     }
+
     public AddListingAdminController (){
         //default constructor
     }
+
     public AddListingAdminController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController){
         this.addListingAdminModel = new AddListingAdminModel(registry, clientCallback);
     }
@@ -66,6 +61,7 @@ public class AddListingAdminController implements ControllerInterface {
     public String getObjectsUsed() throws RemoteException {
         return "Item";
     }
+
     private void handleOkButton(ActionEvent actionEvent) throws NotLoggedInException, OutOfRoleException {
         if (okButton != null && itemNameField != null) {
             String itemName = itemNameField.getText();
@@ -89,6 +85,12 @@ public class AddListingAdminController implements ControllerInterface {
         alert.showAndWait();
     }
 
+    @FXML
+    private void handleAddListing() {
+        // TODO: Logic
+    }
+
+    @FXML
     public void initialize() {
         addHoverEffect(okButton);
         okButton.setOnAction(actionEvent -> {
