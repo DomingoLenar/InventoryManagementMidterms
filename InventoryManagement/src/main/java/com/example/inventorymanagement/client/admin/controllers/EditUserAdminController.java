@@ -203,4 +203,14 @@ public class EditUserAdminController implements ControllerInterface {
         alert.showAndWait();
     }
 
+    public void editUser(User selectedUser) {
+        // Set the selected user's username to the usernameLabel
+        usernameLabel.setText(selectedUser.getUsername());
+
+        // Set the selected user's data as user data of the usernameLabel
+        usernameLabel.setUserData(selectedUser);
+
+        // Set the selected user's current role as the default value of the changeRoleComboBox
+        changeRoleComboBox.setValue(selectedUser.getRole());
+    }
 }
