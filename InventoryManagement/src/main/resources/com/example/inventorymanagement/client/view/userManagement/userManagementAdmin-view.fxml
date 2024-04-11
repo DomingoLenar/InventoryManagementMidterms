@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane fx:id="borderPaneUserManagement" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="850.0" style="-fx-background-color: linear-gradient(to bottom, #EFD1D1, #FFFFFF);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="653.0" BorderPane.alignment="CENTER">
@@ -26,9 +25,8 @@
          <children>
             <TableView fx:id="userManagementTableView" layoutX="10.0" layoutY="-6.0" prefHeight="530.0" prefWidth="830.0">
               <columns>
-                <TableColumn fx:id="idTableColumn" prefWidth="208.79999351501465" text="ID" />
-                <TableColumn fx:id="nameTableColumn" minWidth="3.20001220703125" prefWidth="423.1999816894531" text="Name" />
-                  <TableColumn fx:id="roleTableColumn" minWidth="0.0" prefWidth="196.79998779296875" text="Role" />
+                <TableColumn fx:id="nameTableColumn" minWidth="3.20001220703125" prefWidth="541.5999507904053" text="Name" />
+                  <TableColumn fx:id="roleTableColumn" minWidth="0.0" prefWidth="288.0000366210937" text="Role" />
               </columns>
             </TableView>
             <Button fx:id="addUserButton" layoutX="754.0" layoutY="538.0" mnemonicParsing="false" style="-fx-background-color: EAD7D7;" text="Add User" />
