@@ -9,7 +9,6 @@ import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.objects.Item;
 import com.example.inventorymanagement.util.objects.ItemOrder;
 import com.example.inventorymanagement.util.objects.OrderDetail;
-import com.example.inventorymanagement.util.objects.Stock;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
@@ -36,17 +35,15 @@ public class SalesHistorySalesController implements ControllerInterface {
     @FXML
     private TableView salesHistorySalesTable;
     @FXML
-    private TableColumn<ItemOrder, String> productColumn;
+    private TableColumn<ItemOrder, String> dateColumn;
     @FXML
-    private TableColumn<ItemOrder, Integer> quantityColumn;
+    private TableColumn<ItemOrder, String> productColumn;
     @FXML
     private TableColumn<ItemOrder, Float> priceColumn;
     @FXML
-    private TableColumn<ItemOrder, Float> costColumn;
+    private TableColumn<ItemOrder, Integer> quantityColumn;
     @FXML
-    private TableColumn<ItemOrder, String> supplierColumn;
-    @FXML
-    private TableColumn<ItemOrder, String> dateColumn;
+    private TableColumn<ItemOrder, Float> totalSalesColumn;
 
     @FXML
     public BorderPane getBorderPaneSalesHistorySales() {
@@ -68,28 +65,24 @@ public class SalesHistorySalesController implements ControllerInterface {
         return salesHistorySalesTable;
     }
 
-    public TableColumn getProductColumn() {
-        return productColumn;
+    public TableColumn getDateColumn() {
+        return dateColumn;
     }
 
-    public TableColumn getQuantityColumn() {
-        return quantityColumn;
+    public TableColumn getProductColumn() {
+        return productColumn;
     }
 
     public TableColumn getPriceColumn() {
         return priceColumn;
     }
 
-    public TableColumn getCostColumn() {
-        return costColumn;
+    public TableColumn getQuantityColumn() {
+        return quantityColumn;
     }
 
-    public TableColumn getSupplierColumn() {
-        return supplierColumn;
-    }
-
-    public TableColumn getDateColumn() {
-        return dateColumn;
+    public TableColumn getTotalSalesColumn() {
+        return totalSalesColumn;
     }
 
     private MainController mainController;
@@ -114,63 +107,49 @@ public class SalesHistorySalesController implements ControllerInterface {
         }
     }
 
+    /**
+     * For populating table view in fxml
+     * @param itemOrders objects to populate table with
+     */
     private void populateTableView(LinkedList<ItemOrder> itemOrders) {
         ObservableList<ItemOrder> observableItems = FXCollections.observableArrayList(itemOrders);
         salesHistorySalesTable.setItems(observableItems);
 
-        productColumn.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getOrderDetails().get(0).getItemId())));
+        dateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate()));
+        productColumn.setCellValueFactory(cellData -> {
+            ItemOrder itemOrder = cellData.getValue();
+            String itemName = "No Item";
+
+            for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
+                int itemId = orderDetail.getItemId();
+                try {
+                    Item item = salesHistorySalesModel.fetchItem(itemId);
+                    if (item != null) {
+                        itemName = item.getItemName();
+                        break; // Exit the loop once an item is found
+                    }
+                } catch (NotLoggedInException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return new SimpleStringProperty(itemName);
+        });
         quantityColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getOrderDetails().get(0).getQty()).asObject());
         priceColumn.setCellValueFactory(cellData -> new SimpleFloatProperty(cellData.getValue().getOrderDetails().get(0).getUnitPrice()).asObject());
-        costColumn.setCellValueFactory(cellData -> {
+        totalSalesColumn.setCellValueFactory(cellData -> {
             ItemOrder order = cellData.getValue();
             float totalCost = order.getOrderDetails().stream()
-                    .map(detail -> detail.getQty() * detail.getUnitPrice())
+                    .map(detail -> {
+                        return detail.getQty() * detail.getUnitPrice();
+                    })
                     .reduce(0.0f, Float::sum);
             return new SimpleFloatProperty(totalCost).asObject();
         });
-        supplierColumn.setCellValueFactory(cellData -> {
-            OrderDetail orderDetail = cellData.getValue().getOrderDetails().get(0);
-            String batchNo = orderDetail.getBatchNo();
-            Stock stock = findStockByBatchNo(batchNo);
-            return new SimpleStringProperty(stock != null ? stock.getSupplier() : "Supplier Not Found");
-        });
-        dateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate()));
-    }
-
-    private Stock findStockByBatchNo(String batchNo) {
-        try {
-            LinkedList<ItemOrder> itemOrders = salesHistorySalesModel.fetchItems();
-            for (ItemOrder itemOrder : itemOrders) {
-                for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
-                    if (orderDetail.getBatchNo().equals(batchNo)) {
-                        return findStockByBatchNoInItemOrder(batchNo, itemOrder);
-                    }
-                }
-            }
-        } catch (NotLoggedInException e) {
-            showAlert("User is not logged in");
-        }
-        return null;
-    }
-
-    private Stock findStockByBatchNoInItemOrder(String batchNo, ItemOrder itemOrder) {
-        try {
-            for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
-                if (orderDetail.getBatchNo().equals(batchNo)) {
-                    // Assuming the batch number uniquely identifies a stock
-                    return new Stock(batchNo, orderDetail.getQty(), orderDetail.getUnitPrice(), 0, "", ""); // Create a temporary stock with available information
-                }
-            }
-        } catch (Exception e) {
-            // Handle any other exceptions
-            showAlert("Error finding stock by batch number in item order: " + e.getMessage());
-        }
-        return null; // Return null if stock with batchNo is not found or if an exception occurs
     }
 
     @Override
     public String getObjectsUsed() throws RemoteException {
-        return "ItemOrder";
+        return "itemOrder";
     }
 
     private void addHoverEffect(Button button) {
