@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 
 public class ItemOrder implements Serializable {
-    private int orderId;
+    private int orderID;
     private String byUser;
     private String date;
     private LinkedList<OrderDetail> orderDetails = new LinkedList<>();
@@ -13,7 +13,7 @@ public class ItemOrder implements Serializable {
      * Default constructor
      */
     public ItemOrder(){
-        orderId = -1;
+        orderID = -1;
         byUser = null;
         date = null;
     }
@@ -26,7 +26,7 @@ public class ItemOrder implements Serializable {
      * @param orderDetails  LinkedList of object OrderDetails, to store details regarding this order
      */
     public ItemOrder(int orderId, String byUser, String date, LinkedList<OrderDetail> orderDetails) {
-        this.orderId = orderId;
+        this.orderID = orderId;
         this.byUser = byUser;
         this.date = date;
         this.orderDetails = orderDetails;
@@ -41,12 +41,12 @@ public class ItemOrder implements Serializable {
     }
 
     // Getter and setter below
-    public int getOrderId() {
-        return orderId;
+    public int getOrderID() {
+        return orderID;
     }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
+    public void setOrderID(int orderId) {
+        this.orderID = orderID;
     }
 
     public String getByUser() {
