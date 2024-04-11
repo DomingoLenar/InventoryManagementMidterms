@@ -24,15 +24,13 @@
             <children>
                 <TableView fx:id="salesHistorySalesTable" layoutX="10.0" layoutY="10.0" prefHeight="510.0" prefWidth="830.0" style="-fx-font-family: 'Share Tech Mono'; -fx-font-size: 15;">
                     <columns>
-                        <TableColumn fx:id="dateColumn" minWidth="166.0" prefWidth="166.0" text="Date" />
-                        <TableColumn fx:id="productColumn" minWidth="166.0" prefWidth="166.0" text="Product" />
-                        <TableColumn fx:id="priceColumn" minWidth="166.0" prefWidth="166.0" text="Price" />
-                        <TableColumn fx:id="quantityColumn" minWidth="166.0" prefWidth="166.0" text="Quantity" />
-                        <TableColumn fx:id="totalSalesColumn" minWidth="166.0" prefWidth="166.0" text="Total Sales" />
+                  <TableColumn fx:id="orderIDColumn" minWidth="50.0" prefWidth="85.0" text="Order ID" />
+                        <TableColumn fx:id="dateColumn" minWidth="110.0" prefWidth="127.0" text="Date" />
+                        <TableColumn fx:id="productColumn" minWidth="120.0" prefWidth="202.0" text="Product" />
+                        <TableColumn fx:id="priceColumn" minWidth="110.0" prefWidth="133.0" text="Price" />
+                        <TableColumn fx:id="quantityColumn" minWidth="110.0" prefWidth="126.0" text="Quantity" />
+                        <TableColumn fx:id="totalSalesColumn" minWidth="150.0" prefWidth="156.0" text="Total Sales" />
                     </columns>
-                    <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                    </columnResizePolicy>
                 </TableView>
             </children></AnchorPane>
     </center>
