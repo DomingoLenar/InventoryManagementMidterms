@@ -76,7 +76,7 @@ public class StockControlAdminController implements ControllerInterface {
     }
 
     public StockControlAdminController(){
-
+        // Default Constructor
     }
 
     public StockControlAdminController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
@@ -125,10 +125,13 @@ public class StockControlAdminController implements ControllerInterface {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
     @FXML
     private void handleAddItem() {
-        // Handle sales invoice button action
+        if (mainController != null) {
+            mainController.openAddItemAdminPanel();
+        } else {
+            System.out.println("MainController is not set.");
+        }
     }
 
     @FXML
