@@ -103,6 +103,7 @@
                             </mainClass>
                             <includes>
                                 <include>com/example/inventorymanagement/util/requests/**/*.java</include>
+                                <include>src/main/resources/com/example/inventorymanagement/items.json</include>
                             </includes>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

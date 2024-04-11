@@ -77,14 +77,18 @@ public class NavigationBarSalesController implements ControllerInterface {
     }
 
     private void loadSalesHistoryPanel() {
-        // TODO: Add Getters
+        try {
+            MainController.getSalesHistorySalesController().fetchAndUpdate();
+            mainPane.setRight(MainController.getSalesHistorySalesPanel());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadProfileManagementPanel() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagement-view.fxml"));
-            BorderPane profileManagementPane = loader.load();
-            mainPane.setRight(profileManagementPane);
+            MainController.getProfileManagementSalesController().fetchAndUpdate();
+            mainPane.setRight(MainController.getProfileManagementSalesPanel());
         } catch (IOException e) {
             e.printStackTrace();
         }

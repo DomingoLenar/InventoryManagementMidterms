@@ -87,7 +87,7 @@ public class ProfileManagementSalesController implements ControllerInterface {
 
     boolean initialized = false;
 
-    public void fetchAndUpdate() {
+    public void fetchAndUpdate() throws RemoteException {
         try {
             // Update UI components with current user's username
             updateUsernameLabel();
@@ -97,47 +97,6 @@ public class ProfileManagementSalesController implements ControllerInterface {
         }
     }
 
-    @FXML
-    private void changeUserRole() {
-        String newRole = changeUserAccountComboBox.getValue();
-        User selectedUser = userListView.getSelectionModel().getSelectedItem();
-        try {
-            boolean success = profileManagementSalesModel.changeUserRole(selectedUser, newRole);
-            if (success) {
-                // Handle successful role change
-                showAlert(Alert.AlertType.INFORMATION, "Role Change", "Role changed successfully.");
-            } else {
-                // Handle unsuccessful role change
-                showAlert(Alert.AlertType.ERROR, "Role Change Error", "Failed to change role.");
-            }
-        } catch (UserExistenceException | OutOfRoleException | NotLoggedInException e) {
-            // Handle specific exceptions
-            showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
-        }
-    }
-
-    @FXML
-    private void removeUser() {
-        User selectedUser = userListView.getSelectionModel().getSelectedItem();
-        if (selectedUser == null) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Please select a user to remove.");
-            return;
-        }
-
-        try {
-            boolean success = profileManagementSalesModel.removeUser(selectedUser);
-            if (success) {
-                // Handle successful user removal
-                showAlert(Alert.AlertType.INFORMATION, "User Removal", "User removed successfully.");
-            } else {
-                // Handle unsuccessful user removal
-                showAlert(Alert.AlertType.ERROR, "User Removal Error", "Failed to remove user.");
-            }
-        } catch (UserExistenceException | OutOfRoleException | NotLoggedInException e) {
-            // Handle specific exceptions
-            showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
-        }
-    }
 
     // Helper method to display alerts
     private void showAlert(Alert.AlertType type, String title, String content) {
@@ -156,6 +115,10 @@ public class ProfileManagementSalesController implements ControllerInterface {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
+    private void addHoverEffect(ComboBox<String> comboBox){
+        comboBox.setOnMouseEntered(e -> comboBox.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
+        comboBox.setOnMouseExited(e -> comboBox.setStyle("-fx-background-color: #EAD7D7;"));
+    }
 
     // Action handlers
     @FXML
@@ -167,6 +130,37 @@ public class ProfileManagementSalesController implements ControllerInterface {
             // Show an error dialog to the user
             showErrorDialog("Error", "Failed to open change password window.");
             e.printStackTrace();
+        }
+    }
+    @FXML
+    private void handleChangeUserRole() {
+        String newRole = changeUserAccountComboBox.getValue();
+        User currentUser;
+        try {
+            currentUser = MainController.clientCallback.getUser();
+        } catch (RemoteException e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to fetch current user information.");
+            return;
+        }
+
+        if (currentUser == null) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to fetch current user information.");
+            return;
+        }
+
+        try {
+            boolean success = profileManagementSalesModel.changeUserRole(currentUser, newRole);
+            if (success) {
+                // Handle successful role change
+                showAlert(Alert.AlertType.INFORMATION, "Role Change", "Role changed successfully.");
+                // Optionally, update the UI to reflect the role change
+            } else {
+                // Handle unsuccessful role change
+                showAlert(Alert.AlertType.ERROR, "Role Change Error", "Failed to change role.");
+            }
+        } catch (UserExistenceException | OutOfRoleException | NotLoggedInException e) {
+            // Handle specific exceptions
+            showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
         }
     }
 
@@ -206,14 +200,14 @@ public class ProfileManagementSalesController implements ControllerInterface {
         changeUserAccountComboBox.setPromptText("Change User Account");
         changeUserAccountComboBox.getItems().addAll("Sales", "Purchaser");
 
-        //sout initialize
-        System.out.println("initialize");
         addHoverEffect(changePasswordButton);
         addHoverEffect(logoutButton);
+        addHoverEffect(changeUserAccountComboBox);
 
         // Add action handlers
         changePasswordButton.setOnAction(event -> handleChangePassword());
         logoutButton.setOnAction(event -> handleLogout());
+        changeUserAccountComboBox.setOnAction(event -> handleChangeUserRole());
         profileManagementSalesModel = new ProfileManagementSalesModel(registry, clientCallback);
         if (!initialized) { // Check if already initialized
             initialized = true; // Set the flag to true
@@ -222,8 +216,10 @@ public class ProfileManagementSalesController implements ControllerInterface {
             if (changeUserAccountComboBox != null && changePasswordButton != null && logoutButton != null) {
                 addHoverEffect(changePasswordButton);
                 addHoverEffect(logoutButton);
+                addHoverEffect(changeUserAccountComboBox);
                 changePasswordButton.setOnAction(event -> handleChangePassword());
                 logoutButton.setOnAction(event -> handleLogout());
+                changeUserAccountComboBox.setOnAction(event -> handleChangeUserRole());
 
                 try {
                     if (profileManagementSalesModel != null) {

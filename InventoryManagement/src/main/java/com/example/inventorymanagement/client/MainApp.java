@@ -7,7 +7,6 @@ import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -16,6 +15,8 @@ import java.rmi.registry.Registry;
 public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        System.setProperty("java.util.logging.config.file", "logging.properties");
         Registry registry = LocateRegistry.getRegistry("localhost", 2018);
         UserRequestInterface userService = (UserRequestInterface) registry.lookup("userRequest");
         ItemOrderRequestInterface iOService = (ItemOrderRequestInterface) registry.lookup("itemOrder");
@@ -27,9 +28,7 @@ public class MainApp extends Application {
         primaryStage.show();
     }
 
-
     public static void main(String[] args) throws NotBoundException, RemoteException {
         launch(args);
-
     }
 }
