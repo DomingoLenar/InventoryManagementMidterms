@@ -3,6 +3,7 @@ package com.example.inventorymanagement.client.admin.controllers;
 import com.example.inventorymanagement.client.admin.models.AddItemAdminModel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
 import com.example.inventorymanagement.client.microservices.UpdateCallback;
+import com.example.inventorymanagement.client.purchaser.models.AddItemPurchaserModel;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
@@ -28,7 +29,7 @@ import java.util.LinkedList;
 
 public class AddItemAdminController implements ControllerInterface {
     @FXML
-    private ComboBox<Item> itemComboBox;
+    private ComboBox<Item> itemNameComboBox;
     @FXML
     private ComboBox<String> supplierComboBox;
     @FXML
@@ -46,8 +47,8 @@ public class AddItemAdminController implements ControllerInterface {
         return addItemAdminModel;
     }
 
-    public ComboBox<Item> getItemComboBox() {
-        return itemComboBox;
+    public ComboBox<Item> geItemNameComboBox() {
+        return itemNameComboBox;
     }
 
     public ComboBox<String> getSupplierComboBox() { return supplierComboBox; }
@@ -73,7 +74,7 @@ public class AddItemAdminController implements ControllerInterface {
         try {
             // Fetch list of items and populate the ComboBox
             LinkedList<Item> itemList = addItemAdminModel.fetchListOfItems();
-            itemComboBox.getItems().addAll(itemList);
+            itemNameComboBox.getItems().addAll(itemList);
         } catch (NotLoggedInException e) {
             showAlert("Error occurred while fetching items: " + e.getMessage());
         }
@@ -87,8 +88,8 @@ public class AddItemAdminController implements ControllerInterface {
     @FXML
     private void handleOkButton(ActionEvent actionEvent) throws NotLoggedInException, OutOfRoleException {
         try {
-            if (okButton != null && itemComboBox != null && supplierComboBox != null) {
-                Item selectedItem = itemComboBox.getValue();
+            if (okButton != null && itemNameComboBox != null && supplierComboBox != null) {
+                Item selectedItem = itemNameComboBox.getValue();
                 String selectedSupplier = supplierComboBox.getValue();
                 float unitPrice = Float.parseFloat(itemPriceField.getText());
                 int quantity = Integer.parseInt(quantityField.getText());
@@ -141,6 +142,11 @@ public class AddItemAdminController implements ControllerInterface {
         }
     }
 
+    @FXML
+    private void handleAddItem() {
+        // TODO: Logic
+    }
+
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
@@ -156,11 +162,14 @@ public class AddItemAdminController implements ControllerInterface {
 
     @FXML
     public void initialize() {
+
+        addItemAdminModel = new AddItemAdminModel(MainController.registry, MainController.clientCallback);
+
         if (!initialized) {
             addHoverEffect(okButton);
             initialized = true; // Set initialized to true after initialization
 
-            if (okButton != null && itemComboBox != null && supplierComboBox != null && itemPriceField != null && quantityField != null) {
+            if (okButton != null && itemNameComboBox != null && supplierComboBox != null && itemPriceField != null && quantityField != null) {
                 addHoverEffect(okButton);
                 try {
                     fetchAndUpdate(); // Fetch and update items list on initialization

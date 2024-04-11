@@ -23,6 +23,10 @@ import java.rmi.registry.Registry;
 import java.util.LinkedList;
 
 public class StockControlPurchaserController implements ControllerInterface {
+
+    /**
+     * FXML Controller Variables
+     */
     @FXML
     private BorderPane borderPaneStockControlPurchaser;
     @FXML
@@ -38,46 +42,59 @@ public class StockControlPurchaserController implements ControllerInterface {
     @FXML
     private TableColumn<Item, Integer> totalQtyColumn;
 
+    /**
+     * Controller Variables
+     */
+    private StockControlPurchaserModel stockControlPurchaserModel;
+    private MainController mainController;
+    boolean initialized = false;
+
+    /**
+     * Getters
+     */
     @FXML
     public BorderPane getBorderPaneStockControlPurchaser() {
         return borderPaneStockControlPurchaser;
     }
-
     @FXML
     public Button getLowStocksButton() {
         return lowStocksButtonPurchaser;
     }
-
     @FXML
     public Button getAddItemButton() { return addItemButtonPurchaser;}
-
     @FXML
     public TextField getSearchFieldPurchaser() { return searchFieldPurchaser; }
-
     @FXML
     public TableView getStockControlPurchaserTable() { return stockControlPurchaserTable; }
 
-    private StockControlPurchaserModel stockControlPurchaserModel;
-
-    private MainController mainController;
-    public StockControlPurchaserController(){
-
+    /**
+     * Default constructor for StockControlPurchaserController.
+     */
+    public StockControlPurchaserController() {
+        // Default Constructor
     }
 
+    /**
+     * Constructor for StockControlAdminController.
+     * Initializes the controller with necessary services and references.
+     *
+     * @param clientCallback The client callback for server communication.
+     * @param userService The user service interface.
+     * @param iOService The item order service interface.
+     * @param itemService The item service interface.
+     * @param registry The RMI registry.
+     * @param mainController The main controller instance.
+     */
     public StockControlPurchaserController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
         this.stockControlPurchaserModel = new StockControlPurchaserModel(registry, clientCallback);
-    }
-    boolean initialized = false;
-    @Override
-    public void fetchAndUpdate() throws RemoteException {
-        try {
-            LinkedList<Item> items = stockControlPurchaserModel.fetchItems();
-            populateTableView(items);
-        } catch (NotLoggedInException e) {
-            showAlert("Error occurred while fetching items: " + e.getMessage());
-        }
+        this.mainController = mainController;
     }
 
+    /**
+     * Populates the table view with the given list of items.
+     *
+     * @param items The list of items to populate the table with.
+     */
     private void populateTableView(LinkedList<Item> items) {
         if (stockControlPurchaserTable != null && itemNameColumn != null && totalQtyColumn != null) {
             ObservableList<Item> observableItems = FXCollections.observableArrayList(items);
@@ -91,16 +108,30 @@ public class StockControlPurchaserController implements ControllerInterface {
         }
     }
 
-    @Override
-    public String getObjectsUsed() throws RemoteException {
-        return "item";
+    /**
+     * Sets the main controller instance.
+     *
+     * @param mainController The main controller instance.
+     */
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 
+    /**
+     * Adds hover effect to the given button.
+     *
+     * @param button The button to add hover effect to.
+     */
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
 
+    /**
+     * Shows an alert dialog with the given message.
+     *
+     * @param message The message to display in the alert dialog.
+     */
     private void showAlert(String message){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -109,15 +140,34 @@ public class StockControlPurchaserController implements ControllerInterface {
         alert.showAndWait();
     }
 
+    /**
+     * Handles the action event for adding an item.
+     */
     @FXML
     private void handleAddItem() {
-        // Handle sales invoice button action
+        if (mainController != null) {
+            mainController.openAddItemPurchaserPanel();
+        } else {
+            System.out.println("MainController is not set.");
+        }
     }
 
+    /**
+     * Handles the action event for checking low stocks.
+     */
     @FXML
     private void handleLowStocks() {
-        // Handle low stocks button action
+        if (mainController != null) {
+            mainController.openLowStocksPurchaserPanel();
+        } else {
+            System.out.println("MainController is not set.");
+        }
     }
+
+    /**
+     * Initializes the controller.
+     * This method sets up the UI components and initializes the data model.
+     */
     @FXML
     public void initialize() { // initialize components -> better approach is to initialize just the components and let nav___bar buttons handle the population of data/realtime
         addHoverEffect(lowStocksButtonPurchaser);
@@ -160,5 +210,33 @@ public class StockControlPurchaserController implements ControllerInterface {
         } catch (RemoteException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    /**
+     * Fetches and updates data remotely.
+     * This method is called to update the data displayed in the UI.
+     *
+     * @throws RemoteException If a remote communication error occurs.
+     */
+    @Override
+    public void fetchAndUpdate() throws RemoteException {
+        try {
+            LinkedList<Item> items = stockControlPurchaserModel.fetchItems();
+            populateTableView(items);
+        } catch (NotLoggedInException e) {
+            showAlert("Error occurred while fetching items: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Gets the objects used.
+     * This method returns a string indicating the type of objects used by the controller.
+     *
+     * @return A string representing the objects used.
+     * @throws RemoteException If a remote communication error occurs.
+     */
+    @Override
+    public String getObjectsUsed() throws RemoteException {
+        return "item";
     }
 }
