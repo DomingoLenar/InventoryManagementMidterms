@@ -20,17 +20,20 @@ import javafx.scene.control.*;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class CreateSalesInvoiceSalesController implements ControllerInterface {
     @FXML
-    private ComboBox<Item> itemNameComboBox;
+    private ComboBox<String> itemNameComboBox;
     @FXML
     private TextField itemQuantityField;
     @FXML
     private Label itemPriceLabel;
     @FXML
     private Button okButton;
+    private Map<String, Item> itemMap = new HashMap<>();
 
     boolean initialized = false;
 
@@ -71,9 +74,11 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
 
         // Fetch and update data from the model
         try {
-            // Fetch list of items and populate the ComboBox
             LinkedList<Item> itemList = createSalesInvoiceSalesModel.fetchListOfItems();
-            itemNameComboBox.getItems().addAll(itemList);
+            for (Item item : itemList) {
+                itemNameComboBox.getItems().add(item.getItemName());
+                itemMap.put(item.getItemName(), item); // Add item to the map
+            }
         } catch (NotLoggedInException e) {
             showAlert("User not logged in.");
         }
@@ -94,9 +99,15 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
             showAlert("User does not have required permission.");
         } catch (Exception e) {
             showAlert("Error processing sales invoice: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
+    /**
+     *
+     * @throws NotLoggedInException
+     * @throws OutOfRoleException
+     */
     private void validateAndProcessSalesInvoice() throws NotLoggedInException, OutOfRoleException {
         Item selectedItem = getSelectedItem();
         Stock selectedStock = getSelectedStock(selectedItem);
@@ -116,13 +127,35 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
         createSalesInvoice(itemOrder);
     }
 
+    /**
+     * Get selected Item from String
+     * @return selectedItem object of Item from String input
+     */
     private Item getSelectedItem() {
-        Item selectedItem = itemNameComboBox.getValue();
-        if (selectedItem == null) {
+        String selectedItemName = itemNameComboBox.getValue();
+        try {
+            LinkedList<Item> itemList = createSalesInvoiceSalesModel.fetchListOfItems();
+            for (Item item : itemList) {
+                itemNameComboBox.getItems().add(item.getItemName());
+                itemMap.put(item.getItemName(), item); // Add item to the map
+            }
+        } catch (NotLoggedInException e) {
+            showAlert("User not logged in.");
+        }
+        if (selectedItemName == null) {
             showAlert("Please select an item.");
+            return null; // Indicate no selection
+        }
+
+        Item selectedItem = itemMap.get(selectedItemName);
+        if (selectedItem == null) {
+            // Handle unexpected case (item name not found in map)
+            showAlert("Error: Item not found.");
+            return null;
         }
         return selectedItem;
     }
+
 
     private Stock getSelectedStock(Item selectedItem) {
         if (selectedItem == null) {
@@ -136,10 +169,13 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
         return stocks.getFirst();
     }
 
+    /**
+     * Method to get int quantity from textfield
+     * @return int value obtained from itemQuantityField
+     */
     private int getQuantity() {
         if (itemQuantityField.getText().trim().isEmpty()) {
             showAlert("Please enter quantity.");
-            return -1;
         }
         try {
             return Integer.parseInt(itemQuantityField.getText().trim());
@@ -172,13 +208,25 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
         }
     }
 
+
+    private Item lookupItem(String itemName) {
+        return itemMap.get(itemName);
+    }
     @FXML
     private void handleCreateSalesInvoice(ActionEvent event) {
         try {
             // Retrieve selected item from the ComboBox
-            Item selectedItem = itemNameComboBox.getValue();
-            if (selectedItem == null) {
+            // Retrieve selected item name from the ComboBox
+            String selectedItemName = itemNameComboBox.getValue();
+            if (selectedItemName == null) {
                 showAlert("Please select an item.");
+                return;
+            }
+
+// Retrieve the actual Item object using the selected name (replace with your implementation)
+            Item selectedItem = lookupItem(selectedItemName);
+            if (selectedItem == null) {
+                showAlert("Error: Item not found.");
                 return;
             }
 
@@ -250,8 +298,10 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
                 addHoverEffect(okButton);
                 try {
                     // Fetch list of items and populate the ComboBox
-                    LinkedList<Item> itemList = createSalesInvoiceSalesModel.fetchListOfItems();
-                    itemNameComboBox.getItems().addAll(itemList);
+                    LinkedList<Item> itemList =createSalesInvoiceSalesModel.fetchListOfItems();
+                    for (Item item : itemList) {
+                        itemNameComboBox.getItems().add(item.getItemName());
+                    }
                 } catch (NotLoggedInException e) {
                     showAlert("User not logged in.");
                 }
