@@ -38,8 +38,6 @@ public class UserManagementAdminController implements ControllerInterface {
     @FXML
     private Button addUserButton;
     @FXML
-    private TableColumn<User, Integer> idTableColumn;
-    @FXML
     private TableColumn<User, String> nameTableColumn;
     @FXML
     private TableColumn<User, String> roleTableColumn;
@@ -47,6 +45,7 @@ public class UserManagementAdminController implements ControllerInterface {
 
     private UserManagementAdminModel userManagementAdminModel;
     private AddUserAdminController addUserAdminController;
+    private EditUserAdminController editUserAdminController;
 
 
     public BorderPane getBorderPaneUserManagement() {
@@ -80,7 +79,7 @@ public class UserManagementAdminController implements ControllerInterface {
     }
 
     private void populateTableView(LinkedList<User> users){
-        if (userManagementTableView != null && idTableColumn != null & nameTableColumn !=null & roleTableColumn!=null){
+        if (userManagementTableView != null &&  nameTableColumn !=null & roleTableColumn!=null){
             ObservableList<User> observableList = FXCollections.observableArrayList(users);
             userManagementTableView.setUserData(observableList);
 
@@ -110,6 +109,13 @@ public class UserManagementAdminController implements ControllerInterface {
     private void handleAddUser(){
         //Handle add user button action
     }
+    private void handleRowClick() {
+        User selectedUser = userManagementTableView.getSelectionModel().getSelectedItem();
+        if (selectedUser != null) {
+            // Call the editUser method of the editUserAdminController class
+            editUserAdminController.editUser(selectedUser);
+        }
+    }
     @FXML
     public void initialize() {
         addHoverEffect(addUserButton);
@@ -130,6 +136,9 @@ public class UserManagementAdminController implements ControllerInterface {
                 }else {
                     System.out.println("User Management Admin Model is null");
                 }
+
+                // Add listener to handle row selection events
+                userManagementTableView.setOnMouseClicked(event -> handleRowClick());
             }else {
                 System.out.println("Error: Table or button is null. Cannot initialize.");
             }
@@ -145,5 +154,8 @@ public class UserManagementAdminController implements ControllerInterface {
     }
     public void setAddUserAdminController(AddUserAdminController addUserAdminController) {
         this.addUserAdminController = addUserAdminController;
+    }
+    public void setEditUserAdminController(EditUserAdminController editUserAdminController){
+        this.editUserAdminController = editUserAdminController;
     }
 }
