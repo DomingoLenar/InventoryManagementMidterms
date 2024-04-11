@@ -135,7 +135,7 @@ public class ProfileManagementSalesController implements ControllerInterface {
     @FXML
     private void handleChangeUserRole() {
         String newRole = changeUserAccountComboBox.getValue();
-        User currentUser = null;
+        User currentUser;
         try {
             currentUser = MainController.clientCallback.getUser();
         } catch (RemoteException e) {
