@@ -12,12 +12,12 @@ import com.example.inventorymanagement.util.objects.OrderDetail;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
-import javafx.beans.property.SimpleFloatProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 
@@ -35,13 +35,15 @@ public class SalesHistorySalesController implements ControllerInterface {
     @FXML
     private TableView salesHistorySalesTable;
     @FXML
+    private TableColumn<ItemOrder, Integer> orderIDColumn;
+    @FXML
     private TableColumn<ItemOrder, String> dateColumn;
     @FXML
     private TableColumn<ItemOrder, String> productColumn;
     @FXML
-    private TableColumn<ItemOrder, Float> priceColumn;
+    private TableColumn<ItemOrder, String> priceColumn;
     @FXML
-    private TableColumn<ItemOrder, Integer> quantityColumn;
+    private TableColumn<ItemOrder, String> quantityColumn;
     @FXML
     private TableColumn<ItemOrder, Float> totalSalesColumn;
 
@@ -63,6 +65,10 @@ public class SalesHistorySalesController implements ControllerInterface {
     @FXML
     public TableView getsalesHistorySalesTable() {
         return salesHistorySalesTable;
+    }
+
+    public TableColumn getOrderIDColumn() {
+        return orderIDColumn;
     }
 
     public TableColumn getDateColumn() {
@@ -115,27 +121,54 @@ public class SalesHistorySalesController implements ControllerInterface {
         ObservableList<ItemOrder> observableItems = FXCollections.observableArrayList(itemOrders);
         salesHistorySalesTable.setItems(observableItems);
 
-        dateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate()));
+        orderIDColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getOrderID()).asObject());
+        dateColumn.setCellValueFactory(cellData -> {
+            ItemOrder itemOrder = cellData.getValue();
+            if (itemOrder.getOrderDetails().isEmpty()) {
+                return new SimpleStringProperty("");
+            }
+            StringBuilder dateString = new StringBuilder();
+            for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
+                dateString.append(itemOrder.getDate()).append("\n");
+            }
+            return new SimpleStringProperty(dateString.toString().trim());
+        });//Lambda for populating dateColumn
+
         productColumn.setCellValueFactory(cellData -> {
             ItemOrder itemOrder = cellData.getValue();
-            String itemName = "No Item";
-
+            StringBuilder itemList = new StringBuilder();
             for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
                 int itemId = orderDetail.getItemId();
                 try {
                     Item item = salesHistorySalesModel.fetchItem(itemId);
                     if (item != null) {
-                        itemName = item.getItemName();
-                        break; // Exit the loop once an item is found
+                        itemList.append(item.getItemName()).append("\n");
                     }
                 } catch (NotLoggedInException e) {
                     throw new RuntimeException(e);
                 }
             }
-            return new SimpleStringProperty(itemName);
-        });
-        quantityColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getOrderDetails().get(0).getQty()).asObject());
-        priceColumn.setCellValueFactory(cellData -> new SimpleFloatProperty(cellData.getValue().getOrderDetails().get(0).getUnitPrice()).asObject());
+            return new SimpleStringProperty(itemList.toString().trim());
+        });//Lambda to populate product column
+
+        quantityColumn.setCellValueFactory(cellData -> {
+            ItemOrder itemOrder = cellData.getValue();
+            StringBuilder quantityList = new StringBuilder();
+            for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
+                quantityList.append(orderDetail.getQty()).append("\n");
+            }
+            return new SimpleStringProperty(quantityList.toString().trim());
+        });//lambda to populate quantity column
+
+        priceColumn.setCellValueFactory(cellData -> {
+            ItemOrder itemOrder = cellData.getValue();
+            StringBuilder priceList = new StringBuilder();
+            for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
+                priceList.append(orderDetail.getUnitPrice()).append("\n");
+            }
+            return new SimpleStringProperty(priceList.toString().trim());
+        });//lamda to populate priceColumn
+
         totalSalesColumn.setCellValueFactory(cellData -> {
             ItemOrder order = cellData.getValue();
             float totalCost = order.getOrderDetails().stream()
@@ -144,7 +177,7 @@ public class SalesHistorySalesController implements ControllerInterface {
                     })
                     .reduce(0.0f, Float::sum);
             return new SimpleFloatProperty(totalCost).asObject();
-        });
+        });//lambda to populate total sales column
     }
 
     @Override

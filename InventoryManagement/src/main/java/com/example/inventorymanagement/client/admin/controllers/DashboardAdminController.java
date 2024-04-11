@@ -277,7 +277,7 @@ public class DashboardAdminController implements ControllerInterface {
             transTodayTableView.setItems(observableItems);
 
             // Make sure the cell value factories are set for the table columns
-            transactionIDTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getOrderId())));
+            transactionIDTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getOrderID())));
             dateTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getItemName()));
             // calculate the total amount using stream for every item order
             amountTableColumn.setCellValueFactory(cellData -> {
