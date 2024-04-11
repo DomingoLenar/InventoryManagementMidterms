@@ -292,7 +292,7 @@ public class MainController implements ControllerInterface {
         }
 
         VBox rightComponents = new VBox();
-        rightComponents.getChildren().addAll(stockControlAdminPanel, salesHistoryAdminPanel, profileManagementAdminPanel, dashboardAdminPanel, financesAdminPanel);
+        rightComponents.getChildren().addAll(dashboardAdminPanel, stockControlAdminPanel, salesHistoryAdminPanel, profileManagementAdminPanel, financesAdminPanel);
 
         BorderPane root = new BorderPane();
         root.setLeft(navigationBar);
