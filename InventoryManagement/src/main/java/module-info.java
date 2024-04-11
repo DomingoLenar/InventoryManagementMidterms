@@ -3,6 +3,7 @@ module com.example.inventorymanagement {
     requires javafx.fxml;
     requires com.google.gson;
     requires java.rmi;
+    requires java.logging;
 
     // Controllers
     exports com.example.inventorymanagement.client.common.controllers;
