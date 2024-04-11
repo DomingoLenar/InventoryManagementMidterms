@@ -12,7 +12,6 @@ import java.util.LinkedList;
 
 public class ProfileManagementPurchaserModel {
     private ChangeUserRoleService changeUserRoleService;
-    private RemoveUserService removeUserService;
     private FetchListOfUsersService fetchListOfUsersService;
     private Registry registry;
     private ClientCallback clientCallback;
@@ -21,23 +20,12 @@ public class ProfileManagementPurchaserModel {
         this.registry = registry;
         this.clientCallback = clientCallback;
         this.changeUserRoleService = new ChangeUserRoleService();
-        this.removeUserService = new RemoveUserService();
         this.fetchListOfUsersService = new FetchListOfUsersService(); // Initialize the new service;
     }
 
     public boolean changeUserRole(User user, String newRole) throws UserExistenceException, OutOfRoleException, NotLoggedInException {
         try {
             return changeUserRoleService.process(registry, clientCallback, user, newRole);
-        } catch (RuntimeException e) {
-            // Handle any runtime exceptions
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean removeUser(User user) throws UserExistenceException, OutOfRoleException, NotLoggedInException {
-        try {
-            return removeUserService.process(registry, clientCallback, user);
         } catch (RuntimeException e) {
             // Handle any runtime exceptions
             e.printStackTrace();
