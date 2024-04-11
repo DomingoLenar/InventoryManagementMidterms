@@ -96,7 +96,6 @@ public class GSONProcessing {
         }
     }//end of method
 
-    // TODO: Update object of item as well inside the items.json
     /**
      * Adds a new purchase order or sales order to the respective JSON file.
      *
@@ -108,7 +107,6 @@ public class GSONProcessing {
         try {
             String filePath;
             String orderArrayName;
-            Gson gson = new Gson();
 
             switch (orderType.toLowerCase()) {
                 case "purchase":
@@ -123,27 +121,39 @@ public class GSONProcessing {
                     throw new IllegalArgumentException("Invalid order type: " + orderType);
             }
 
-            try (
-                 BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
-                 FileWriter writer = new FileWriter(filePath)) {
-                JsonElement rootElement = JsonParser.parseReader(bufferedReader);
-                JsonObject rootObject = rootElement.getAsJsonObject();
-                JsonArray orderJsonArray = rootObject.getAsJsonArray(orderArrayName);
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-                int currentID = 0;
-
-                JsonElement latestElement = orderJsonArray.get(orderJsonArray.size()-1);
-                ItemOrder latestOrder = gson.fromJson(latestElement, ItemOrder.class);
-                currentID = latestOrder.getOrderId();
-
-                newOrder.setOrderId(currentID+1);
-
-                String ioString = gson.toJson(newOrder);
-                JsonElement ioElement = JsonParser.parseString(ioString);
-                orderJsonArray.add(ioElement);
-                gson.toJson(rootElement,writer);
-                updateItem(newOrder, orderType);
+            StringBuilder fileContent = new StringBuilder();
+            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    fileContent.append(line).append('\n');
+                }
             }
+
+            JsonElement rootElement = JsonParser.parseString(fileContent.toString());
+            JsonObject rootObject = rootElement.getAsJsonObject();
+            JsonArray orderJsonArray = rootObject.getAsJsonArray(orderArrayName);
+
+            int currentID = 0;
+
+            if (orderJsonArray.size() > 0) {
+                JsonElement latestElement = orderJsonArray.get(orderJsonArray.size() - 1);
+                ItemOrder latestOrder = gson.fromJson(latestElement, ItemOrder.class);
+                currentID = latestOrder.getOrderID();
+            }
+
+            newOrder.setOrderID(currentID + 1);
+
+            String ioString = gson.toJson(newOrder);
+            JsonElement ioElement = JsonParser.parseString(ioString);
+            orderJsonArray.add(ioElement);
+
+            try (FileWriter writer = new FileWriter(filePath)) {
+                gson.toJson(rootElement, writer);
+            }
+
+            updateItem(newOrder, orderType);
 
             return true;
         } catch (IOException e) {
@@ -152,54 +162,76 @@ public class GSONProcessing {
         }
     }
 
-    private synchronized static void updateItem(ItemOrder order, String type){
+    private synchronized static void updateItem(ItemOrder order, String type) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         File itemFile = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/items.json");
-        try(
-                BufferedReader bReader = new BufferedReader(new FileReader(itemFile))
-                ) {
+
+        try (FileReader reader = new FileReader(itemFile);
+             BufferedReader bReader = new BufferedReader(reader);
+             FileWriter writer = new FileWriter(itemFile)) {
+
             JsonElement rootElement = JsonParser.parseReader(bReader);
-            JsonObject rootObject = rootElement.getAsJsonObject();
-            JsonArray itemArray = rootObject.getAsJsonArray("items");
-            for(OrderDetail detail : order.getOrderDetails()){
-                String batch = detail.getBatchNo();
-                for(JsonElement element : itemArray) {
-                    JsonObject item = element.getAsJsonObject();
-                    if(Integer.parseInt(item.get("itemID").getAsString()) == detail.getItemId()){
-                        if(type.equals("sales")) {
-                            JsonArray stocks = item.getAsJsonArray("stocks");
-                            for (JsonElement stock : stocks) {
-                                JsonObject stockObject = stock.getAsJsonObject();
-                                if (stockObject.get("batchNo").equals(batch)) {
-                                    int initialQty = stockObject.get("qty").getAsInt();
-                                    stockObject.remove("qty");
-                                    stockObject.addProperty("qty", String.valueOf(initialQty - detail.getQty()));
-                                    int initialTQty = item.get("totalQty").getAsInt();
-                                    item.remove("totalQty");
-                                    item.addProperty("totalQty", String.valueOf((initialTQty-detail.getQty())));
-                                }
-                            }
-                        }else{
-                            String[] disseminatedBatch = detail.getBatchNo().split("_");
-                            float price = detail.getUnitPrice() + (detail.getUnitPrice() * 20);
-                            Stock newStock = new Stock(detail.getBatchNo(), detail.getQty(), price, detail.getQty(), disseminatedBatch[0],disseminatedBatch[1]);
-                            String newStockJson = gson.toJson(newStock);
-                            JsonArray stocks = item.getAsJsonArray();
-                            stocks.add(newStockJson);
-                            item.remove("totalQty");
-                            item.addProperty("totalQty", String.valueOf(newStock.getQty()));
-                        }
-                    }
-                }
-            }
-            try(FileWriter writer = new FileWriter(itemFile)){
-                gson.toJson(rootElement, writer);
+            if (rootElement.isJsonNull()) {
+                System.err.println("Error: items.json is empty or not valid JSON");
+                return;
             }
 
-        }catch (IOException e){
+            JsonObject rootObject = rootElement.getAsJsonObject();
+            JsonArray itemArray = rootObject.getAsJsonArray("items");
+
+            for (OrderDetail detail : order.getOrderDetails()) {
+                updateItemQuantity(itemArray, detail, type);
+            }
+
+            gson.toJson(rootElement, writer);
+        } catch (IOException e) {
             e.printStackTrace();
+        } catch (JsonParseException e) {
+            System.err.println("Error parsing items.json: " + e.getMessage());
         }
     }
+
+    private static void updateItemQuantity(JsonArray itemArray, OrderDetail detail, String type) {
+        String batch = detail.getBatchNo();
+        for (int i = 0; i < itemArray.size(); i++) {
+            JsonObject item = itemArray.get(i).getAsJsonObject();
+            if (Integer.parseInt(item.get("itemID").getAsString()) == detail.getItemId()) {
+                JsonArray stocks = item.getAsJsonArray("stocks");
+                if (stocks == null) {
+                    stocks = new JsonArray();
+                    item.add("stocks", stocks);
+                }
+
+                updateStockQuantity(stocks, batch, detail, type);
+
+                int initialTQty = item.get("totalQty").getAsInt();
+                item.remove("totalQty");
+                item.addProperty("totalQty", String.valueOf(initialTQty + (type.equals("sales") ? -detail.getQty() : detail.getQty())));
+                break;
+            }
+        }
+    }
+
+    private static void updateStockQuantity(JsonArray stocks, String batch, OrderDetail detail, String type) {
+        for (int j = 0; j < stocks.size(); j++) {
+            JsonObject stockObject = stocks.get(j).getAsJsonObject();
+            if (stockObject != null && stockObject.has("batchNo") && stockObject.get("batchNo").getAsString().equals(batch)) {
+                int initialQty = stockObject.get("qty").getAsInt();
+                stockObject.remove("qty");
+                stockObject.addProperty("qty", String.valueOf(type.equals("sales") ? initialQty - detail.getQty() : initialQty + detail.getQty()));
+                return;
+            }
+        }
+
+        if (type.equals("purchase")) {
+            String[] disseminatedBatch = detail.getBatchNo().split("_");
+            float price = detail.getUnitPrice() + (detail.getUnitPrice() * 20);
+            Stock newStock = new Stock(detail.getBatchNo(), detail.getQty(), price, detail.getQty(), disseminatedBatch[0], disseminatedBatch[1]);
+            Gson gson = new Gson();
+            stocks.add(JsonParser.parseString(gson.toJson(newStock)));
+        }
+    }
+
 
 
     // TODO: Update object of item as well inside the items.json
@@ -388,25 +420,35 @@ public class GSONProcessing {
         File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/"+type+"orders.json");
         try(
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(file))
-                ){
+        ){
             JsonElement rootElement = JsonParser.parseReader(bufferedReader);
-            JsonObject rootObject = rootElement.getAsJsonObject();
-            JsonArray jsonArray = rootObject.getAsJsonArray(type+"Orders");
-            for(JsonElement jsonElement: jsonArray){
-                Gson gson = new Gson();
-                ItemOrder itemOrder = gson.fromJson(jsonElement, ItemOrder.class);
-                listOfItemOrder.addLast(itemOrder);
+            if (rootElement != null && rootElement.isJsonObject()) {
+                JsonObject rootObject = rootElement.getAsJsonObject();
+                JsonArray jsonArray = rootObject.getAsJsonArray(type+"Orders");
+                if (jsonArray != null) {
+                    for(JsonElement jsonElement: jsonArray){
+                        Gson gson = new Gson();
+                        ItemOrder itemOrder = gson.fromJson(jsonElement, ItemOrder.class);
+                        listOfItemOrder.addLast(itemOrder);
+                    }
+                } else {
+                    System.out.println("JSON array is null");
+                }
+            } else {
+                System.out.println("Root element is null or not a JSON object");
             }
-        }catch(Exception e){
+        } catch(Exception e){
             System.out.println(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
         return listOfItemOrder;
     }
 
+
+
     public static synchronized LinkedList<Item> fetchListOfItems(){
         LinkedList<Item> itemList = new LinkedList<>();
-        File file = new File("src/main/resources/com/example/inventorymanagement/data/items.json");
+        File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/items.json");
         try(
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(file))
                 ){
@@ -501,4 +543,30 @@ public class GSONProcessing {
         }
         return userList;
     }
+
+    public static Item fetchItem(int id){
+        Gson gson = new Gson();
+        File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/items.json");
+        try(
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file))
+        ){
+
+            JsonElement rootElement = JsonParser.parseReader(bufferedReader);
+            JsonObject rootObject = rootElement.getAsJsonObject();
+            JsonArray jsonArray = rootObject.getAsJsonArray("items");
+            for(JsonElement jsonElement : jsonArray){
+                Item item = gson.fromJson(jsonElement, Item.class);
+                if(item.getItemId()==id){
+                    return item;
+                }
+            }
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
 }
