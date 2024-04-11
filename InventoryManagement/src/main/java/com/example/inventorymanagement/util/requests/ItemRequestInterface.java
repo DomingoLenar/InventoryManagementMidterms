@@ -19,6 +19,8 @@ public interface ItemRequestInterface extends Remote {
 
     public LinkedList<Item> fetchLowestStock(ClientCallback clientCallback) throws RemoteException, NotLoggedInException;
 
+    public Item fetchItem(ClientCallback clientCallback,int id) throws RemoteException, NotLoggedInException;
+
     public void checkIfLoggedIn(ClientCallback clientCallback) throws RemoteException, NotLoggedInException;
 
     public void callUpdate(String panel) throws RemoteException;

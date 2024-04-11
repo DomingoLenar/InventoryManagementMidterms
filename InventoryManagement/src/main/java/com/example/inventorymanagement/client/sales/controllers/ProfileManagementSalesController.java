@@ -87,7 +87,7 @@ public class ProfileManagementSalesController implements ControllerInterface {
 
     boolean initialized = false;
 
-    public void fetchAndUpdate() {
+    public void fetchAndUpdate() throws RemoteException {
         try {
             // Update UI components with current user's username
             updateUsernameLabel();
@@ -200,8 +200,6 @@ public class ProfileManagementSalesController implements ControllerInterface {
         changeUserAccountComboBox.setPromptText("Change User Account");
         changeUserAccountComboBox.getItems().addAll("Sales", "Purchaser");
 
-        //sout initialize
-        System.out.println("initialize");
         addHoverEffect(changePasswordButton);
         addHoverEffect(logoutButton);
         addHoverEffect(changeUserAccountComboBox);

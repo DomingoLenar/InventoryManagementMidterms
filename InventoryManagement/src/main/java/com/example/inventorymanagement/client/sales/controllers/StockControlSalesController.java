@@ -86,7 +86,7 @@ public class StockControlSalesController implements ControllerInterface {
 
     @Override
     public String getObjectsUsed() throws RemoteException {
-        return "Item";
+        return "item";
     }
 
     private void addHoverEffect(Button button) {

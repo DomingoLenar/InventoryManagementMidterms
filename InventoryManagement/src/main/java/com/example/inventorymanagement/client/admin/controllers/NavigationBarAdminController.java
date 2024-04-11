@@ -101,15 +101,20 @@ public class NavigationBarAdminController implements ControllerInterface {
     }
 
     private void loadSalesHistoryPanel() {
-        // TODO: Add the Getters
+        try {
+            MainController.getSalesHistoryAdminController().fetchAndUpdate();
+            mainPane.setRight(MainController.getSalesHistoryAdminPanel());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadProfileManagementPanel() {
         try {
-            BorderPane profileManagementPanel = FXMLLoader.load(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagement-view.fxml"));
-            mainPane.setRight(profileManagementPanel);
+            MainController.getProfileManagementAdminController().fetchAndUpdate();
+            mainPane.setRight(MainController.getProfileManagementAdminPanel());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

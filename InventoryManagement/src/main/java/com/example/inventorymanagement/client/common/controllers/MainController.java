@@ -1,13 +1,14 @@
 package com.example.inventorymanagement.client.common.controllers;
 
-import com.example.inventorymanagement.client.admin.controllers.AddItemAdminController;
-import com.example.inventorymanagement.client.admin.controllers.StockControlAdminController;
+import com.example.inventorymanagement.client.admin.controllers.*;
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.client.purchaser.controllers.NavigationBarPurchaserController;
+import com.example.inventorymanagement.client.purchaser.controllers.ProfileManagementPurchaserController;
 import com.example.inventorymanagement.client.purchaser.controllers.StockControlPurchaserController;
-import com.example.inventorymanagement.client.admin.controllers.NavigationBarAdminController;
 import com.example.inventorymanagement.client.admin.controllers.StockControlAdminController;
 import com.example.inventorymanagement.client.sales.controllers.NavigationBarSalesController;
+import com.example.inventorymanagement.client.sales.controllers.ProfileManagementSalesController;
+import com.example.inventorymanagement.client.sales.controllers.SalesHistorySalesController;
 import com.example.inventorymanagement.client.sales.controllers.StockControlSalesController;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
@@ -18,6 +19,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -43,15 +45,24 @@ public class MainController implements ControllerInterface {
     static StockControlAdminController stockControlAdminController;
     NavigationBarAdminController navigationBarAdminController;
     static BorderPane stockControlAdminPanel;
-    AddItemAdminController addItemAdminController;
+    static SalesHistoryAdminController salesHistoryAdminController;
+    static BorderPane salesHistoryAdminPanel;
+    static ProfileManagementAdminController profileManagementAdminController;
+    static BorderPane profileManagementAdminPanel;
 
     static StockControlPurchaserController stockControlPurchaserController;
     NavigationBarPurchaserController navigationBarPurchaserController;
     static BorderPane stockControlPurchaserPanel;
+    static ProfileManagementPurchaserController profileManagementPurchaserController;
+    static BorderPane profileManagementPurchaserPanel;
 
     static StockControlSalesController stockControlSalesController;
     NavigationBarSalesController navigationBarSalesController;
     static BorderPane stockControlSalesPanel;
+    static SalesHistorySalesController salesHistorySalesController;
+    static BorderPane salesHistorySalesPanel;
+    static ProfileManagementSalesController profileManagementSalesController;
+    static BorderPane profileManagementSalesPanel;
 
 
     public MainController(UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry) throws RemoteException {
@@ -133,32 +144,41 @@ public class MainController implements ControllerInterface {
         }
     }
 
-    public static BorderPane getStockControlPurchaserPanel() {
-        return stockControlPurchaserPanel;
-    }
+    public static BorderPane getStockControlPurchaserPanel() {return stockControlPurchaserPanel;}
 
-    public static BorderPane getStockControlAdminPanel() {
-        return stockControlAdminPanel;
-    }
+    public static BorderPane getStockControlAdminPanel() {return stockControlAdminPanel;}
 
-    public static BorderPane getStockControlSalesPanel() {
-        return stockControlSalesPanel;
-    }
+    public static BorderPane getStockControlSalesPanel() {return stockControlSalesPanel;}
+
+    public static BorderPane getSalesHistorySalesPanel() {return salesHistorySalesPanel;}
+
+    public static BorderPane getSalesHistoryAdminPanel() {return salesHistoryAdminPanel;}
+
+    public static BorderPane getProfileManagementSalesPanel() {return profileManagementSalesPanel;}
+
+    public static BorderPane getProfileManagementPurchaserPanel() {return profileManagementPurchaserPanel;}
+
+    public static BorderPane getProfileManagementAdminPanel() { return profileManagementAdminPanel;}
 
     public void displayAdminMainMenu() throws IOException {
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
 
         FXMLLoader navLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/navigationBar/navigationBarAdmin-view.fxml"));
-        BorderPane navigationBar = navLoader.load(); // convert .fxml components into borderPane/panel
-        navigationBarAdminController = navLoader.getController(); // initialize obj of navbarAdmincontroller
+        BorderPane navigationBar = navLoader.load();
+        navigationBarAdminController = navLoader.getController();
 
-        // same process below
-
-        // Create the stock control panel
         FXMLLoader stockAdminLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlAdmin-view.fxml"));
         stockControlAdminPanel = stockAdminLoader.load();
         stockControlAdminController = stockAdminLoader.getController();
 
+        FXMLLoader salesHistoryLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/salesHistory/salesHistoryAdmin-view.fxml"));
+        salesHistoryAdminPanel = salesHistoryLoader.load();
+        salesHistoryAdminController = salesHistoryLoader.getController();
+
+        FXMLLoader profileManagementLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagementAdmin-view.fxml"));
+        profileManagementAdminPanel = profileManagementLoader.load();
+        profileManagementAdminController = profileManagementLoader.getController();
+
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
 
         if (inputStream != null) {
@@ -168,34 +188,37 @@ public class MainController implements ControllerInterface {
             System.err.println("Failed to load image: logo.png");
         }
 
-        BorderPane root = new BorderPane(); // create pane to insert components
-        root.setLeft(navigationBar); // set to left
-        root.setRight(stockControlAdminPanel); // set to right
+        VBox rightComponents = new VBox();
+        rightComponents.getChildren().addAll(stockControlAdminPanel, salesHistoryAdminPanel, profileManagementAdminPanel);
 
-        Scene scene = new Scene(root, 1080, 650); // create a container place the pane
-        stage.setScene(scene); // kind of like jframe -> place it into jframe
+        BorderPane root = new BorderPane();
+        root.setLeft(navigationBar);
+        root.setRight(rightComponents);
+
+        Scene scene = new Scene(root, 1080, 650);
+        stage.setScene(scene);
         stage.setTitle("Stock Pilot");
         stage.setResizable(false);
-        stage.show(); // then show
+        stage.show();
 
-        // Set the main BorderPane reference in the navigation bar controller
         navigationBarAdminController.setMainPane(root);
     }
 
-    public void displayPurchaserMainMenu() throws Exception { // load purchaser view
+    public void displayPurchaserMainMenu() throws Exception {
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
 
         FXMLLoader navLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/navigationBar/navigationBarPurchaser-view.fxml"));
-        BorderPane navigationBar = navLoader.load(); // convert .fxml components into borderPane/panel
-        navigationBarPurchaserController = navLoader.getController(); // initialize obj of navbarpurchasercontroller
+        BorderPane navigationBar = navLoader.load();
+        navigationBarPurchaserController = navLoader.getController();
 
-        // same process below
-
-        // Create the stock control panel
         FXMLLoader stockPurchaserLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlPurchaser-view.fxml"));
         stockControlPurchaserPanel = stockPurchaserLoader.load();
         stockControlPurchaserController = stockPurchaserLoader.getController();
 
+        FXMLLoader profileManagementLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagementPurchaser-view.fxml"));
+        profileManagementPurchaserPanel = profileManagementLoader.load();
+        profileManagementPurchaserController = profileManagementLoader.getController();
+
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
 
         if (inputStream != null) {
@@ -205,17 +228,19 @@ public class MainController implements ControllerInterface {
             System.err.println("Failed to load image: logo.png");
         }
 
-        BorderPane root = new BorderPane(); // create pane to insert components
-        root.setLeft(navigationBar); // set to left
-        root.setRight(stockControlPurchaserPanel); // set to right
+        VBox rightComponents = new VBox();
+        rightComponents.getChildren().addAll(stockControlPurchaserPanel, profileManagementPurchaserPanel);
 
-        Scene scene = new Scene(root, 1080, 650); // create a container place the pane
-        stage.setScene(scene); // kind of like jframe -> place it into jframe
+        BorderPane root = new BorderPane();
+        root.setLeft(navigationBar);
+        root.setRight(rightComponents);
+
+        Scene scene = new Scene(root, 1080, 650);
+        stage.setScene(scene);
         stage.setTitle("Stock Pilot");
         stage.setResizable(false);
-        stage.show(); // then show
+        stage.show();
 
-        // Set the main BorderPane reference in the navigation bar controller
         navigationBarPurchaserController.setMainPane(root);
     }
 
@@ -223,18 +248,22 @@ public class MainController implements ControllerInterface {
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
 
         FXMLLoader navLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/navigationBar/navigationBarSales-view.fxml"));
-        BorderPane navigationBar = navLoader.load(); // convert .fxml components into borderPane/panel
-        navigationBarSalesController = navLoader.getController(); // initialize obj of navbarsalescontroller
+        BorderPane navigationBar = navLoader.load();
+        navigationBarSalesController = navLoader.getController();
 
-        // same process below
-
-        // Create the stock control panel
         FXMLLoader stockSalesLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlSales-view.fxml"));
         stockControlSalesPanel = stockSalesLoader.load();
         stockControlSalesController = stockSalesLoader.getController();
 
-        InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+        FXMLLoader salesHistoryLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/salesHistory/salesHistorySales-view.fxml"));
+        salesHistorySalesPanel = salesHistoryLoader.load();
+        salesHistorySalesController = salesHistoryLoader.getController();
 
+        FXMLLoader profileManagementLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagementSales-view.fxml"));
+        profileManagementSalesPanel = profileManagementLoader.load();
+        profileManagementSalesController = profileManagementLoader.getController();
+
+        InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
         if (inputStream != null) {
             Image image = new Image(inputStream);
             stage.getIcons().add(image);
@@ -242,17 +271,19 @@ public class MainController implements ControllerInterface {
             System.err.println("Failed to load image: logo.png");
         }
 
-        BorderPane root = new BorderPane(); // create pane to insert components
-        root.setLeft(navigationBar); // set to left
-        root.setRight(stockControlSalesPanel); // set to right
+        VBox rightComponents = new VBox();
+        rightComponents.getChildren().addAll(stockControlSalesPanel, salesHistorySalesPanel, profileManagementSalesPanel);
 
-        Scene scene = new Scene(root, 1080, 650); // create a container place the pane
-        stage.setScene(scene); // kind of like jframe -> place it into jframe
+        BorderPane root = new BorderPane();
+        root.setLeft(navigationBar);
+        root.setRight(rightComponents);
+
+        Scene scene = new Scene(root, 1080, 650);
+        stage.setScene(scene);
         stage.setTitle("Stock Pilot");
         stage.setResizable(false);
-        stage.show(); // then show
+        stage.show();
 
-        // Set the main BorderPane reference in the navigation bar controller
         navigationBarSalesController.setMainPane(root);
     }
 
@@ -270,17 +301,13 @@ public class MainController implements ControllerInterface {
         return navigationBarAdminController;
     }
 
-    public NavigationBarPurchaserController getNavigationBarPurchaserController() {
-        return navigationBarPurchaserController;
-    }
+    public NavigationBarPurchaserController getNavigationBarPurchaserController() { return navigationBarPurchaserController;}
 
     public NavigationBarSalesController getNavigationBarSalesController() {
         return navigationBarSalesController;
     }
 
-    public static StockControlPurchaserController getStockControlPurchaserController() {
-        return stockControlPurchaserController;
-    }
+    public static StockControlPurchaserController getStockControlPurchaserController() { return stockControlPurchaserController;}
 
     public static StockControlAdminController getStockControlAdminController() {
         return stockControlAdminController;
@@ -290,9 +317,16 @@ public class MainController implements ControllerInterface {
         return stockControlSalesController;
     }
 
-    public AddItemAdminController getAddItemAdminController() {
-        return addItemAdminController;
-    }
+    public static SalesHistorySalesController getSalesHistorySalesController() { return salesHistorySalesController;}
+
+    public static SalesHistoryAdminController getSalesHistoryAdminController() { return salesHistoryAdminController;}
+
+    public static ProfileManagementSalesController getProfileManagementSalesController() { return profileManagementSalesController;}
+
+    public static ProfileManagementPurchaserController getProfileManagementPurchaserController() { return profileManagementPurchaserController;}
+
+    public static ProfileManagementAdminController getProfileManagementAdminController() { return profileManagementAdminController;}
+
 
     public ClientCallback getClientCallback() {
         return clientCallback;
