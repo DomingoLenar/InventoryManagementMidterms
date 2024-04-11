@@ -9,6 +9,7 @@ import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
 import com.example.inventorymanagement.util.objects.Item;
 import com.example.inventorymanagement.util.objects.ItemOrder;
+import com.example.inventorymanagement.util.objects.OrderDetail;
 import com.example.inventorymanagement.util.objects.User;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
@@ -23,6 +24,7 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 
 import java.rmi.RemoteException;
@@ -75,7 +77,7 @@ public class DashboardAdminController implements ControllerInterface {
     @FXML
     private TableColumn<ItemOrder, String> transactionIDTableColumn;
     @FXML
-    private TableColumn<Item, String> dateTableColumn;
+    private TableColumn<ItemOrder, String> dateTableColumn;
     @FXML
     private TableColumn<ItemOrder, Double> amountTableColumn;
     @FXML
@@ -161,7 +163,7 @@ public class DashboardAdminController implements ControllerInterface {
         return transactionIDTableColumn;
     }
 
-    public TableColumn<Item, String> getDateTableColumn() {
+    public TableColumn<ItemOrder, String> getDateTableColumn() {
         return dateTableColumn;
     }
 
@@ -191,7 +193,9 @@ public class DashboardAdminController implements ControllerInterface {
     }
 
     public void updateActiveUsersLabel(int activeUsersCount) {
-        usersActiveLabel.setText("Active Users: " + activeUsersCount);
+        Platform.runLater(() -> {
+            usersActiveLabel.setText("Active Users: " + activeUsersCount);
+        });
     }
 
     public void updateLowestStock(LinkedList<Item> lowestStockData) {
@@ -200,10 +204,11 @@ public class DashboardAdminController implements ControllerInterface {
     }
 
     public void updateTransactionsToday(LinkedList<ItemOrder> transactionsTodayData) {
-        ObservableList<ItemOrder> itemOrder = FXCollections.observableArrayList(transactionsTodayData);
-        transTodayTableView.setItems(itemOrder);    //Should be objects of ItemOrder not items - Lestat
+        ObservableList<ItemOrder> itemOrderList = FXCollections.observableArrayList(transactionsTodayData);
+        transTodayTableView.setItems(itemOrderList);
     }
     public void fetchAndUpdate() throws RemoteException {
+        System.out.println("updated");
         try {
             // Fetch data from the model
             LinkedHashMap<Integer, Float> monthlyRevenueData = dashboardAdminModel.fetchMonthlyRevenue();
@@ -223,6 +228,12 @@ public class DashboardAdminController implements ControllerInterface {
 
             // update the transactions today data
             updateTransactionsToday(transactionsTodayData);
+
+            // Populate the active users table
+            populateUsersActiveTableView(activeUsersData);
+
+            // Populate the today's transaction table
+            populateTransTodayTableView(transactionsTodayData);
 
         } catch (NotLoggedInException | OutOfRoleException e) {
             e.printStackTrace(); // Handle exceptions appropriately
@@ -267,19 +278,17 @@ public class DashboardAdminController implements ControllerInterface {
             System.out.println("Error: Table or column is null. Cannot populate table.");
         }
     }
-    private void populateTransTodayTableView(LinkedList<ItemOrder> recentSales){
-        // for today's transaction table
+    private void populateTransTodayTableView(LinkedList<ItemOrder> transactionsTodayData) {
         // Check if the TableView and TableColumn are not null
-        if (transTodayTableView != null && transactionIDTableColumn != null && dateTableColumn != null && roleTableColumn != null) {
-            // Create an ObservableList of items
-            ObservableList<ItemOrder> observableItems = FXCollections.observableArrayList(recentSales);
+        if (transTodayTableView != null && transactionIDTableColumn != null && dateTableColumn != null && amountTableColumn != null) {
+            // Create an ObservableList of transaction data
+            ObservableList<ItemOrder> observableTransactions = FXCollections.observableArrayList(transactionsTodayData);
             // Set the items to the TableView
-            transTodayTableView.setItems(observableItems);
+            transTodayTableView.setItems(observableTransactions);
 
             // Make sure the cell value factories are set for the table columns
             transactionIDTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getOrderId())));
-            dateTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getItemName()));
-            // calculate the total amount using stream for every item order
+            dateTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate()));
             amountTableColumn.setCellValueFactory(cellData -> {
                 ItemOrder cOrder = cellData.getValue();
                 double totalValue = cOrder.getOrderDetails().stream().mapToDouble(orderDetail -> {
@@ -312,6 +321,11 @@ public class DashboardAdminController implements ControllerInterface {
 
         // Update time label every second
         updateTimeLabel();
+
+        // Set up table columns
+        transactionIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+        dateTableColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        amountTableColumn.setCellValueFactory(new PropertyValueFactory<>(   "totalAmount"));
 
         addHoverEffect(addUserButton);
         addUserButton.setOnAction(event -> handleAddUserButton());
@@ -372,11 +386,9 @@ public class DashboardAdminController implements ControllerInterface {
             while (true) {
                 LocalDateTime currentTime = LocalDateTime.now();
                 String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("hh:mm:ss a", Locale.forLanguageTag("fil-PH")));
-                System.out.println("Formatted Time: " + formattedTime);
 
                 Platform.runLater(() -> {
                     timeLabel.setText(formattedTime);
-                    System.out.println("Time updated: " + formattedTime); // Debug print statement
                 });
 
                 try {
