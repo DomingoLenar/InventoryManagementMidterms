@@ -5,14 +5,24 @@ import com.example.inventorymanagement.client.admin.models.FinancesAdminModel;
 import com.example.inventorymanagement.client.admin.views.DashboardAdminPanel;
 import com.example.inventorymanagement.client.admin.views.FinancesAdminPanel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.client.microservices.UpdateCallback;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
+import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
+import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
+import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
+import com.example.inventorymanagement.util.requests.ItemRequestInterface;
+import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.StackedBarChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -28,11 +38,14 @@ import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class FinancesAdminController extends Application implements Initializable, ControllerInterface {
+public class FinancesAdminController implements ControllerInterface {
     @FXML
     private BorderPane borderPaneFinancesAdmin;
     @FXML
@@ -95,11 +108,12 @@ public class FinancesAdminController extends Application implements Initializabl
     private Line minuteHand;
     @FXML
     private Label dateTodayLabel;
+    private Label grossRevenueAmountLabel;
+    private Label taxDeductableAmountLabel;
+    private Label salesWorthAmountLabel;
+    private Label grossProfitsAmountLabel;
     private MainController mainController;
 
-    private ClientCallback clientCallback;
-    private Registry registry;
-    private FinancesAdminPanel financesAdminPanel;
     private FinancesAdminModel financesAdminModel;
 
     public BorderPane getBorderPaneFinancesAdmin() {
@@ -225,20 +239,100 @@ public class FinancesAdminController extends Application implements Initializabl
     public Label getDateTodayLabel() {
         return dateTodayLabel;
     }
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
+    public FinancesAdminController(){
+        // Default constructor
     }
 
-    @Override
+    boolean initialized = false;
+
+    public FinancesAdminController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController){
+        this.financesAdminModel = new FinancesAdminModel(registry, clientCallback);
+    }
+
+    public void updateRevenueCostChart(LinkedHashMap<Integer, Float> monthlyRevenueData, LinkedHashMap<Integer, Float> monthlyCostData){
+        revenueCostChart.getData().clear();
+
+        XYChart.Series<String, Number> revenueSeries = new XYChart.Series<>();
+        revenueSeries.setName("Monthly Revenue");
+
+        XYChart.Series<String, Number> costSeries = new XYChart.Series<>();
+        costSeries.setName("Monthly Cost");
+
+        // Add data for monthly revenue
+        for (Integer month : monthlyRevenueData.keySet()) {
+            revenueSeries.getData().add(new XYChart.Data<>(getMonthName(month), monthlyRevenueData.get(month)));
+        }
+
+        // Add data for monthly cost
+        for (Integer month : monthlyCostData.keySet()) {
+            costSeries.getData().add(new XYChart.Data<>(getMonthName(month), monthlyCostData.get(month)));
+        }
+        revenueCostChart.getData().addAll(revenueSeries, costSeries);
+    }
+
+    // Method to get the name of the month from its number (1-based)
+    private String getMonthName(int monthNumber) {
+        return Month.of(monthNumber).name();
+    }
+    public void updateProductsSoldChart(float revenueTodayData, float costTodayData){
+        productsSoldChart.getData().clear();
+
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
+                new PieChart.Data("Today's Revenue", revenueTodayData),
+                new PieChart.Data("Today's Cost", costTodayData)
+        );
+
+        productsSoldChart.setData(pieChartData);
+    }
+
     public void fetchAndUpdate() throws RemoteException {
-    }
+        try {
+            // Fetch data from the model
+            LinkedHashMap<Integer, Float> monthlyRevenueData = financesAdminModel.fetchMonthlyRevenue();
+            LinkedHashMap<Integer, Float> monthlyCostData = financesAdminModel.fetchMonthlyCost();
+            float revenueTodayData = financesAdminModel.fetchRevenueToday();
+            float costTodayData = financesAdminModel.fetchCostToday();
 
+            // Compute gross revenue
+            float grossRevenue = financesAdminModel.computeGrossRevenue(monthlyRevenueData);
+
+            // Compute tax deductible
+            float taxDeductable = financesAdminModel.computeTaxDeductible(grossRevenue, costTodayData);
+
+            // Compute stock worth
+            float stockWorth = financesAdminModel.computeStockWorth(grossRevenue, taxDeductable);
+
+            // Compute gross profit
+            float grossProfit = financesAdminModel.computeGrossProfit(grossRevenue, costTodayData);
+
+            // Update labels or other UI elements with computed values
+            grossRevenueAmountLabel.setText(String.format("$%.2f", grossRevenue));
+            taxDeductableAmountLabel.setText(String.format("$%.2f", taxDeductable));
+            salesWorthAmountLabel.setText(String.format("$%.2f", stockWorth));
+            grossProfitsAmountLabel.setText(String.format("$%.2f", grossProfit));
+
+            // Update the stacked bar chart for monthly revenue vs. cost
+            updateRevenueCostChart(monthlyRevenueData, monthlyCostData);
+
+            // Update the chart for products sold
+            updateProductsSoldChart(revenueTodayData, costTodayData);
+        } catch (NotLoggedInException | OutOfRoleException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     public String getObjectsUsed() throws RemoteException {
-        return "FinancesAdmin";
+        return "itemorder";
     }
 
-    public void initialize(URL location, ResourceBundle resources) {
+    private void showAlert(String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    public void initialize() {
         // Set the current date
         LocalDate currentDate = LocalDate.now();
         dateTodayLabel.setText(currentDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
@@ -249,11 +343,39 @@ public class FinancesAdminController extends Application implements Initializabl
 
         // Update time label every second
         updateTimeLabel();
+        // Fetch revenue data from the model and update the labels
+        try {
+            LinkedHashMap<Integer, Float> monthlyRevenueData = financesAdminModel.fetchMonthlyRevenue();
+            float grossRevenue = financesAdminModel.computeGrossRevenue(monthlyRevenueData);
+            grossRevenueAmountLabel.setText("Amount: P " + grossRevenue);
 
-        // initialize the model and panel objects
-        financesAdminPanel = new FinancesAdminPanel();
-        financesAdminModel = new FinancesAdminModel(registry, clientCallback);
+            LinkedHashMap<Integer, Float> grossCost = financesAdminModel.fetchMonthlyCost();
+            float taxDeductable = financesAdminModel.computeTaxDeductible(grossRevenue, grossCost);
+            taxDeductableAmountLabel.setText("Amount: P " + taxDeductable);
 
+            float salesWorth = financesAdminModel.computeStockWorth(grossRevenue, taxDeductable);
+            salesWorthAmountLabel.setText("Amount: P " + salesWorth);
+
+            float grossProfit = financesAdminModel.computeGrossProfit(grossRevenue, grossCost);
+            grossProfitsAmountLabel.setText("Amount: P " + grossProfit);
+        } catch (NotLoggedInException | OutOfRoleException e) {
+            e.printStackTrace();
+            // Handle exceptions
+        }
+
+        financesAdminModel = new FinancesAdminModel(MainController.registry, MainController.clientCallback);
+        if (!initialized){
+            initialized = true;
+
+        }
+        try {
+            MainController.clientCallback.setCurrentPanel(this);
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
+        } catch (NotLoggedInException e){
+            showAlert("User is not logged in");
+        } catch (RemoteException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     // Method to update the time label
@@ -274,12 +396,6 @@ public class FinancesAdminController extends Application implements Initializabl
         });
         updateTimeThread.setDaemon(true);
         updateTimeThread.start();
-    }
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        financesAdminPanel = new FinancesAdminPanel();
-        financesAdminPanel.start(stage);
     }
 }
 

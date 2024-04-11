@@ -4,32 +4,25 @@ import com.example.inventorymanagement.client.microservices.*;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.exceptions.OutOfRoleException;
-import com.example.inventorymanagement.util.objects.Item;
-import com.example.inventorymanagement.util.objects.ItemOrder;
 
 import java.rmi.registry.Registry;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 
 public class FinancesAdminModel {
-    private FetchLowestStockService fetchLowestStockService;
     private FetchMonthlyCostService fetchMonthlyCostService;
     private FetchMonthlyRevenueService fetchMonthlyRevenueService;
-    private FetchTransTodayService fetchTransTodayService;
+    private FetchCostTodayService fetchCostTodayService;
+    private FetchRevenueTodayService fetchRevenueTodayService;
     private Registry registry;
     private ClientCallback clientCallback;
 
     public FinancesAdminModel(Registry registry, ClientCallback clientCallback) {
         this.registry = registry;
         this.clientCallback = clientCallback;
-        this.fetchLowestStockService = new FetchLowestStockService();
         this.fetchMonthlyCostService = new FetchMonthlyCostService();
         this.fetchMonthlyRevenueService = new FetchMonthlyRevenueService();
-        this.fetchTransTodayService = new FetchTransTodayService();
-    }
-
-    public LinkedList<Item> fetchLowestStockItems() throws NotLoggedInException {
-        return fetchLowestStockService.process(registry, clientCallback);
+        this.fetchCostTodayService = new FetchCostTodayService();
+        this.fetchRevenueTodayService = new FetchRevenueTodayService();
     }
 
     public LinkedHashMap<Integer, Float> fetchMonthlyCost() throws NotLoggedInException, OutOfRoleException {
@@ -40,7 +33,55 @@ public class FinancesAdminModel {
         return fetchMonthlyRevenueService.process(registry, clientCallback);
     }
 
-    public LinkedList<ItemOrder> fetchTransactionsToday() throws NotLoggedInException {
-        return fetchTransTodayService.process(registry, clientCallback);
+    public float fetchCostToday() throws NotLoggedInException, OutOfRoleException {
+        return fetchCostTodayService.process(registry, clientCallback);
     }
+
+    public float fetchRevenueToday() throws NotLoggedInException, OutOfRoleException {
+        return fetchRevenueTodayService.process(registry, clientCallback);
+    }
+    public float computeGrossRevenue(LinkedHashMap<Integer, Float> monthlyRevenue) {
+        float totalRevenue = 0;
+        for (float revenue : monthlyRevenue.values()) {
+            totalRevenue += revenue;
+        }
+        return totalRevenue;
+    }
+
+    public float computeTaxDeductible(float grossRevenue, float grossCost) {
+        // Assuming tax-deductible is 30% of the gross revenue minus total monthly cost
+        return 0.3f * (grossRevenue - grossCost);
+    }
+
+    public float computeStockWorth(float grossRevenue, float taxDeductible) {
+        // Assuming stock worth is 70% of the gross revenue minus tax-deductible
+        return 0.7f * (grossRevenue - taxDeductible);
+    }
+
+    public float computeGrossProfit(float grossRevenue, float grossCost) {
+        return grossRevenue - grossCost;
+    }
+
+    public float computeTaxDeductible(float grossRevenue, LinkedHashMap<Integer, Float> monthlyCost) {
+        // Calculate total monthly cost
+        float totalMonthlyCost = 0;
+        for (float cost : monthlyCost.values()) {
+            totalMonthlyCost += cost;
+        }
+
+        // Assuming tax-deductible is 30% of the gross revenue minus total monthly cost
+        return 0.3f * (grossRevenue - totalMonthlyCost);
+    }
+
+    public float computeGrossProfit(float grossRevenue, LinkedHashMap<Integer, Float> grossCost) {
+        // Calculate total gross cost
+        float totalGrossCost = 0;
+        for (float cost : grossCost.values()) {
+            totalGrossCost += cost;
+        }
+
+        // Gross profit is the difference between gross revenue and total gross cost
+        return grossRevenue - totalGrossCost;
+    }
+
 }
