@@ -6,10 +6,7 @@ import com.example.inventorymanagement.client.purchaser.controllers.NavigationBa
 import com.example.inventorymanagement.client.purchaser.controllers.ProfileManagementPurchaserController;
 import com.example.inventorymanagement.client.purchaser.controllers.StockControlPurchaserController;
 import com.example.inventorymanagement.client.admin.controllers.StockControlAdminController;
-import com.example.inventorymanagement.client.sales.controllers.NavigationBarSalesController;
-import com.example.inventorymanagement.client.sales.controllers.ProfileManagementSalesController;
-import com.example.inventorymanagement.client.sales.controllers.SalesHistorySalesController;
-import com.example.inventorymanagement.client.sales.controllers.StockControlSalesController;
+import com.example.inventorymanagement.client.sales.controllers.*;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
@@ -17,10 +14,12 @@ import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -49,6 +48,8 @@ public class MainController implements ControllerInterface {
     static BorderPane salesHistoryAdminPanel;
     static ProfileManagementAdminController profileManagementAdminController;
     static BorderPane profileManagementAdminPanel;
+    static CreateSalesInvoiceAdminController createSalesInvoiceAdminController;
+    static DialogPane createSalesInvoiceAdminPanel;
 
     static StockControlPurchaserController stockControlPurchaserController;
     NavigationBarPurchaserController navigationBarPurchaserController;
@@ -63,6 +64,8 @@ public class MainController implements ControllerInterface {
     static BorderPane salesHistorySalesPanel;
     static ProfileManagementSalesController profileManagementSalesController;
     static BorderPane profileManagementSalesPanel;
+    static CreateSalesInvoiceSalesController createSalesInvoiceSalesController;
+    static DialogPane createSalesInvoiceSalesPanel;
 
 
     public MainController(UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry) throws RemoteException {
@@ -104,7 +107,7 @@ public class MainController implements ControllerInterface {
 
             Scene scene = new Scene(welcomePane);
             stage.setScene(scene);
-
+            stage.setResizable(false);
             WelcomeController welcomeController = fxmlLoader.getController();
             welcomeController.setMainController(this); // Pass MainController instance to WelcomeController
         } catch (IOException e) {
@@ -135,7 +138,7 @@ public class MainController implements ControllerInterface {
                 throw new IllegalStateException("Stage is not set. Please set the stage before calling showLoginPanel.");
             }
             stage.setScene(scene);
-
+            stage.setResizable(false);
             LoginController loginController = fxmlLoader.getController();
             loginController.setMainController(this);
             loginController.initialize();
@@ -160,6 +163,10 @@ public class MainController implements ControllerInterface {
 
     public static BorderPane getProfileManagementAdminPanel() { return profileManagementAdminPanel;}
 
+    public static DialogPane getCreateSalesInvoiceSalesPanel() { return createSalesInvoiceSalesPanel;}
+
+    public static DialogPane getCreateSalesInvoiceAdminPanel() { return createSalesInvoiceAdminPanel;}
+
     public void displayAdminMainMenu() throws IOException {
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
 
@@ -170,6 +177,7 @@ public class MainController implements ControllerInterface {
         FXMLLoader stockAdminLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlAdmin-view.fxml"));
         stockControlAdminPanel = stockAdminLoader.load();
         stockControlAdminController = stockAdminLoader.getController();
+        stockControlAdminController.setMainController(this);
 
         FXMLLoader salesHistoryLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/salesHistory/salesHistoryAdmin-view.fxml"));
         salesHistoryAdminPanel = salesHistoryLoader.load();
@@ -254,6 +262,7 @@ public class MainController implements ControllerInterface {
         FXMLLoader stockSalesLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlSales-view.fxml"));
         stockControlSalesPanel = stockSalesLoader.load();
         stockControlSalesController = stockSalesLoader.getController();
+        stockControlSalesController.setMainController(this);
 
         FXMLLoader salesHistoryLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/salesHistory/salesHistorySales-view.fxml"));
         salesHistorySalesPanel = salesHistoryLoader.load();
@@ -286,6 +295,71 @@ public class MainController implements ControllerInterface {
 
         navigationBarSalesController.setMainPane(root);
     }
+
+    public void openSalesInvoiceSalesPanel() {
+        try {
+            Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
+            FXMLLoader createSalesInvoiceLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/createSalesInvoiceSales-view.fxml"));
+            createSalesInvoiceSalesPanel = createSalesInvoiceLoader.load();
+            createSalesInvoiceSalesController = createSalesInvoiceLoader.getController();
+
+            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                stage.getIcons().add(image);
+            } else {
+                System.err.println("Failed to load image: logo.png");
+            }
+
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(stage);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setTitle("Sales Invoice");
+            Scene scene = new Scene(createSalesInvoiceSalesPanel);
+            dialogStage.setScene(scene);
+
+            // Set the stage not resizable
+            dialogStage.setResizable(false);
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openSalesInvoiceAdminPanel() {
+        try {
+            Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
+            FXMLLoader createSalesInvoiceLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/createSalesInvoiceAdmin-view.fxml"));
+            createSalesInvoiceAdminPanel = createSalesInvoiceLoader.load();
+            createSalesInvoiceAdminController = createSalesInvoiceLoader.getController();
+
+            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                stage.getIcons().add(image);
+            } else {
+                System.err.println("Failed to load image: logo.png");
+            }
+
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(stage);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setTitle("Sales Invoice");
+            Scene scene = new Scene(createSalesInvoiceAdminPanel);
+            dialogStage.setScene(scene);
+
+            // Set the stage not resizable
+            dialogStage.setResizable(false);
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void fetchAndUpdate() throws RemoteException {
@@ -327,6 +401,9 @@ public class MainController implements ControllerInterface {
 
     public static ProfileManagementAdminController getProfileManagementAdminController() { return profileManagementAdminController;}
 
+    public static CreateSalesInvoiceSalesController getCreateSalesInvoiceSalesController() { return createSalesInvoiceSalesController;}
+
+    public static CreateSalesInvoiceAdminController getCreateSalesInvoiceAdminController() { return createSalesInvoiceAdminController;}
 
     public ClientCallback getClientCallback() {
         return clientCallback;
