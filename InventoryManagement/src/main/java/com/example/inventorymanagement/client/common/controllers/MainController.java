@@ -2,6 +2,7 @@ package com.example.inventorymanagement.client.common.controllers;
 
 import com.example.inventorymanagement.client.admin.controllers.*;
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
+import com.example.inventorymanagement.client.purchaser.controllers.AddItemPurchaserController;
 import com.example.inventorymanagement.client.purchaser.controllers.NavigationBarPurchaserController;
 import com.example.inventorymanagement.client.purchaser.controllers.ProfileManagementPurchaserController;
 import com.example.inventorymanagement.client.purchaser.controllers.StockControlPurchaserController;
@@ -50,12 +51,17 @@ public class MainController implements ControllerInterface {
     static BorderPane profileManagementAdminPanel;
     static CreateSalesInvoiceAdminController createSalesInvoiceAdminController;
     static DialogPane createSalesInvoiceAdminPanel;
+    static AddItemAdminController addItemAdminController;
+    static DialogPane addItemAdminPanel;
+
 
     static StockControlPurchaserController stockControlPurchaserController;
     NavigationBarPurchaserController navigationBarPurchaserController;
     static BorderPane stockControlPurchaserPanel;
     static ProfileManagementPurchaserController profileManagementPurchaserController;
     static BorderPane profileManagementPurchaserPanel;
+    static AddItemPurchaserController addItemPurchaserController;
+    static DialogPane addItemPurchaserPanel;
 
     static StockControlSalesController stockControlSalesController;
     NavigationBarSalesController navigationBarSalesController;
@@ -167,6 +173,10 @@ public class MainController implements ControllerInterface {
 
     public static DialogPane getCreateSalesInvoiceAdminPanel() { return createSalesInvoiceAdminPanel;}
 
+    public static DialogPane getAddItemPurchaserPanel() {return addItemPurchaserPanel;}
+
+    public static DialogPane getAddItemAdminPanel() { return addItemAdminPanel;}
+
     public void displayAdminMainMenu() throws IOException {
         Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
 
@@ -222,6 +232,7 @@ public class MainController implements ControllerInterface {
         FXMLLoader stockPurchaserLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlPurchaser-view.fxml"));
         stockControlPurchaserPanel = stockPurchaserLoader.load();
         stockControlPurchaserController = stockPurchaserLoader.getController();
+        stockControlPurchaserController.setMainController(this);
 
         FXMLLoader profileManagementLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagementPurchaser-view.fxml"));
         profileManagementPurchaserPanel = profileManagementLoader.load();
@@ -360,6 +371,69 @@ public class MainController implements ControllerInterface {
         }
     }
 
+    public void openAddItemPurchaserPanel() {
+        try {
+            Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
+            FXMLLoader addItemLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/addItemPurchaser-view.fxml"));
+            addItemPurchaserPanel = addItemLoader.load();
+            addItemPurchaserController = addItemLoader.getController();
+
+            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                stage.getIcons().add(image);
+            } else {
+                System.err.println("Failed to load image: logo.png");
+            }
+
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(stage);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setTitle("Add Item");
+            Scene scene = new Scene(addItemPurchaserPanel);
+            dialogStage.setScene(scene);
+
+            // Set the stage not resizable
+            dialogStage.setResizable(false);
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openAddItemAdminPanel() {
+        try {
+            Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
+            FXMLLoader addItemLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/addItemAdmin-view.fxml"));
+            addItemAdminPanel = addItemLoader.load();
+            addItemAdminController = addItemLoader.getController();
+
+            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                stage.getIcons().add(image);
+            } else {
+                System.err.println("Failed to load image: logo.png");
+            }
+
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(stage);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setTitle("Add Item");
+            Scene scene = new Scene(addItemAdminPanel);
+            dialogStage.setScene(scene);
+
+            // Set the stage not resizable
+            dialogStage.setResizable(false);
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void fetchAndUpdate() throws RemoteException {
@@ -383,13 +457,9 @@ public class MainController implements ControllerInterface {
 
     public static StockControlPurchaserController getStockControlPurchaserController() { return stockControlPurchaserController;}
 
-    public static StockControlAdminController getStockControlAdminController() {
-        return stockControlAdminController;
-    }
+    public static StockControlAdminController getStockControlAdminController() { return stockControlAdminController;}
 
-    public static StockControlSalesController getStockControlSalesController() {
-        return stockControlSalesController;
-    }
+    public static StockControlSalesController getStockControlSalesController() { return stockControlSalesController;}
 
     public static SalesHistorySalesController getSalesHistorySalesController() { return salesHistorySalesController;}
 
@@ -404,6 +474,10 @@ public class MainController implements ControllerInterface {
     public static CreateSalesInvoiceSalesController getCreateSalesInvoiceSalesController() { return createSalesInvoiceSalesController;}
 
     public static CreateSalesInvoiceAdminController getCreateSalesInvoiceAdminController() { return createSalesInvoiceAdminController;}
+
+    public static AddItemPurchaserController getAddItemPurchaserController() { return addItemPurchaserController;}
+
+    public static AddItemAdminController getAddItemAdminController() { return addItemAdminController;}
 
     public ClientCallback getClientCallback() {
         return clientCallback;
