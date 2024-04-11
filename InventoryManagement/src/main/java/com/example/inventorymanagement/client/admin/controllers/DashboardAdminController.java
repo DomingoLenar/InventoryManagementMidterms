@@ -21,6 +21,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
@@ -35,6 +36,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Set;
 
 
 public class DashboardAdminController implements ControllerInterface {
@@ -185,11 +187,37 @@ public class DashboardAdminController implements ControllerInterface {
     }
     public void updateMonthlyRevenueChart(LinkedHashMap<Integer, Float> monthlyRevenueData) {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        for (Integer month : monthlyRevenueData.keySet()) {
-            series.getData().add(new XYChart.Data<>(String.valueOf(month), monthlyRevenueData.get(month)));
+        series.setName("Revenue");
+        int maxMonth = getMaxMonth(monthlyRevenueData.keySet());
+
+        // Add data to the series
+        for (int month = 1; month <= maxMonth; month++) {
+            Float revenue = monthlyRevenueData.get(month);
+            series.getData().add(new XYChart.Data<>(String.valueOf(month), revenue != null ? revenue : 0));
         }
+
         monthRevChart.getData().clear();
         monthRevChart.getData().add(series);
+
+        // Get the x-axis of the chart
+        CategoryAxis xAxis = (CategoryAxis) monthRevChart.getXAxis();
+
+        // Clear existing categories
+        xAxis.getCategories().clear();
+
+        // Add categories with increments of 5
+        for (int i = 1; i <= maxMonth; i += 5) {
+            xAxis.getCategories().add("Month " + i);
+        }
+    }
+
+    // Helper method to get the maximum month from the data
+    private int getMaxMonth(Set<Integer> months) {
+        int maxMonth = 0;
+        for (Integer month : months) {
+            maxMonth = Math.max(maxMonth, month);
+        }
+        return maxMonth;
     }
 
     public void updateActiveUsersLabel(int activeUsersCount) {
