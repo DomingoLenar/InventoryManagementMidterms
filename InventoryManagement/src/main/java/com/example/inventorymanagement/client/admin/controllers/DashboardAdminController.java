@@ -203,7 +203,7 @@ public class DashboardAdminController implements ControllerInterface {
         ObservableList<ItemOrder> itemOrder = FXCollections.observableArrayList(transactionsTodayData);
         transTodayTableView.setItems(itemOrder);    //Should be objects of ItemOrder not items - Lestat
     }
-    public void fetchAndUpdate() {
+    public void fetchAndUpdate() throws RemoteException {
         try {
             // Fetch data from the model
             LinkedHashMap<Integer, Float> monthlyRevenueData = dashboardAdminModel.fetchMonthlyRevenue();
