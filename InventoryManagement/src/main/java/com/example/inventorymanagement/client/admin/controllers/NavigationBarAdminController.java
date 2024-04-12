@@ -98,7 +98,12 @@ public class NavigationBarAdminController implements ControllerInterface {
     }
 
     private void loadUserManagementPanel() {
-        // TODO: Add the Getters
+        try{
+            MainController.getUserManagementAdminController().fetchAndUpdate();
+            mainPane.setRight(MainController.getUserManagementAdminPanel());
+        } catch (IOException e){
+            throw new RuntimeException();
+        }
     }
 
     private void loadStockControlPanel() {
