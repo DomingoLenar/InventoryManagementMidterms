@@ -3,7 +3,6 @@ package com.example.inventorymanagement.client.admin.controllers;
 import com.example.inventorymanagement.client.admin.models.AddItemAdminModel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
 import com.example.inventorymanagement.client.microservices.UpdateCallback;
-import com.example.inventorymanagement.client.purchaser.models.AddItemPurchaserModel;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
 import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
@@ -28,6 +27,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class AddItemAdminController implements ControllerInterface {
+
+    /**
+     * FXML Controller Variables
+     */
     @FXML
     private ComboBox<Item> itemNameComboBox;
     @FXML
@@ -39,36 +42,96 @@ public class AddItemAdminController implements ControllerInterface {
     @FXML
     private Button okButton;
 
+    /**
+     * Controller Variables
+     */
     private MainController mainController;
     private AddItemAdminModel addItemAdminModel;
     boolean initialized = false;
 
+    /**
+     * Getters
+     */
     public AddItemAdminModel getAddItemAdminModel() {
         return addItemAdminModel;
     }
-
-    public ComboBox<Item> geItemNameComboBox() {
-        return itemNameComboBox;
-    }
-
+    public ComboBox<Item> geItemNameComboBox() { return itemNameComboBox;}
     public ComboBox<String> getSupplierComboBox() { return supplierComboBox; }
-
     public TextField getItemPriceField() {
         return itemPriceField;
     }
-
     public Button getOkButton() { return okButton; }
-
     public TextField getQuantityField() { return quantityField; }
 
+
+    /**
+     * Default constructor.
+     */
     public AddItemAdminController() {
         // Default Constructor
     }
 
+    /**
+     * Parameterized constructor.
+     * @param clientCallback Callback for client communication.
+     * @param userService User service interface.
+     * @param iOService Item order service interface.
+     * @param itemService Item service interface.
+     * @param registry RMI registry.
+     * @param mainController Main controller reference.
+     */
     public AddItemAdminController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController){
         this.addItemAdminModel = new AddItemAdminModel(registry, clientCallback);
     }
 
+    /**
+     * Fetches list of suppliers and updates the UI.
+     * @throws RemoteException if a remote communication error occurs.
+     */
+    private void fetchSuppliersAndUpdate() throws RemoteException {
+        try {
+            // Fetch list of suppliers
+            ArrayList<String> suppliers = addItemAdminModel.fetchSuppliers();
+
+            // Update UI with suppliers data
+            Platform.runLater(() -> {
+                // Clear existing items in the ComboBox
+                supplierComboBox.getItems().clear();
+
+                // Add fetched suppliers to the ComboBox
+                supplierComboBox.getItems().addAll(suppliers);
+            });
+
+        } catch (NotLoggedInException e) {
+            showAlert("Error occurred while fetching suppliers: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Adds hover effect to a button.
+     * @param button The button to add hover effect to.
+     */
+    private void addHoverEffect(Button button) {
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
+    }
+
+    /**
+     * Shows an alert with the given message.
+     * @param message The message to display in the alert.
+     */
+    private void showAlert(String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    /**
+     * Fetches and updates the list of items in the ComboBox.
+     * @throws RemoteException if a remote communication error occurs.
+     */
     @Override
     public void fetchAndUpdate() throws RemoteException {
         try {
@@ -80,11 +143,22 @@ public class AddItemAdminController implements ControllerInterface {
         }
     }
 
+    /**
+     * Gets the objects used in this controller.
+     * @return A string representing the object used.
+     * @throws RemoteException if a remote communication error occurs.
+     */
     @Override
     public String getObjectsUsed() throws RemoteException {
         return "item";
     }
 
+    /**
+     * Handles the action event when the OK button is clicked.
+     * @param actionEvent The action event triggered by clicking the OK button.
+     * @throws NotLoggedInException if the user is not logged in.
+     * @throws OutOfRoleException if the user does not have the required permission.
+     */
     @FXML
     private void handleOkButton(ActionEvent actionEvent) throws NotLoggedInException, OutOfRoleException {
         try {
@@ -123,43 +197,17 @@ public class AddItemAdminController implements ControllerInterface {
         }
     }
 
-    private void fetchSuppliersAndUpdate() throws RemoteException {
-        try {
-            // Fetch list of suppliers
-            ArrayList<String> suppliers = addItemAdminModel.fetchSuppliers();
-
-            // Update UI with suppliers data
-            Platform.runLater(() -> {
-                // Clear existing items in the ComboBox
-                supplierComboBox.getItems().clear();
-
-                // Add fetched suppliers to the ComboBox
-                supplierComboBox.getItems().addAll(suppliers);
-            });
-
-        } catch (NotLoggedInException e) {
-            showAlert("Error occurred while fetching suppliers: " + e.getMessage());
-        }
-    }
-
+    /**
+     * Handles the action event when the Add Item Button is clicked.
+     */
     @FXML
     private void handleAddItem() {
         // TODO: Logic
     }
 
-    private void addHoverEffect(Button button) {
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
-    }
-
-    private void showAlert(String message){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
+    /**
+     * Initializes the controller.
+     */
     @FXML
     public void initialize() {
 

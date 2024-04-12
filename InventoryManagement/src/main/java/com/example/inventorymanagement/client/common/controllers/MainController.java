@@ -64,6 +64,9 @@ public class MainController implements ControllerInterface {
     static AddItemAdminController addItemAdminController;
     static DialogPane addItemAdminPanel;
 
+    static AddListingAdminController addListingAdminController;
+    static DialogPane addListingAdminPanel;
+
     static LowStocksAdminController lowStocksAdminController;
     static BorderPane lowStocksAdminPanel;
 
@@ -123,6 +126,8 @@ public class MainController implements ControllerInterface {
     public static DialogPane getAddItemPurchaserPanel() {return addItemPurchaserPanel;}
     public static DialogPane getAddItemAdminPanel() { return addItemAdminPanel;}
 
+    public static DialogPane getAddListingAdminPanel() { return addListingAdminPanel;}
+
     public static BorderPane getLowStocksPurchaserPanel() { return lowStocksPurchaserPanel;}
     public static BorderPane getLowStocksAdminPanel() { return lowStocksAdminPanel;}
 
@@ -153,6 +158,8 @@ public class MainController implements ControllerInterface {
     public static AddItemAdminController getAddItemAdminController() { return addItemAdminController;}
 
 
+    public static AddListingAdminController getAddListingAdminController() { return addListingAdminController;}
+
     public static LowStocksPurchaserController getLowStocksPurchaserController() {return lowStocksPurchaserController;}
     public static LowStocksAdminController getLowStocksAdminController() {return lowStocksAdminController;}
 
@@ -165,6 +172,17 @@ public class MainController implements ControllerInterface {
     public void setStage(Stage stage) { this.stage = stage;}
 
     public Registry getRegistry() { return registry;}
+
+    /**
+     * Constructor for MainController.
+     * Initializes the MainController with the necessary services and sets up the client callback for server communication.
+     *
+     * @param userService The user service interface.
+     * @param iOService The item order service interface.
+     * @param itemService The item service interface.
+     * @param registry The RMI registry.
+     * @throws RemoteException If a remote communication error occurs.
+     */
     public MainController(UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry) throws RemoteException {
         MainController.userService = userService;
         MainController.iOService = iOService;
@@ -269,6 +287,7 @@ public class MainController implements ControllerInterface {
         FXMLLoader salesHistoryLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/salesHistory/salesHistoryAdmin-view.fxml"));
         salesHistoryAdminPanel = salesHistoryLoader.load();
         salesHistoryAdminController = salesHistoryLoader.getController();
+        salesHistoryAdminController.setMainController(this);
 
         FXMLLoader profileManagementLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagementAdmin-view.fxml"));
         profileManagementAdminPanel = profileManagementLoader.load();
@@ -375,6 +394,7 @@ public class MainController implements ControllerInterface {
         FXMLLoader salesHistoryLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/salesHistory/salesHistorySales-view.fxml"));
         salesHistorySalesPanel = salesHistoryLoader.load();
         salesHistorySalesController = salesHistoryLoader.getController();
+        salesHistorySalesController.setMainController(this);
 
         FXMLLoader profileManagementLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagementSales-view.fxml"));
         profileManagementSalesPanel = profileManagementLoader.load();
@@ -532,17 +552,17 @@ public class MainController implements ControllerInterface {
                 System.err.println("Failed to load image: logo.png");
             }
 
-            Stage stage = new Stage();
-            stage.initOwner(stage);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Add Item");
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(stage);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setTitle("Add Item");
             Scene scene = new Scene(addItemAdminPanel);
-            stage.setScene(scene);
+            dialogStage.setScene(scene);
 
             // Set the stage not resizable
-            stage.setResizable(false);
+            dialogStage.setResizable(false);
 
-            stage.showAndWait();
+            dialogStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -609,6 +629,42 @@ public class MainController implements ControllerInterface {
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.setTitle("Add Item");
             Scene scene = new Scene(lowStocksAdminPanel);
+            dialogStage.setScene(scene);
+
+            // Set the stage not resizable
+            dialogStage.setResizable(false);
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Opens the add liting panel for the admin user.
+     * This method displays a pane that adds a listing.
+     */
+    public void openAddListingAdminPanel() {
+        try {
+            Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
+            FXMLLoader addListingPanelLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/addListingAdmin-view.fxml"));
+            addListingAdminPanel = addListingPanelLoader.load();
+            addListingAdminController = addListingPanelLoader.getController();
+
+            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                stage.getIcons().add(image);
+            } else {
+                System.err.println("Failed to load image: logo.png");
+            }
+
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(stage);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setTitle("Add Item");
+            Scene scene = new Scene(addListingAdminPanel);
             dialogStage.setScene(scene);
 
             // Set the stage not resizable

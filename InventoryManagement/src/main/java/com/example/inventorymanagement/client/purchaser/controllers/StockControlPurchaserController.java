@@ -75,7 +75,7 @@ public class StockControlPurchaserController implements ControllerInterface {
     }
 
     /**
-     * Constructor for StockControlAdminController.
+     * Constructor for StockControlPurchaserController.
      * Initializes the controller with necessary services and references.
      *
      * @param clientCallback The client callback for server communication.
@@ -175,6 +175,7 @@ public class StockControlPurchaserController implements ControllerInterface {
 
         lowStocksButtonPurchaser.setOnAction(event -> handleLowStocks());
         addItemButtonPurchaser.setOnAction(event -> handleAddItem());
+
         stockControlPurchaserModel = new StockControlPurchaserModel(MainController.registry, MainController.clientCallback);
         if (!initialized) { // Check if already initialized
             initialized = true; // Set the flag to true

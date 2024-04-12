@@ -177,7 +177,11 @@ public class StockControlAdminController implements ControllerInterface {
      */
     @FXML
     private void handleAddListing() {
-        // Handle add listing button action
+        if (mainController != null) {
+            mainController.openAddListingAdminPanel();
+        } else {
+            System.out.println("MainController is not set.");
+        }
     }
 
     /**
