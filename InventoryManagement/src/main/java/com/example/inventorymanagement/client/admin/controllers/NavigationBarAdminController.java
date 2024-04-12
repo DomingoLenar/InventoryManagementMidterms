@@ -80,11 +80,21 @@ public class NavigationBarAdminController implements ControllerInterface {
     }
 
     private void loadDashboardPanel() {
-        // TODO: Add the Getters
+        try {
+            MainController.getDashboardAdminController().fetchAndUpdate();
+            mainPane.setRight(MainController.getDashboardAdminPanel());
+        } catch (IOException e){
+            throw new RuntimeException();
+        }
     }
 
     private void loadFinancesPanel() {
-        // TODO: Add the Getters
+      try{
+          MainController.getFinancesAdminController().fetchAndUpdate();
+          mainPane.setRight(MainController.getFinancesAdminPanel());
+      } catch (IOException e){
+          throw new RuntimeException();
+      }
     }
 
     private void loadUserManagementPanel() {

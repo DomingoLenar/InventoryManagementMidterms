@@ -92,7 +92,7 @@ public class ProfileManagementChangePassAdminController  implements ControllerIn
     }
 
     boolean initialized = false;
-    public void fetchAndUpdate() {
+    public void fetchAndUpdate() throws RemoteException {
         try {
             // Update UI components with current user's username
             updateUsernameLabel();

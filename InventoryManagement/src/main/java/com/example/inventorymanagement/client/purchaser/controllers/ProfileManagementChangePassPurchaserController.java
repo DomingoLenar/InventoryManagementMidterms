@@ -92,7 +92,7 @@ public class ProfileManagementChangePassPurchaserController  implements Controll
     }
 
     boolean initialized = false;
-    public void fetchAndUpdate() {
+    public void fetchAndUpdate() throws RemoteException {
         try {
             // Update UI components with current user's username
             updateUsernameLabel();
@@ -176,7 +176,7 @@ public class ProfileManagementChangePassPurchaserController  implements Controll
         try {
             usernameLabel.setText(clientCallback.getUser().getUsername());
         } catch (RemoteException e) {
-            //Prompt user unable to fetch User object
+            showAlert("Error:" + e.getMessage());
         }
     }
 

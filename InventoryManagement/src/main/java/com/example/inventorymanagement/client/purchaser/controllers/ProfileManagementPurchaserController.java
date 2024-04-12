@@ -188,7 +188,7 @@ public class ProfileManagementPurchaserController  implements ControllerInterfac
         try {
             usernameLabel.setText(clientCallback.getUser().getUsername());
         } catch (RemoteException e) {
-            //Prompt user unable to fetch User object
+            showAlert("Error:" + e.getMessage());
         }
     }
     // Initialization method

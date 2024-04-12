@@ -4,7 +4,6 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.chart.StackedBarChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -18,7 +17,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="borderPaneFinancesAdmin" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="850.0" style="-fx-background-color: linear-gradient(to bottom, #EFD1D1, #FFFFFF);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="borderPaneFinancesAdmin" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="850.0" style="-fx-background-color: linear-gradient(to bottom, #EFD1D1, #FFFFFF);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.inventorymanagement.client.admin.controllers.FinancesAdminController">
    <top>
       <AnchorPane prefHeight="58.0" prefWidth="653.0" BorderPane.alignment="CENTER">
          <children>
@@ -108,48 +107,47 @@
    <bottom>
       <AnchorPane prefHeight="339.0" prefWidth="850.0" style="-fx-background-color: linear-gradient(to bottom, #EFD1D1, #FFFFFF);" BorderPane.alignment="CENTER">
          <children>
-            <StackedBarChart fx:id="revenueCostChart" focusTraversable="true" layoutX="4.0" layoutY="56.0" legendSide="LEFT" prefHeight="282.0" prefWidth="488.0" title="Revenue vs. Cost for this month">
+            <StackedBarChart fx:id="revenueCostChart" focusTraversable="true" layoutX="20.0" layoutY="45.0" legendSide="LEFT" prefHeight="282.0" prefWidth="679.0" title="Revenue vs. Cost for this month">
               <xAxis>
-                <CategoryAxis label="01            05            10            15            20            25           30" prefHeight="31.0" prefWidth="410.0" side="BOTTOM" tickLabelFill="#a91292" />
+                <CategoryAxis prefHeight="43.0" prefWidth="602.0" side="BOTTOM" tickLabelFill="#941681" tickLabelGap="7.0" />
               </xAxis>
               <yAxis>
-                <NumberAxis side="LEFT" tickLabelFill="#a91292" upperBound="10000.0" />
+                <NumberAxis side="LEFT" tickLabelFill="#941681" upperBound="10000.0" />
               </yAxis>
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
                <cursor>
-                  <Cursor fx:constant="DISAPPEAR" />
+                  <Cursor fx:constant="OPEN_HAND" />
                </cursor>
                <effect>
                   <Glow />
                </effect>
             </StackedBarChart>
-            <Label fx:id="analyticsTrackingLabel" layoutX="14.0" layoutY="18.0" text="Analytics Tracking">
+            <Label fx:id="analyticsTrackingLabel" layoutX="20.0" layoutY="14.0" text="Analytics Tracking">
                <font>
                   <Font name="Share Tech Mono" size="24.0" />
                </font>
             </Label>
-            <PieChart fx:id="productsSoldChart" blendMode="DARKEN" layoutX="493.0" layoutY="55.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="274.0" prefWidth="206.0" title="Products Sold" />
             <Button fx:id="dateBg" layoutX="708.0" layoutY="57.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="118.0" prefWidth="130.0" style="-fx-background-color: EFD1D1;" />
             <Button fx:id="timeBg" layoutX="708.0" layoutY="186.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="142.0" prefWidth="130.0" style="-fx-background-color: EFD1D1;" />
             <Button fx:id="dateWhiteBg" layoutX="714.0" layoutY="74.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="41.0" prefWidth="118.0" style="-fx-background-color: FFFFFF;" />
             <Label fx:id="dayLabel" layoutX="733.0" layoutY="130.0" text="Saturday">
                <font>
-                  <Font name="Share Tech Mono" size="18.0" />
+                  <Font name="Share Tech Mono" size="23.0" />
                </font>
             </Label>
-            <Label fx:id="timeLabel" layoutX="729.0" layoutY="295.0" text="8:53 AM">
+            <Label fx:id="timeLabel" layoutX="716.0" layoutY="295.0" text="8:53 AM">
                <font>
-                  <Font name="Share Tech Mono" size="24.0" />
+                  <Font name="Share Tech Mono" size="20.0" />
                </font>
             </Label>
             <Circle fx:id="clockFace" fill="WHITE" layoutX="775.0" layoutY="243.0" radius="46.0" stroke="#00000003" strokeType="OUTSIDE" />
-            <Line fx:id="hourHand" endX="23.199951171875" endY="16.599990844726562" layoutX="758.0" layoutY="227.0" startX="6.39990234375" startY="29.39996337890625" strokeLineCap="ROUND" strokeWidth="4.0" />
-            <Line fx:id="minuteHand" endX="14.7999267578125" endY="4.9999542236328125" layoutX="768.0" layoutY="237.0" startX="-4.4000244140625" startY="-23.800033569335938" strokeLineCap="ROUND" strokeWidth="4.0" />
-            <Label fx:id="dateTodayLabel" layoutX="742.0" layoutY="80.0" text="03/28">
+            <Line fx:id="hourHand" endX="17.0" endY="16.000015258789062" layoutX="758.0" layoutY="227.0" startX="31.199951171875" startY="34.199951171875" strokeLineCap="ROUND" strokeWidth="4.0" />
+            <Line fx:id="minuteHand" endX="4.0" endY="3.0000152587890625" layoutX="771.0" layoutY="240.0" startX="-4.4000244140625" startY="-23.800033569335938" strokeLineCap="ROUND" strokeWidth="4.0" />
+            <Label fx:id="dateTodayLabel" layoutX="720.0" layoutY="80.0" text="04/12">
                <font>
-                  <Font name="Share Tech Mono" size="24.0" />
+                  <Font name="Share Tech Mono" size="20.0" />
                </font>
             </Label>
          </children>

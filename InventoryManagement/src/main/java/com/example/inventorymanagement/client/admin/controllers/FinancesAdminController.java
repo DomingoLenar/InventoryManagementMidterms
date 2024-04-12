@@ -87,8 +87,6 @@ public class FinancesAdminController implements ControllerInterface {
     @FXML
     private StackedBarChart revenueCostChart;
     @FXML
-    private PieChart productsSoldChart;
-    @FXML
     private Label analyticsTrackingLabel;
     @FXML
     private Button dateBg;
@@ -196,10 +194,6 @@ public class FinancesAdminController implements ControllerInterface {
         return revenueCostChart;
     }
 
-    public PieChart getProductsSoldChart() {
-        return productsSoldChart;
-    }
-
     public Label getAnalyticsTrackingLabel() {
         return analyticsTrackingLabel;
     }
@@ -253,10 +247,10 @@ public class FinancesAdminController implements ControllerInterface {
         revenueCostChart.getData().clear();
 
         XYChart.Series<String, Number> revenueSeries = new XYChart.Series<>();
-        revenueSeries.setName("Monthly Revenue");
+        revenueSeries.setName("this month's Revenue");
 
         XYChart.Series<String, Number> costSeries = new XYChart.Series<>();
-        costSeries.setName("Monthly Cost");
+        costSeries.setName("this month's Cost");
 
         // Add data for monthly revenue
         for (Integer month : monthlyRevenueData.keySet()) {
@@ -274,16 +268,7 @@ public class FinancesAdminController implements ControllerInterface {
     private String getMonthName(int monthNumber) {
         return Month.of(monthNumber).name();
     }
-    public void updateProductsSoldChart(float revenueTodayData, float costTodayData){
-        productsSoldChart.getData().clear();
 
-        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
-                new PieChart.Data("Today's Revenue", revenueTodayData),
-                new PieChart.Data("Today's Cost", costTodayData)
-        );
-
-        productsSoldChart.setData(pieChartData);
-    }
 
     public void fetchAndUpdate() throws RemoteException {
         try {
@@ -306,16 +291,14 @@ public class FinancesAdminController implements ControllerInterface {
             float grossProfit = financesAdminModel.computeGrossProfit(grossRevenue, costTodayData);
 
             // Update labels or other UI elements with computed values
-            grossRevenueAmountLabel.setText(String.format("$%.2f", grossRevenue));
-            taxDeductableAmountLabel.setText(String.format("$%.2f", taxDeductable));
-            salesWorthAmountLabel.setText(String.format("$%.2f", stockWorth));
-            grossProfitsAmountLabel.setText(String.format("$%.2f", grossProfit));
+            grossRevenueAmount.setText(String.format("$%.2f", grossRevenue));
+            taxDeductableAmount.setText(String.format("$%.2f", taxDeductable));
+            salesWorthAmount.setText(String.format("$%.2f", stockWorth));
+            grossProfitsAmount.setText(String.format("$%.2f", grossProfit));
 
             // Update the stacked bar chart for monthly revenue vs. cost
             updateRevenueCostChart(monthlyRevenueData, monthlyCostData);
 
-            // Update the chart for products sold
-            updateProductsSoldChart(revenueTodayData, costTodayData);
         } catch (NotLoggedInException | OutOfRoleException e) {
             e.printStackTrace();
         }
@@ -333,9 +316,12 @@ public class FinancesAdminController implements ControllerInterface {
         alert.showAndWait();
     }
     public void initialize() {
+        financesAdminModel = new FinancesAdminModel(MainController.registry, MainController.clientCallback);
+
+
         // Set the current date
         LocalDate currentDate = LocalDate.now();
-        dateTodayLabel.setText(currentDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        dateTodayLabel.setText(currentDate.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
 
         // Set the current day
         String currentDay = currentDate.getDayOfWeek().toString();
@@ -347,23 +333,22 @@ public class FinancesAdminController implements ControllerInterface {
         try {
             LinkedHashMap<Integer, Float> monthlyRevenueData = financesAdminModel.fetchMonthlyRevenue();
             float grossRevenue = financesAdminModel.computeGrossRevenue(monthlyRevenueData);
-            grossRevenueAmountLabel.setText("Amount: P " + grossRevenue);
+            grossRevenueAmount.setText("Amount: P " + grossRevenue);
 
             LinkedHashMap<Integer, Float> grossCost = financesAdminModel.fetchMonthlyCost();
             float taxDeductable = financesAdminModel.computeTaxDeductible(grossRevenue, grossCost);
-            taxDeductableAmountLabel.setText("Amount: P " + taxDeductable);
+            taxDeductableAmount.setText("Amount: P " + taxDeductable);
 
             float salesWorth = financesAdminModel.computeStockWorth(grossRevenue, taxDeductable);
-            salesWorthAmountLabel.setText("Amount: P " + salesWorth);
+            salesWorthAmount.setText("Amount: P " + salesWorth);
 
             float grossProfit = financesAdminModel.computeGrossProfit(grossRevenue, grossCost);
-            grossProfitsAmountLabel.setText("Amount: P " + grossProfit);
+            grossProfitsAmount.setText("Amount: P " + grossProfit);
         } catch (NotLoggedInException | OutOfRoleException e) {
             e.printStackTrace();
             // Handle exceptions
         }
 
-        financesAdminModel = new FinancesAdminModel(MainController.registry, MainController.clientCallback);
         if (!initialized){
             initialized = true;
 
