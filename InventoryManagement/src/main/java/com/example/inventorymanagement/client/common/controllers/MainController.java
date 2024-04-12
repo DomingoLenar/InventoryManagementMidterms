@@ -59,6 +59,9 @@ public class MainController implements ControllerInterface {
     static AddItemAdminController addItemAdminController;
     static DialogPane addItemAdminPanel;
 
+    static AddListingAdminController addListingAdminController;
+    static DialogPane addListingAdminPanel;
+
     static LowStocksAdminController lowStocksAdminController;
     static BorderPane lowStocksAdminPanel;
 
@@ -116,6 +119,8 @@ public class MainController implements ControllerInterface {
     public static DialogPane getAddItemPurchaserPanel() {return addItemPurchaserPanel;}
     public static DialogPane getAddItemAdminPanel() { return addItemAdminPanel;}
 
+    public static DialogPane getAddListingAdminPanel() { return addListingAdminPanel;}
+
     public static BorderPane getLowStocksPurchaserPanel() { return lowStocksPurchaserPanel;}
     public static BorderPane getLowStocksAdminPanel() { return lowStocksAdminPanel;}
 
@@ -142,6 +147,8 @@ public class MainController implements ControllerInterface {
 
     public static AddItemPurchaserController getAddItemPurchaserController() { return addItemPurchaserController;}
     public static AddItemAdminController getAddItemAdminController() { return addItemAdminController;}
+
+    public static AddListingAdminController getAddListingAdminController() { return addListingAdminController;}
 
     public static LowStocksPurchaserController getLowStocksPurchaserController() {return lowStocksPurchaserController;}
     public static LowStocksAdminController getLowStocksAdminController() {return lowStocksAdminController;}
@@ -509,6 +516,7 @@ public class MainController implements ControllerInterface {
      * Opens the add item panel for the admin user.
      * This method displays a dialog for adding an item to the inventory.
      */
+    // TODO: Recursive
     public void openAddItemAdminPanel() {
         try {
             Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
@@ -602,6 +610,42 @@ public class MainController implements ControllerInterface {
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.setTitle("Add Item");
             Scene scene = new Scene(lowStocksAdminPanel);
+            dialogStage.setScene(scene);
+
+            // Set the stage not resizable
+            dialogStage.setResizable(false);
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Opens the add liting panel for the admin user.
+     * This method displays a pane that adds a listing.
+     */
+    public void openAddListingAdminPanel() {
+        try {
+            Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
+            FXMLLoader addListingPanelLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/addListingAdmin-view.fxml"));
+            addListingAdminPanel = addListingPanelLoader.load();
+            addListingAdminController = addListingPanelLoader.getController();
+
+            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                stage.getIcons().add(image);
+            } else {
+                System.err.println("Failed to load image: logo.png");
+            }
+
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(stage);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setTitle("Add Item");
+            Scene scene = new Scene(addListingAdminPanel);
             dialogStage.setScene(scene);
 
             // Set the stage not resizable

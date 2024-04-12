@@ -151,6 +151,7 @@ public class StockControlAdminController implements ControllerInterface {
     /**
      * Handles the action event for adding an item.
      */
+    // TODO: Recursive
     @FXML
     private void handleAddItem() {
         if (mainController != null) {
@@ -177,7 +178,11 @@ public class StockControlAdminController implements ControllerInterface {
      */
     @FXML
     private void handleAddListing() {
-        // Handle add listing button action
+        if (mainController != null) {
+            mainController.openAddListingAdminPanel();
+        } else {
+            System.out.println("MainController is not set.");
+        }
     }
 
     /**
@@ -196,6 +201,7 @@ public class StockControlAdminController implements ControllerInterface {
      * Initializes the controller.
      * This method sets up the UI components and initializes the data model.
      */
+    // TODO: Recursive
     @FXML
     public void initialize() { // initialize components -> better approach is to initialize just the components and let nav___bar buttons handle the population of data/realtime
         addHoverEffect(lowStocksButtonAdmin);
