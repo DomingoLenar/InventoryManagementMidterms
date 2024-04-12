@@ -117,7 +117,7 @@ public class ServicesTest implements ControllerInterface{
 
    @Test
    public void testCreatePurchaseOrderService() {
-      OrderDetail orderDetail = new OrderDetail(1, 2, 200, "FeatherFarms_2023-12-29_200.00");
+      OrderDetail orderDetail = new OrderDetail(1, 2, 200, "FeatherFarms_2024-04-13_200.00");
 
       LinkedList<OrderDetail> orderDetails = new LinkedList<>();
       orderDetails.add(orderDetail);
@@ -135,7 +135,7 @@ public class ServicesTest implements ControllerInterface{
 
    @Test
    public void testCreateSalesInvoiceService() {
-      OrderDetail orderDetail = new OrderDetail(1, 2, 200, "FeatherFarms_2023-12-29_200.00");
+      OrderDetail orderDetail = new OrderDetail(1, 2, 200, "FeatherFarms_2024-01-03_200.00");
 
       LinkedList<OrderDetail> orderDetails = new LinkedList<>();
       orderDetails.add(orderDetail);
