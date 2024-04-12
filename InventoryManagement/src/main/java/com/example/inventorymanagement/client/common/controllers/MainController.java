@@ -277,6 +277,7 @@ public class MainController implements ControllerInterface {
         FXMLLoader salesHistoryLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/salesHistory/salesHistoryAdmin-view.fxml"));
         salesHistoryAdminPanel = salesHistoryLoader.load();
         salesHistoryAdminController = salesHistoryLoader.getController();
+        salesHistoryAdminController.setMainController(this);
 
         FXMLLoader profileManagementLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagementAdmin-view.fxml"));
         profileManagementAdminPanel = profileManagementLoader.load();
@@ -375,6 +376,7 @@ public class MainController implements ControllerInterface {
         FXMLLoader salesHistoryLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/salesHistory/salesHistorySales-view.fxml"));
         salesHistorySalesPanel = salesHistoryLoader.load();
         salesHistorySalesController = salesHistoryLoader.getController();
+        salesHistorySalesController.setMainController(this);
 
         FXMLLoader profileManagementLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagementSales-view.fxml"));
         profileManagementSalesPanel = profileManagementLoader.load();
@@ -516,7 +518,6 @@ public class MainController implements ControllerInterface {
      * Opens the add item panel for the admin user.
      * This method displays a dialog for adding an item to the inventory.
      */
-    // TODO: Recursive
     public void openAddItemAdminPanel() {
         try {
             Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
@@ -533,17 +534,17 @@ public class MainController implements ControllerInterface {
                 System.err.println("Failed to load image: logo.png");
             }
 
-            Stage stage = new Stage();
-            stage.initOwner(stage);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Add Item");
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(stage);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setTitle("Add Item");
             Scene scene = new Scene(addItemAdminPanel);
-            stage.setScene(scene);
+            dialogStage.setScene(scene);
 
             // Set the stage not resizable
-            stage.setResizable(false);
+            dialogStage.setResizable(false);
 
-            stage.showAndWait();
+            dialogStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
