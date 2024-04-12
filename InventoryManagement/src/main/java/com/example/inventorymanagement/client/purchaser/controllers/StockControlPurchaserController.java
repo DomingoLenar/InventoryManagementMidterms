@@ -143,7 +143,6 @@ public class StockControlPurchaserController implements ControllerInterface {
     /**
      * Handles the action event for adding an item.
      */
-    // TODO: Recursive
     @FXML
     private void handleAddItem() {
         if (mainController != null) {
