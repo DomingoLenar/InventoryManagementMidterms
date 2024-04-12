@@ -17,10 +17,10 @@ public class UserManagementAdminModel {
         this.clientCallback = clientCallback;
     }
 
-    public LinkedList<User> fetchListOfUsers() {
+    public LinkedList<User> fetchListOfUsers() throws NotLoggedInException, OutOfRoleException{
         try {
             return FetchListOfUsersService.process(clientCallback, registry);
-        } catch (OutOfRoleException | NotLoggedInException e) {
+        } catch (NotLoggedInException | OutOfRoleException e) {
             // Handle exceptions appropriately
             e.printStackTrace();
         }
