@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogEvent;
 import javafx.scene.control.TextField;
@@ -44,6 +45,15 @@ public class LoginController implements ControllerInterface {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#FFFFFF, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #FFFFFF;"));
     }
+
+    private void showAlert(String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     @FXML
     public void OnLogin(ActionEvent actionEvent) {
         String username = usernameField.getText();
@@ -73,10 +83,10 @@ public class LoginController implements ControllerInterface {
             }
         } catch (RemoteException remoteException) {
             throw new RuntimeException("RMI Server error");
-        } catch (UserExistenceException userExistenceException) {
-
-        } catch (AlreadyLoggedInException alreadyLoggedInException) {
-
+        } catch (UserExistenceException e) {
+            showAlert(e.getMessage());
+        } catch (AlreadyLoggedInException e) {
+            showAlert(e.getMessage());
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {
@@ -84,6 +94,7 @@ public class LoginController implements ControllerInterface {
         }
         // todo: handle the exception using javafx components
     }
+
 
     @Override
     public void fetchAndUpdate() throws RemoteException {

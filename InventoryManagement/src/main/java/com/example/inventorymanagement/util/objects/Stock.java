@@ -30,9 +30,9 @@ public class Stock implements Serializable {
 
     public Stock(){
         this.batchNo = null;
-        this.qty = -1;
-        this.price = -1;
-        this.cost = -1;
+        this.qty = 0;
+        this.price = 0;
+        this.cost = 0;
         this.supplier = null;
         this.date = null;
     }
