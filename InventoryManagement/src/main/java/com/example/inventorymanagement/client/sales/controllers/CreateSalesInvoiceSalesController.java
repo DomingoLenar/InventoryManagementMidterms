@@ -17,12 +17,18 @@ import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.Region;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Optional;
 
 public class CreateSalesInvoiceSalesController implements ControllerInterface {
     @FXML
@@ -32,9 +38,19 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
     @FXML
     private Label itemPriceLabel;
     @FXML
+    private ListView<String> itemNameListView;
+    @FXML
+    private ListView<Float> priceListView;
+    @FXML
+    private ListView<Integer> quantityListView;
+    @FXML
+    private Button addButton;
+    @FXML
+    private Button clearButton;
+    @FXML
     private Button okButton;
     private Map<String, Item> itemMap = new HashMap<>();
-
+    private LinkedList<OrderDetail> orderDetailsList = new LinkedList<>();
     boolean initialized = false;
 
     private CreateSalesInvoiceSalesModel createSalesInvoiceSalesModel;
@@ -43,13 +59,29 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
     public ComboBox getItemNameComboBox() {
         return itemNameComboBox;
     }
-
     public TextField getItemQuantityField() {
         return itemQuantityField;
     }
-
     public Label getItemPriceLabel() {
         return itemPriceLabel;
+    }
+    public ListView<String> getItemNameListView() {
+        return itemNameListView;
+    }
+    public ListView<Float> getPriceListView() {
+        return priceListView;
+    }
+    public ListView<Integer> getQuantityListView() {
+        return quantityListView;
+    }
+    public Button getAddButton() {
+        return addButton;
+    }
+    public Button getClearButton() {
+        return clearButton;
+    }
+    public Button getOkButton() {
+        return okButton;
     }
 
     public CreateSalesInvoiceSalesController() {
@@ -90,9 +122,77 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
     }
 
     @FXML
+    private void handleAddButton() throws RemoteException {
+        String selectedItemName = itemNameComboBox.getValue();
+        if (selectedItemName == null) {
+            showAlert("Please select an item.");
+            return;
+        }
+        Item selectedItem = getSelectedItem();
+        if (selectedItem == null) {
+            showAlert("Error: Item not found.");
+            return;
+        }
+
+        int quantity;
+        try {
+            quantity = Integer.parseInt(itemQuantityField.getText().trim());
+            if (quantity <= 0) {
+                showAlert("Quantity must be greater than zero.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            showAlert("Please enter a valid quantity.");
+            return;
+        }
+
+        Stock firstAvailableStock = selectedItem.findFirstAvailableStock();
+        if (firstAvailableStock == null) {
+            showAlert("Error: No available stock for selected item.");
+            return;
+        }
+
+        float unitPrice = selectedItem.findFirstAvailableStock().getPrice();
+        String batchNo = firstAvailableStock.getBatchNo();
+        OrderDetail newOrderDetail = new OrderDetail(selectedItem.getItemId(), quantity, unitPrice, batchNo);
+        orderDetailsList.add(newOrderDetail);
+
+        itemNameListView.getItems().add(selectedItemName);
+        quantityListView.getItems().add(quantity);
+        priceListView.getItems().add(unitPrice);
+        itemQuantityField.setText("");
+        itemNameComboBox.getSelectionModel().select(null);
+
+        updateTotalPriceLabel();
+
+    }
+    @FXML
+    private void handleClearButton() {
+        if (confirmAction("Are you sure you want to clear all items in your order?")) {
+            clearOrderDetails();
+            itemNameComboBox.getSelectionModel().select(null);
+            itemQuantityField.setText("");
+        }
+    }
+
+    private boolean confirmAction(String message) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setHeaderText("Confirmation Required");
+        confirmation.setContentText(message);
+        ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.YES);
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        confirmation.getButtonTypes().setAll(okButton, cancelButton);
+        Optional<ButtonType> result = confirmation.showAndWait();
+        return result.orElse(ButtonType.CANCEL) == okButton;
+    }
+
+    @FXML
     private void handleOkButton(ActionEvent actionEvent) throws NotLoggedInException, OutOfRoleException {
         try {
             validateAndProcessSalesInvoice();
+            Stage stage = (Stage) okButton.getScene().getWindow();
+            stage.close();
+
         } catch (NotLoggedInException e) {
             showAlert("User not logged in.");
         } catch (OutOfRoleException e) {
@@ -104,126 +204,131 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
     }
 
     /**
-     *
      * @throws NotLoggedInException
      * @throws OutOfRoleException
      */
     private void validateAndProcessSalesInvoice() throws NotLoggedInException, OutOfRoleException {
-        Item selectedItem = getSelectedItem();
-        Stock selectedStock = getSelectedStock(selectedItem);
-        if (selectedStock == null) {
-            return; // showAlert method will already be called inside getSelectedStock method
-        }
+        try {
+            String formattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-        int quantity = getQuantity();
-        if (quantity <= 0) {
-            showAlert("Quantity must be greater than zero.");
-            return;
-        }
+            ItemOrder itemOrder = new ItemOrder(0, MainController.clientCallback.getUser().getUsername(), formattedDate, orderDetailsList);
 
-        float totalPrice = calculateTotalPrice(selectedStock.getPrice(), quantity);
-        updateItemPriceLabel(totalPrice);
-        ItemOrder itemOrder = createItemOrder(selectedItem, quantity, selectedStock.getPrice());
-        createSalesInvoice(itemOrder);
+            boolean success = createSalesInvoiceSalesModel.createSalesInvoice(itemOrder);
+            if (success) {
+                showSuccess("Sale invoiced successfully");
+                updateStockControlTable();
+            } else {
+                showAlert("Failed to create sales invoice.");
+            }
+        } catch (NotLoggedInException | OutOfRoleException e) {
+            showAlert("Error: " + e.getMessage());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
      * Get selected Item from String
+     *
      * @return selectedItem object of Item from String input
      */
     private Item getSelectedItem() {
         String selectedItemName = itemNameComboBox.getValue();
-        try {
-            LinkedList<Item> itemList = createSalesInvoiceSalesModel.fetchListOfItems();
-            for (Item item : itemList) {
-                itemNameComboBox.getItems().add(item.getItemName());
-                itemMap.put(item.getItemName(), item); // Add item to the map
-            }
-        } catch (NotLoggedInException e) {
-            showAlert("User not logged in.");
-        }
         if (selectedItemName == null) {
             showAlert("Please select an item.");
-            return null; // Indicate no selection
+            return null;
         }
 
         Item selectedItem = itemMap.get(selectedItemName);
         if (selectedItem == null) {
-            // Handle unexpected case (item name not found in map)
             showAlert("Error: Item not found.");
             return null;
         }
         return selectedItem;
     }
-
-
-    private Stock getSelectedStock(Item selectedItem) {
-        if (selectedItem == null) {
-            return null;
+//        private Stock getSelectedStock(Item selectedItem) {
+//        if (selectedItem == null) {
+//            return null;
+//        }
+//        LinkedList<Stock> stocks = selectedItem.getStocks();
+//        if (stocks.isEmpty()) {
+//            showAlert("No stock available for selected item.");
+//            return null;
+//        }
+//        return stocks.getFirst();
+//    }
+//
+//    /**
+//     * Method to get int quantity from textfield
+//     * @return int value obtained from itemQuantityField
+//     */
+//    private int getQuantity() {
+//        if (itemQuantityField.getText().trim().isEmpty()) {
+//            showAlert("Please enter quantity.");
+//        }
+//        try {
+//            return Integer.parseInt(itemQuantityField.getText().trim());
+//        } catch (NumberFormatException e) {
+//            showAlert("Please enter a valid quantity.");
+//            return -1;
+//        }
+//    }
+//
+    private void updateTotalPriceLabel() {
+        float totalPrice = 0.0f;
+        for (OrderDetail orderDetail : orderDetailsList) {
+            totalPrice += orderDetail.getQty() * orderDetail.getUnitPrice();
         }
-        LinkedList<Stock> stocks = selectedItem.getStocks();
-        if (stocks.isEmpty()) {
-            showAlert("No stock available for selected item.");
-            return null;
-        }
-        return stocks.getFirst();
-    }
-
-    /**
-     * Method to get int quantity from textfield
-     * @return int value obtained from itemQuantityField
-     */
-    private int getQuantity() {
-        if (itemQuantityField.getText().trim().isEmpty()) {
-            showAlert("Please enter quantity.");
-        }
-        try {
-            return Integer.parseInt(itemQuantityField.getText().trim());
-        } catch (NumberFormatException e) {
-            showAlert("Please enter a valid quantity.");
-            return -1;
-        }
-    }
-
-    private float calculateTotalPrice(float unitPrice, int quantity) {
-        return unitPrice * quantity;
-    }
-
-    private void updateItemPriceLabel(float totalPrice) {
         itemPriceLabel.setText(String.format("%.2f", totalPrice));
     }
 
-    private ItemOrder createItemOrder(Item selectedItem, int quantity, float unitPrice) {
-        OrderDetail orderDetail = new OrderDetail(selectedItem.getItemId(), quantity, unitPrice, "");
-        ItemOrder itemOrder = new ItemOrder();
-        itemOrder.addOrderDetail(orderDetail);
-        return itemOrder;
-    }
-
-    private void createSalesInvoice(ItemOrder itemOrder) throws NotLoggedInException, OutOfRoleException {
-        if (createSalesInvoiceSalesModel.createSalesInvoice(itemOrder)) {
-            showAlert("Sales invoice created successfully.");
-        } else {
-            showAlert("Failed to create sales invoice.");
-        }
+    private void clearOrderDetails() {
+        orderDetailsList.clear();
+        itemNameListView.getItems().clear();
+        priceListView.getItems().clear();
+        quantityListView.getItems().clear();
+        updateTotalPriceLabel();
     }
 
 
+//    private float calculateTotalPrice(float unitPrice, int quantity) {
+//        return unitPrice * quantity;
+//    }
+//
+//    private void updateItemPriceLabel(float totalPrice) {
+//        itemPriceLabel.setText(String.format("%.2f", totalPrice));
+//    }
+
+    //
+//    private ItemOrder createItemOrder(Item selectedItem, int quantity, float unitPrice) {
+//        OrderDetail orderDetail = new OrderDetail(selectedItem.getItemId(), quantity, unitPrice, "");
+//        ItemOrder itemOrder = new ItemOrder();
+//        itemOrder.addOrderDetail(orderDetail);
+//        return itemOrder;
+//    }
+//
+//    private void createSalesInvoice(ItemOrder itemOrder) throws NotLoggedInException, OutOfRoleException {
+//        if (createSalesInvoiceSalesModel.createSalesInvoice(itemOrder)) {
+//            showSuccess("Sale invoiced successfully!");
+//        } else {
+//            showAlert("Failed to create sales invoice.");
+//        }
+//    }
+//
+//
     private Item lookupItem(String itemName) {
         return itemMap.get(itemName);
     }
+
     @FXML
-    private void handleCreateSalesInvoice(ActionEvent event) {
+    private void handleCreateSalesInvoice(ActionEvent event) throws RemoteException {
         try {
-            // Retrieve selected item from the ComboBox
-            // Retrieve selected item name from the ComboBox
             String selectedItemName = itemNameComboBox.getValue();
             if (selectedItemName == null) {
                 showAlert("Please select an item.");
                 return;
             }
-
-// Retrieve the actual Item object using the selected name (replace with your implementation)
+            // Retrieve the actual Item object using the selected name (replace with your implementation
             Item selectedItem = lookupItem(selectedItemName);
             if (selectedItem == null) {
                 showAlert("Error: Item not found.");
@@ -243,15 +348,25 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
                 return;
             }
 
-            // Create ItemOrder
-            OrderDetail orderDetail = new OrderDetail(selectedItem.getItemId(), quantity, selectedItem.getStocks().get(0).getPrice(), "");
-            ItemOrder itemOrder = new ItemOrder();
-            itemOrder.addOrderDetail(orderDetail);
+            Stock firstAvailableStock = selectedItem.findFirstAvailableStock();
+            if (firstAvailableStock == null) {
+                showAlert("Error: No available stock for selected item.");
+                return;
+            }
+
+            String formattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+            OrderDetail orderDetail = new OrderDetail(selectedItem.getItemId(), quantity, firstAvailableStock.getPrice(), firstAvailableStock.getBatchNo());
+            LinkedList<OrderDetail> orderDetailsList = new LinkedList<>();
+            orderDetailsList.add(orderDetail);
+
+            ItemOrder itemOrder = new ItemOrder(0, MainController.clientCallback.getUser().getUsername(), formattedDate, orderDetailsList);
+
 
             // Create sales invoice using the model
             boolean success = createSalesInvoiceSalesModel.createSalesInvoice(itemOrder);
             if (success) {
-                showAlert("Sales invoice created successfully.");
+                showSuccess("Sale invoiced successfully");
 
                 // Update stock control table
                 updateStockControlTable();
@@ -277,7 +392,15 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
 
-    private void showAlert(String message){
+    private void showSuccess(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success!");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setHeaderText(null);
@@ -291,46 +414,54 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
         createSalesInvoiceSalesModel = new CreateSalesInvoiceSalesModel(MainController.registry, MainController.clientCallback);
 
         if (!initialized) {
+            addHoverEffect(addButton);
+            addHoverEffect(clearButton);
             addHoverEffect(okButton);
-            initialized = true; // Set initialized to true after initialization
 
-            if (okButton != null && itemNameComboBox != null && itemQuantityField != null && itemPriceLabel != null) {
+            initialized = true;
+
+            if (addButton != null && clearButton != null && okButton != null && itemNameComboBox != null && itemQuantityField != null && itemPriceLabel != null && itemNameListView != null) {
                 addHoverEffect(okButton);
                 try {
-                    // Fetch list of items and populate the ComboBox
-                    LinkedList<Item> itemList =createSalesInvoiceSalesModel.fetchListOfItems();
+                    LinkedList<Item> itemList = createSalesInvoiceSalesModel.fetchListOfItems();
                     for (Item item : itemList) {
                         itemNameComboBox.getItems().add(item.getItemName());
+                        itemMap.put(item.getItemName(), item);
                     }
                 } catch (NotLoggedInException e) {
-                    showAlert("User not logged in.");
+                    throw new RuntimeException(e);
                 }
             } else {
                 System.out.println("Button or Field is null. Cannot continue");
-                return; // Exit the method if UI components are not properly initialized
+                return;
             }
+            addButton.setOnAction(actionEvent -> {
+                try {
+                    handleAddButton();
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            clearButton.setOnAction(actionEvent -> {handleClearButton();});
 
             okButton.setOnAction(actionEvent -> {
                 try {
-                    if (createSalesInvoiceSalesModel != null) {
-                        handleOkButton(actionEvent);
-                    } else {
-                        System.out.println("CreateSalesInvoiceSalesModel is null");
-                    }
+                    handleOkButton(actionEvent);
                 } catch (NotLoggedInException e) {
                     showAlert("User not logged in.");
                 } catch (OutOfRoleException e) {
-                    showAlert("User does not have required permission.");
+                    showAlert("User does not meet required permissions");
                 }
             });
-        }
-        try {
-            MainController.clientCallback.setCurrentPanel(this);
-            UpdateCallback.process(MainController.clientCallback, MainController.registry);
-        } catch (NotLoggedInException e){
-            showAlert("User is not logged in");
-        } catch (RemoteException e) {
-            System.out.println(e.getMessage());
+            try {
+                MainController.clientCallback.setCurrentPanel(this);
+                UpdateCallback.process(MainController.clientCallback, MainController.registry);
+            } catch (NotLoggedInException e) {
+                showAlert("User is not logged in");
+            } catch (RemoteException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 }
