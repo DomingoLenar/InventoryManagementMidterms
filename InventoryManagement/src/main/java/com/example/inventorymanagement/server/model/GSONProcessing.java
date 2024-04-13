@@ -49,6 +49,8 @@ public class GSONProcessing {
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray itemJsonArray = rootObject.getAsJsonArray("items");
 
+            newItem.setItemId(itemJsonArray.size()+1);
+
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement newItemJson = gson.toJsonTree(newItem);
             itemJsonArray.add(newItemJson);
@@ -136,15 +138,9 @@ public class GSONProcessing {
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray orderJsonArray = rootObject.getAsJsonArray(orderArrayName);
 
-            int currentID = 0;
+            int currentID = orderJsonArray.size()+1;
 
-            if (!orderJsonArray.isEmpty()) {
-                JsonElement latestElement = orderJsonArray.get(orderJsonArray.size() - 1);
-                ItemOrder latestOrder = gson.fromJson(latestElement, ItemOrder.class);
-                currentID = latestOrder.getOrderID();
-            }
-
-            newOrder.setOrderID(++currentID);
+            newOrder.setOrderID(currentID);
 
             String ioString = gson.toJson(newOrder);
             JsonElement ioElement = JsonParser.parseString(ioString);
