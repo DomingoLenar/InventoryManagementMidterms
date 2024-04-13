@@ -391,6 +391,29 @@ public class GSONProcessing {
         }
     }
 
+    private static boolean userExists(JsonArray usersArray, String username){
+        Gson gson = new Gson();
+
+        for(JsonElement jsonElement : usersArray){
+            User cUser = gson.fromJson(jsonElement, User.class);
+            if(cUser.getUsername().equals(username)) return true;
+        }
+        return false;
+    }
+
+    private static boolean itemExists(JsonArray itemArray, String itemName){
+        Gson gson = new Gson();
+
+        for(JsonElement jsonElement : itemArray){
+            Item cItem = gson.fromJson(jsonElement, Item.class);
+            if(cItem.getItemName().equals(itemName)){
+                return false;
+            }
+        }
+
+        return false;
+    }
+
     public static synchronized boolean removeUser(User toRemove){
         Gson gson = new Gson();
         File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/users.json");
