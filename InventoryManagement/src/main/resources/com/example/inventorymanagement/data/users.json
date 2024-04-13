@@ -20,9 +20,9 @@
     },
     {
       "username": "testUser",
-      "isActive": "false",
-      "role": "sales",
-      "password": "newPassword"
+      "password": "password123",
+      "role": "admin",
+      "isActive": "false"
     }
   ]
 }

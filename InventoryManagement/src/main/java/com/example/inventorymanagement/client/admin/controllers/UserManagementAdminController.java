@@ -95,14 +95,15 @@ public class UserManagementAdminController implements ControllerInterface {
     private void populateTableView(LinkedList<User> users) {
         if (userManagementTableView != null && nameTableColumn != null && roleTableColumn != null) {
             ObservableList<User> observableList = FXCollections.observableArrayList(users);
-            userManagementTableView.setUserData(observableList);
+            userManagementTableView.setItems(observableList); // Set items to populate the TableView
 
             nameTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUsername()));
             roleTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRole()));
         } else {
-            System.out.println("Error:Table or columns are null. Cannot populate table");
+            System.out.println("Error: Table or columns are null. Cannot populate table");
         }
     }
+
 
     @Override
     public String getObjectsUsed() throws RemoteException {
@@ -123,8 +124,12 @@ public class UserManagementAdminController implements ControllerInterface {
     }
 
     @FXML
-    private void handleAddUser() {
-        //
+    private void handleSave() {
+        if (mainController != null) {
+            mainController.openAddUserAdminPanel();
+        } else {
+            System.out.println("MainController is not set.");
+        }
     }
 
     private void handleRowClick() {
@@ -140,7 +145,7 @@ public class UserManagementAdminController implements ControllerInterface {
         addHoverEffect(addUserButton);
         // initialize the panel and model objects
 
-        addUserButton.setOnAction(event -> handleAddUser());
+        addUserButton.setOnAction(event -> handleSave());
         // Add listener to handle row selection events
         userManagementTableView.setOnMouseClicked(event -> handleRowClick());
         userManagementAdminModel = new UserManagementAdminModel(MainController.registry, MainController.clientCallback);
@@ -150,7 +155,7 @@ public class UserManagementAdminController implements ControllerInterface {
             // check ui components if not null
             if (userManagementTableView != null & addUserButton != null) {
                 addHoverEffect(addUserButton);
-                addUserButton.setOnAction(event -> handleAddUser());
+                addUserButton.setOnAction(event -> handleSave());
 
                 try {
                     if (userManagementAdminModel != null) {

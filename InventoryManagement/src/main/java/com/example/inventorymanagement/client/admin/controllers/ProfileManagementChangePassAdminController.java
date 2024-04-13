@@ -104,7 +104,7 @@ public class ProfileManagementChangePassAdminController  implements ControllerIn
 
 
     public String getObjectsUsed() throws RemoteException {
-        return "User";
+        return "user";
     }
 
     private void addHoverEffect (Button button){
@@ -155,6 +155,7 @@ public class ProfileManagementChangePassAdminController  implements ControllerIn
         try {
             usernameLabel.setText(clientCallback.getUser().getUsername());
         } catch (RemoteException e) {
+            showAlert("Error:" + e.getMessage());
             //Prompt user unable to fetch User object
         }
     }

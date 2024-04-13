@@ -13,6 +13,7 @@ import com.example.inventorymanagement.util.objects.User;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -42,35 +43,31 @@ public class ProfileManagementAdminController implements ControllerInterface {
 
     // Getters for FXML components
 
-    @FXML
+
     public BorderPane getBorderPaneProfileManagement() {
         return borderPaneProfileManagement;
     }
 
-    @FXML
     public Label getProfileManagementLabel() {
         return profileManagementLabel;
     }
 
-    @FXML
     public Label getUsernameLabel() {
         return usernameLabel;
     }
 
-    @FXML
     public ComboBox<String> getChangeUserAccountComboBox() {
         return changeUserAccountComboBox;
     }
 
-    @FXML
     public Button getChangePasswordButton() {
         return changePasswordButton;
     }
 
-    @FXML
     public Button getLogoutButton() {
         return logoutButton;
     }
+
 
     private ProfileManagementAdminModel profileManagementAdminModel;
 
@@ -83,6 +80,10 @@ public class ProfileManagementAdminController implements ControllerInterface {
     public ProfileManagementAdminController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
         this.profileManagementAdminModel = new ProfileManagementAdminModel(registry, clientCallback);
     }
+    public void setMainController(MainController mainController){
+        this.mainController = mainController;
+    }
+
 
     boolean initialized = false;
 
@@ -181,7 +182,15 @@ public class ProfileManagementAdminController implements ControllerInterface {
 
     @FXML
     private void handleLogout() {
-        // Handle logout action
+        Platform.exit();
+    }
+    @FXML
+    private void handleSave(){
+        if (mainController != null) {
+            mainController.openProfileManagementCPAdminPanel();
+        } else {
+            System.out.println("MainController is not set.");
+        }
     }
 
     @FXML
@@ -205,7 +214,7 @@ public class ProfileManagementAdminController implements ControllerInterface {
         addHoverEffect(changeUserAccountComboBox);
 
         // Add action handlers
-        changePasswordButton.setOnAction(event -> handleChangePassword());
+        changePasswordButton.setOnAction(event -> handleSave());
         logoutButton.setOnAction(event -> handleLogout());
         changeUserAccountComboBox.setOnAction(event -> handleChangeUserRole());
         profileManagementAdminModel = new ProfileManagementAdminModel(registry, clientCallback);
@@ -217,7 +226,7 @@ public class ProfileManagementAdminController implements ControllerInterface {
                 addHoverEffect(changePasswordButton);
                 addHoverEffect(logoutButton);
                 addHoverEffect(changeUserAccountComboBox);
-                changePasswordButton.setOnAction(event -> handleChangePassword());
+                changePasswordButton.setOnAction(event -> handleSave());
                 logoutButton.setOnAction(event -> handleLogout());
                 changeUserAccountComboBox.setOnAction(event -> handleChangeUserRole());
 
