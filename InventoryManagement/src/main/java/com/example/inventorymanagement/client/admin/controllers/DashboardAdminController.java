@@ -179,6 +179,9 @@ public class DashboardAdminController implements ControllerInterface {
     public DashboardAdminController(){
         // Default Constructor
     }
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
 
     boolean initialized = false;
 
@@ -330,7 +333,12 @@ public class DashboardAdminController implements ControllerInterface {
     }
 
     @FXML
-    private void handleAddUserButton(){
+    private void handleSave(){
+        if (mainController != null) {
+            mainController.openAddUserAdminPanel();
+        } else {
+            System.out.println("MainController is not set.");
+        }
     }
 
     public void setAddUserAdminController(AddUserAdminController addUserAdminController) {
@@ -356,7 +364,7 @@ public class DashboardAdminController implements ControllerInterface {
         amountTableColumn.setCellValueFactory(new PropertyValueFactory<>(   "totalAmount"));
 
         addHoverEffect(addUserButton);
-        addUserButton.setOnAction(event -> handleAddUserButton());
+        addUserButton.setOnAction(event -> handleSave());
         dashboardAdminModel = new DashboardAdminModel(MainController.registry,MainController.clientCallback );
         if (!initialized){
             initialized = true;
@@ -364,7 +372,7 @@ public class DashboardAdminController implements ControllerInterface {
             //check if ui components are not null
             if (usersActiveTableView !=null && usernameTableColumn !=null & roleTableColumn !=null){
                 addHoverEffect(addUserButton);
-                addUserButton.setOnAction(event -> handleAddUserButton());
+                addUserButton.setOnAction(event -> handleSave());
 
                 try{
                     if (dashboardAdminModel !=null){
