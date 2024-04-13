@@ -49,6 +49,8 @@ public class GSONProcessing {
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray itemJsonArray = rootObject.getAsJsonArray("items");
 
+            newItem.setItemId(itemJsonArray.size()+1);
+
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement newItemJson = gson.toJsonTree(newItem);
             itemJsonArray.add(newItemJson);
