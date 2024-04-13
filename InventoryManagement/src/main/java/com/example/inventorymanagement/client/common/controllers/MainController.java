@@ -73,6 +73,8 @@ public class MainController implements ControllerInterface {
     static BorderPane lowStocksAdminPanel;
     static AddUserAdminController addUserAdminController;
     static BorderPane addUserAdminPanel;
+    static ProfileManagementChangePassAdminController profileManagementChangePassAdminController;
+    static BorderPane profileManagementChangePassAdminPanel;
 
     /**
      * Purchaser Controller and Panel Variables
@@ -136,6 +138,7 @@ public class MainController implements ControllerInterface {
     public static BorderPane getLowStocksPurchaserPanel() { return lowStocksPurchaserPanel;}
     public static BorderPane getLowStocksAdminPanel() { return lowStocksAdminPanel;}
     public static BorderPane getAddUserAdminPanel() { return addUserAdminPanel;}
+    public static BorderPane getProfileManagementChangePassAdminPanel(){ return profileManagementChangePassAdminPanel;}
 
     /**
      * Getters of all Controllers
@@ -170,6 +173,7 @@ public class MainController implements ControllerInterface {
     public static LowStocksPurchaserController getLowStocksPurchaserController() {return lowStocksPurchaserController;}
     public static LowStocksAdminController getLowStocksAdminController() {return lowStocksAdminController;}
     public static AddUserAdminController getAddUserAdminController() {return addUserAdminController;}
+    public static ProfileManagementChangePassAdminController getProfileManagementChangePassAdminController(){return profileManagementChangePassAdminController;}
 
     public ClientCallback getClientCallback() { return clientCallback;}
 
@@ -300,6 +304,7 @@ public class MainController implements ControllerInterface {
         FXMLLoader profileManagementLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagementAdmin-view.fxml"));
         profileManagementAdminPanel = profileManagementLoader.load();
         profileManagementAdminController = profileManagementLoader.getController();
+        profileManagementAdminController.setMainController(this);
 
         FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/dashboard/dashboardAdmin-view.fxml"));
         dashboardAdminPanel = dashboardLoader.load();
@@ -710,6 +715,37 @@ public class MainController implements ControllerInterface {
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.setTitle("Add User");
             Scene scene = new Scene(addUserAdminPanel);
+            dialogStage.setScene(scene);
+
+            // Set the stage not resizable
+            dialogStage.setResizable(false);
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void openProfileManagementCPAdminPanel(){
+        try {
+            Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
+            FXMLLoader profileManagementCPAdminLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagementChangePassAdmin-view.fxml"));
+            profileManagementChangePassAdminPanel = profileManagementCPAdminLoader.load();
+            profileManagementChangePassAdminController = profileManagementCPAdminLoader.getController();
+
+            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                stage.getIcons().add(image);
+            } else {
+                System.err.println("Failed to load image: logo.png");
+            }
+
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(stage);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setTitle("Change Password");
+            Scene scene = new Scene(profileManagementChangePassAdminPanel);
             dialogStage.setScene(scene);
 
             // Set the stage not resizable
