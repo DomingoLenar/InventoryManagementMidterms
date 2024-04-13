@@ -12,7 +12,7 @@ public class Item implements Serializable {
 
     public Item(){
         itemName = null;
-        itemId = -1;
+        itemId = 0;
         totalQty = 0;
     }
 
@@ -86,5 +86,13 @@ public class Item implements Serializable {
 
     public void setStocks(LinkedList<Stock> stocks) {
         this.stocks = stocks;
+    }
+    public Stock findFirstAvailableStock() {
+        for (Stock stock : stocks) {
+            if (stock.getQty() != 0) {
+                return stock;
+            }
+        }
+        return null;
     }
 }

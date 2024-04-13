@@ -12,12 +12,12 @@ import com.example.inventorymanagement.util.objects.OrderDetail;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
-import javafx.beans.property.SimpleFloatProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 
@@ -26,10 +26,7 @@ import java.rmi.registry.Registry;
 import java.util.LinkedList;
 
 public class SalesHistorySalesController implements ControllerInterface {
-
-    /**
-     * FXML Controller Variables
-     */
+    //Variables
     @FXML
     private BorderPane borderPaneSalesHistorySales;
     @FXML
@@ -39,91 +36,133 @@ public class SalesHistorySalesController implements ControllerInterface {
     @FXML
     private TableView salesHistorySalesTable;
     @FXML
+    private TableColumn<ItemOrder, Integer> orderIDColumn;
+    @FXML
     private TableColumn<ItemOrder, String> dateColumn;
     @FXML
     private TableColumn<ItemOrder, String> productColumn;
     @FXML
-    private TableColumn<ItemOrder, Float> priceColumn;
+    private TableColumn<ItemOrder, String> priceColumn;
     @FXML
-    private TableColumn<ItemOrder, Integer> quantityColumn;
+    private TableColumn<ItemOrder, String> quantityColumn;
     @FXML
-    private TableColumn<ItemOrder, Float> totalSalesColumn;
-
-    /**
-     * Controller Variables
-     */
+    private TableColumn<ItemOrder, String> totalSalesColumn;
+    boolean initialized = false;
     private MainController mainController;
     private SalesHistorySalesModel salesHistorySalesModel;
-    boolean initialized = false;
 
-    /**
-     * Getters
-     */
-    @FXML
-    public BorderPane getBorderPaneSalesHistorySales() { return borderPaneSalesHistorySales;}
-    @FXML
-    public Button getcreateSalesInvoiceSalesSalesButton() { return createSalesInvoiceSalesButton;}
-    @FXML
-    public TextField getSearchFieldSales() { return searchFieldSales;}
-    @FXML
-    public TableView getsalesHistorySalesTable() { return salesHistorySalesTable;}
-    public TableColumn getDateColumn() { return dateColumn;}
-    public TableColumn getProductColumn() { return productColumn;}
-    public TableColumn getPriceColumn() { return priceColumn;}
-    public TableColumn getQuantityColumn() { return quantityColumn;}
-    public TableColumn getTotalSalesColumn() { return totalSalesColumn;}
-
-    /**
-     * Default constructor for SalesHistorySalesController.
-     */
+    //Constructors
     public SalesHistorySalesController() {
-        // Default Constructor
-    }
 
-    /**
-     * Constructor for SalesHistorySalesController.
-     * Initializes the controller with necessary services and references.
-     *
-     * @param clientCallback The client callback for server communication.
-     * @param userService The user service interface.
-     * @param iOService The item order service interface.
-     * @param itemService The item service interface.
-     * @param registry The RMI registry.
-     * @param mainController The main controller instance.
-     */
+    }
     public SalesHistorySalesController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
         this.salesHistorySalesModel = new SalesHistorySalesModel(registry, clientCallback);
     }
 
+    //MainController Setter
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+    //Getters
+    public BorderPane getBorderPaneSalesHistorySales() {
+        return borderPaneSalesHistorySales;
+    }
+    public Button getcreateSalesInvoiceSalesSalesButton() {
+        return createSalesInvoiceSalesButton;
+    }
+    public TextField getSearchFieldSales() {
+        return searchFieldSales;
+    }
+    public TableView getsalesHistorySalesTable() {
+        return salesHistorySalesTable;
+    }
+    public TableColumn getOrderIDColumn() {
+        return orderIDColumn;
+    }
+    public TableColumn getDateColumn() {
+        return dateColumn;
+    }
+    public TableColumn getProductColumn() {
+        return productColumn;
+    }
+    public TableColumn getPriceColumn() {
+        return priceColumn;
+    }
+    public TableColumn getQuantityColumn() {
+        return quantityColumn;
+    }
+    public TableColumn getTotalSalesColumn() {
+        return totalSalesColumn;
+    }
+
+    @Override
+    public void fetchAndUpdate() throws RemoteException {
+        try {
+            LinkedList<ItemOrder> itemOrders = salesHistorySalesModel.fetchItems();
+            populateTableView(itemOrders);
+        } catch (NotLoggedInException e) {
+            showAlert("Error occurred while fetching items: " + e.getMessage());
+        }
+    }
+
     /**
-     * Populates the table view with the given list of items.
-     * @param itemOrders The list of items to populate the table with.
+     * For populating table view in fxml
+     * @param itemOrders objects to populate table with
      */
     private void populateTableView(LinkedList<ItemOrder> itemOrders) {
         ObservableList<ItemOrder> observableItems = FXCollections.observableArrayList(itemOrders);
         salesHistorySalesTable.setItems(observableItems);
 
-        dateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate()));
+        orderIDColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getOrderID()).asObject());
+        dateColumn.setCellValueFactory(cellData -> {
+            ItemOrder itemOrder = cellData.getValue();
+            if (itemOrder.getOrderDetails().isEmpty()) {
+                return new SimpleStringProperty("");
+            }
+            StringBuilder dateString = new StringBuilder();
+            for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
+                dateString.append(itemOrder.getDate()).append("\n");
+            }
+            return new SimpleStringProperty(dateString.toString().trim());
+        });//Lambda for populating dateColumn
+
         productColumn.setCellValueFactory(cellData -> {
             ItemOrder itemOrder = cellData.getValue();
-            String itemName = "No Item";
-
+            StringBuilder itemList = new StringBuilder();
             for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
                 int itemId = orderDetail.getItemId();
                 try {
                     Item item = salesHistorySalesModel.fetchItem(itemId);
                     if (item != null) {
-                        itemName = item.getItemName();
-                        break; // Exit the loop once an item is found
+                        itemList.append(item.getItemName()).append("\n");
                     }
                 } catch (NotLoggedInException e) {
                     throw new RuntimeException(e);
                 }
             }
-            return new SimpleStringProperty(itemName);
-        });
-        quantityColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getOrderDetails().get(0).getQty()).asObject());
-        priceColumn.setCellValueFactory(cellData -> new SimpleFloatProperty(cellData.getValue().getOrderDetails().get(0).getUnitPrice()).asObject());
+            return new SimpleStringProperty(itemList.toString().trim());
+        });//Lambda to populate product column
+
+        quantityColumn.setCellValueFactory(cellData -> {
+            ItemOrder itemOrder = cellData.getValue();
+            StringBuilder quantityList = new StringBuilder();
+            for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
+                quantityList.append(orderDetail.getQty()).append("\n");
+            }
+            return new SimpleStringProperty(quantityList.toString().trim());
+        });//lambda to populate quantity column
+
+        priceColumn.setCellValueFactory(cellData -> {
+            ItemOrder itemOrder = cellData.getValue();
+            StringBuilder priceList = new StringBuilder();
+            for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
+                priceList.append("₱")
+                        .append(String.format("%.2f", orderDetail.getUnitPrice()))
+                        .append("\n");
+            }
+            return new SimpleStringProperty(priceList.toString().trim());
+        });//lamda to populate priceColumn
+
         totalSalesColumn.setCellValueFactory(cellData -> {
             ItemOrder order = cellData.getValue();
             float totalCost = order.getOrderDetails().stream()
@@ -131,34 +170,20 @@ public class SalesHistorySalesController implements ControllerInterface {
                         return detail.getQty() * detail.getUnitPrice();
                     })
                     .reduce(0.0f, Float::sum);
-            return new SimpleFloatProperty(totalCost).asObject();
-        });
+            return new SimpleStringProperty("₱" + String.format("%.2f", totalCost));
+        });//lambda to populate total sales column
     }
 
-    /**
-     * Sets the main controller instance.
-     *
-     * @param mainController The main controller instance.
-     */
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
+    @Override
+    public String getObjectsUsed() throws RemoteException {
+        return "itemOrder";
     }
 
-    /**
-     * Adds hover effect to the given button.
-     *
-     * @param button The button to add hover effect to.
-     */
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
 
-    /**
-     * Shows an alert dialog with the given message.
-     *
-     * @param message The message to display in the alert dialog.
-     */
     private void showAlert(String message){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -167,27 +192,16 @@ public class SalesHistorySalesController implements ControllerInterface {
         alert.showAndWait();
     }
 
-    /**
-     * Handles the action event for sales invoice.
-     */
     @FXML
-    private void handleCreateSalesInvoice() {
-        if (mainController != null) {
-            mainController.openSalesInvoiceSalesPanel();
-        } else {
-            System.out.println("MainController is not set.");
-        }
+    private void handleSalesInvoice() {
+        // Handle the event when the sales invoice button is clicked
     }
 
-    /**
-     * Initializes the controller.
-     * This method sets up the UI components and initializes the data model.
-     */
     @FXML
     public void initialize() { // initialize components -> better approach is to initialize just the components and let nav___bar buttons handle the population of data/realtime
         addHoverEffect(createSalesInvoiceSalesButton);
 
-        createSalesInvoiceSalesButton.setOnAction(event -> handleCreateSalesInvoice());
+        createSalesInvoiceSalesButton.setOnAction(event -> handleSalesInvoice());
         salesHistorySalesModel = new SalesHistorySalesModel(MainController.registry, MainController.clientCallback);
         if (!initialized) { // Check if already initialized
             initialized = true; // Set the flag to true
@@ -195,7 +209,7 @@ public class SalesHistorySalesController implements ControllerInterface {
             // Check if UI components are not null
             if (salesHistorySalesTable != null && createSalesInvoiceSalesButton != null) {
                 addHoverEffect(createSalesInvoiceSalesButton);
-                createSalesInvoiceSalesButton.setOnAction(event -> handleCreateSalesInvoice());
+                createSalesInvoiceSalesButton.setOnAction(event -> handleSalesInvoice());
 
                 try {
                     if (salesHistorySalesModel != null) {
@@ -221,33 +235,5 @@ public class SalesHistorySalesController implements ControllerInterface {
         } catch (RemoteException e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    /**
-     * Fetches and updates data remotely.
-     * This method is called to update the data displayed in the UI.
-     *
-     * @throws RemoteException If a remote communication error occurs.
-     */
-    @Override
-    public void fetchAndUpdate() throws RemoteException {
-        try {
-            LinkedList<ItemOrder> itemOrders = salesHistorySalesModel.fetchItems();
-            populateTableView(itemOrders);
-        } catch (NotLoggedInException e) {
-            showAlert("Error occurred while fetching items: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Gets the objects used.
-     * This method returns a string indicating the type of objects used by the controller.
-     *
-     * @return A string representing the objects used.
-     * @throws RemoteException If a remote communication error occurs.
-     */
-    @Override
-    public String getObjectsUsed() throws RemoteException {
-        return "itemOrder";
     }
 }

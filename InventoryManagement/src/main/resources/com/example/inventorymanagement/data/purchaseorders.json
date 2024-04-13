@@ -4,7 +4,7 @@
       "orderID": "1",
       "byUser": "testpurchase",
       "date": "2023-12-29",
-      "orderDetails":[
+      "orderDetails": [
         {
           "itemID": "1",
           "qty": "50",
@@ -23,7 +23,7 @@
       "orderID": "2",
       "byUser": "testpurchase",
       "date": "2024-01-03",
-      "orderDetails":[
+      "orderDetails": [
         {
           "itemID": "1",
           "qty": "50",
@@ -42,7 +42,7 @@
       "orderID": "3",
       "byUser": "testpurchase",
       "date": "2024-01-04",
-      "orderDetails":[
+      "orderDetails": [
         {
           "itemID": "2",
           "qty": "50",
@@ -55,7 +55,7 @@
       "orderID": "4",
       "byUser": "testpurchase",
       "date": "2024-02-11",
-      "orderDetails":[
+      "orderDetails": [
         {
           "itemID": "3",
           "qty": "100",
@@ -68,7 +68,7 @@
       "orderID": "5",
       "byUser": "testpurchase",
       "date": "2024-02-12",
-      "orderDetails":[
+      "orderDetails": [
         {
           "itemID": "3",
           "qty": "50",
@@ -87,7 +87,7 @@
       "orderID": "6",
       "byUser": "testpurchase",
       "date": "2024-03-16",
-      "orderDetails":[
+      "orderDetails": [
         {
           "itemID": "5",
           "qty": "60",
@@ -100,7 +100,7 @@
       "orderID": "7",
       "byUser": "testpurchase",
       "date": "2024-03-17",
-      "orderDetails":[
+      "orderDetails": [
         {
           "itemID": "5",
           "qty": "60",

@@ -29,6 +29,12 @@
           "qty": "75",
           "unitPrice": "7.20",
           "batchNo": "SweetTreats_2024-02-12_7.20"
+        },
+        {
+          "itemID": "4",
+          "qty": "150",
+          "unitPrice": "250.00",
+          "batchNo": "SteelCraft_2024-02-12_250.00"
         }
       ]
     },
@@ -55,6 +61,31 @@
           "qty": "30",
           "unitPrice": "6.00",
           "batchNo": "ComMeats_2024-03-16_6.00"
+        }
+      ]
+    },
+    {
+      "orderID": "5",
+      "byUser": "testsales",
+      "date": "2024-04-12",
+      "orderDetails": [
+        {
+          "itemID": "5",
+          "qty": "30",
+          "unitPrice": "6.00",
+          "batchNo": "ComMeats_2024-03-16_6.00"
+        },
+        {
+          "itemID": "4",
+          "qty": "126",
+          "unitPrice": "250.00",
+          "batchNo": "SteelCraft_2024-02-12_250.00"
+        },
+        {
+          "itemID": "3",
+          "qty": "30",
+          "unitPrice": "7.20",
+          "batchNo": "SweetTreats_2024-02-12_7.20"
         }
       ]
     }
