@@ -36,8 +36,6 @@ public class ProfileManagementPurchaserController  implements ControllerInterfac
     @FXML
     private Label usernameLabel;
     @FXML
-    private ComboBox<String> changeUserAccountComboBox;
-    @FXML
     private Button changePasswordButton;
     @FXML
     private Button logoutButton;
@@ -58,11 +56,6 @@ public class ProfileManagementPurchaserController  implements ControllerInterfac
     @FXML
     public Label getUsernameLabel() {
         return usernameLabel;
-    }
-
-    @FXML
-    public ComboBox<String> getChangeUserAccountComboBox() {
-        return changeUserAccountComboBox;
     }
 
     @FXML
@@ -98,37 +91,6 @@ public class ProfileManagementPurchaserController  implements ControllerInterfac
             System.out.println("Error fetching current user information.");
         }
     }
-    @FXML
-    private void handleChangeUserRole() {
-        String newRole = changeUserAccountComboBox.getValue();
-        User currentUser;
-        try {
-            currentUser = MainController.clientCallback.getUser();
-        } catch (RemoteException e) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to fetch current user information.");
-            return;
-        }
-
-        if (currentUser == null) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to fetch current user information.");
-            return;
-        }
-
-        try {
-            boolean success = profileManagementPurchaserModel.changeUserRole(currentUser, newRole);
-            if (success) {
-                // Handle successful role change
-                showAlert(Alert.AlertType.INFORMATION, "Role Change", "Role changed successfully.");
-                // Optionally, update the UI to reflect the role change
-            } else {
-                // Handle unsuccessful role change
-                showAlert(Alert.AlertType.ERROR, "Role Change Error", "Failed to change role.");
-            }
-        } catch (UserExistenceException | OutOfRoleException | NotLoggedInException e) {
-            // Handle specific exceptions
-            showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
-        }
-    }
 
     // Helper method to display alerts for remove user
     private void showAlert(Alert.AlertType type, String title, String content) {
@@ -153,10 +115,6 @@ public class ProfileManagementPurchaserController  implements ControllerInterfac
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
-    }
-    private void addHoverEffect(ComboBox<String> comboBox){
-        comboBox.setOnMouseEntered(e -> comboBox.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
-        comboBox.setOnMouseExited(e -> comboBox.setStyle("-fx-background-color: #EAD7D7;"));
     }
 
     // Action handlers
@@ -196,30 +154,23 @@ public class ProfileManagementPurchaserController  implements ControllerInterfac
 
     @FXML
     public void initialize() {
-        // Combo box choices
-        changeUserAccountComboBox.setPromptText("Change User Role");
-        changeUserAccountComboBox.getItems().addAll("Sales", "Purchaser");
 
         addHoverEffect(changePasswordButton);
         addHoverEffect(logoutButton);
-        addHoverEffect(changeUserAccountComboBox);
 
         // Add action handlers
         changePasswordButton.setOnAction(event -> handleChangePassword());
         logoutButton.setOnAction(event -> handleLogout());
-        changeUserAccountComboBox.setOnAction(event -> handleChangeUserRole());
         profileManagementPurchaserModel = new ProfileManagementPurchaserModel(registry, clientCallback);
         if (!initialized) { // Check if already initialized
             initialized = true; // Set the flag to true
 
             // Check if UI components are not null
-            if (changeUserAccountComboBox != null && changePasswordButton != null && logoutButton != null) {
+            if (changePasswordButton != null && logoutButton != null) {
                 addHoverEffect(changePasswordButton);
                 addHoverEffect(logoutButton);
-                addHoverEffect(changeUserAccountComboBox);
                 changePasswordButton.setOnAction(event -> handleChangePassword());
                 logoutButton.setOnAction(event -> handleLogout());
-                changeUserAccountComboBox.setOnAction(event -> handleChangeUserRole());
 
                 try {
                     if (profileManagementPurchaserModel != null) {
