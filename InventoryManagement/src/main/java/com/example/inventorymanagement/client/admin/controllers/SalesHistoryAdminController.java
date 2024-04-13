@@ -27,6 +27,10 @@ import java.rmi.registry.Registry;
 import java.util.LinkedList;
 
 public class SalesHistoryAdminController implements ControllerInterface {
+
+    /**
+     * FXML Controller Variables
+     */
     @FXML
     private BorderPane borderPaneSalesHistoryAdmin;
     @FXML
@@ -46,71 +50,63 @@ public class SalesHistoryAdminController implements ControllerInterface {
     @FXML
     private TableColumn<ItemOrder, Float> totalSalesColumn;
 
+    /**
+     * Controller Variables
+     */
+    private MainController mainController;
+    private SalesHistoryAdminModel salesHistoryAdminModel;
+    boolean initialized = false;
+
+    /**
+     * Getters
+     */
     @FXML
     public BorderPane getBorderPaneSalesHistoryAdmin() {
         return borderPaneSalesHistoryAdmin;
     }
-
     @FXML
     public Button getcreateSalesInvoiceAdminButton() {
         return createSalesInvoiceAdminButton;
     }
-
     @FXML
     public TextField getSearchFieldAdmin() {
         return searchFieldAdmin;
     }
-
     @FXML
     public TableView getsalesHistoryAdminTable() {
         return salesHistoryAdminTable;
     }
+    public TableColumn getDateColumn() { return dateColumn;}
+    public TableColumn getProductColumn() { return productColumn;}
+    public TableColumn getPriceColumn() { return priceColumn;}
+    public TableColumn getQuantityColumn() { return quantityColumn;}
+    public TableColumn getTotalSalesColumn() { return totalSalesColumn;}
 
-    public TableColumn getDateColumn() {
-        return dateColumn;
-    }
-
-    public TableColumn getProductColumn() {
-        return productColumn;
-    }
-
-    public TableColumn getPriceColumn() {
-        return priceColumn;
-    }
-
-    public TableColumn getQuantityColumn() {
-        return quantityColumn;
-    }
-
-    public TableColumn getTotalSalesColumn() {
-        return totalSalesColumn;
-    }
-
-    private MainController mainController;
-    private SalesHistoryAdminModel salesHistoryAdminModel;
+    /**
+     * Default constructor for SalesHistorySalesController.
+     */
     public SalesHistoryAdminController() {
-
+        // Default Constructor
     }
 
+    /**
+     * Constructor for SalesHistorySalesController.
+     * Initializes the controller with necessary services and references.
+     *
+     * @param clientCallback The client callback for server communication.
+     * @param userService The user service interface.
+     * @param iOService The item order service interface.
+     * @param itemService The item service interface.
+     * @param registry The RMI registry.
+     * @param mainController The main controller instance.
+     */
     public SalesHistoryAdminController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
         this.salesHistoryAdminModel = new SalesHistoryAdminModel(registry, clientCallback);
     }
 
-    boolean initialized = false;
-
-    @Override
-    public void fetchAndUpdate() throws RemoteException {
-        try {
-            LinkedList<ItemOrder> itemOrders = salesHistoryAdminModel.fetchItems();
-            populateTableView(itemOrders);
-        } catch (NotLoggedInException e) {
-            showAlert("Error occurred while fetching items: " + e.getMessage());
-        }
-    }
-
     /**
-     * For populating table view in fxml
-     * @param itemOrders objects to populate table with
+     * Populates the table view with the given list of items.
+     * @param itemOrders The list of items to populate the table with.
      */
     private void populateTableView(LinkedList<ItemOrder> itemOrders) {
         ObservableList<ItemOrder> observableItems = FXCollections.observableArrayList(itemOrders);
@@ -148,47 +144,30 @@ public class SalesHistoryAdminController implements ControllerInterface {
         });
     }
 
-    private Stock findStockByBatchNo(String batchNo) {
-        try {
-            LinkedList<ItemOrder> itemOrders = salesHistoryAdminModel.fetchItems();
-            for (ItemOrder itemOrder : itemOrders) {
-                for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
-                    if (orderDetail.getBatchNo().equals(batchNo)) {
-                        return findStockByBatchNoInItemOrder(batchNo, itemOrder);
-                    }
-                }
-            }
-        } catch (NotLoggedInException e) {
-            showAlert("User is not logged in");
-        }
-        return null;
+    /**
+     * Sets the main controller instance.
+     *
+     * @param mainController The main controller instance.
+     */
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 
-    private Stock findStockByBatchNoInItemOrder(String batchNo, ItemOrder itemOrder) {
-        try {
-            for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
-                if (orderDetail.getBatchNo().equals(batchNo)) {
-                    // Assuming the batch number uniquely identifies a stock
-                    return new Stock(batchNo, orderDetail.getQty(), orderDetail.getUnitPrice(), 0, "", ""); // Create a temporary stock with available information
-                }
-            }
-        } catch (Exception e) {
-            // Handle any other exceptions
-            showAlert("Error finding stock by batch number in item order: " + e.getMessage());
-        }
-        return null; // Return null if stock with batchNo is not found or if an exception occurs
-    }
-
-    @Override
-    public String getObjectsUsed() throws RemoteException {
-        return "itemOrder";
-    }
-
+    /**
+     * Adds hover effect to the given button.
+     *
+     * @param button The button to add hover effect to.
+     */
     private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
 
+    /**
+     * Shows an alert dialog with the given message.
+     *
+     * @param message The message to display in the alert dialog.
+     */
     private void showAlert(String message){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -197,16 +176,27 @@ public class SalesHistoryAdminController implements ControllerInterface {
         alert.showAndWait();
     }
 
+    /**
+     * Handles the action event for sales invoice.
+     */
     @FXML
-    private void handleSalesInvoice() {
-        // Handle the event when the sales invoice button is clicked
+    private void handleCreateSalesInvoice() {
+        if (mainController != null) {
+            mainController.openSalesInvoiceSalesPanel();
+        } else {
+            System.out.println("MainController is not set.");
+        }
     }
 
+    /**
+     * Initializes the controller.
+     * This method sets up the UI components and initializes the data model.
+     */
     @FXML
     public void initialize() { // initialize components -> better approach is to initialize just the components and let nav___bar buttons handle the population of data/realtime
         addHoverEffect(createSalesInvoiceAdminButton);
 
-        createSalesInvoiceAdminButton.setOnAction(event -> handleSalesInvoice());
+        createSalesInvoiceAdminButton.setOnAction(event -> handleCreateSalesInvoice());
         salesHistoryAdminModel = new SalesHistoryAdminModel(MainController.registry, MainController.clientCallback);
         if (!initialized) { // Check if already initialized
             initialized = true; // Set the flag to true
@@ -214,7 +204,7 @@ public class SalesHistoryAdminController implements ControllerInterface {
             // Check if UI components are not null
             if (salesHistoryAdminTable != null && createSalesInvoiceAdminButton != null) {
                 addHoverEffect(createSalesInvoiceAdminButton);
-                createSalesInvoiceAdminButton.setOnAction(event -> handleSalesInvoice());
+                createSalesInvoiceAdminButton.setOnAction(event -> handleCreateSalesInvoice());
 
                 try {
                     if (salesHistoryAdminModel != null) {
@@ -240,5 +230,33 @@ public class SalesHistoryAdminController implements ControllerInterface {
         } catch (RemoteException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    /**
+     * Fetches and updates data remotely.
+     * This method is called to update the data displayed in the UI.
+     *
+     * @throws RemoteException If a remote communication error occurs.
+     */
+    @Override
+    public void fetchAndUpdate() throws RemoteException {
+        try {
+            LinkedList<ItemOrder> itemOrders = salesHistoryAdminModel.fetchItems();
+            populateTableView(itemOrders);
+        } catch (NotLoggedInException e) {
+            showAlert("Error occurred while fetching items: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Gets the objects used.
+     * This method returns a string indicating the type of objects used by the controller.
+     *
+     * @return A string representing the objects used.
+     * @throws RemoteException If a remote communication error occurs.
+     */
+    @Override
+    public String getObjectsUsed() throws RemoteException {
+        return "itemOrder";
     }
 }
