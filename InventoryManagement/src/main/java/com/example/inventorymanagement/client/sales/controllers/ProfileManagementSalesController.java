@@ -14,6 +14,7 @@ import com.example.inventorymanagement.util.objects.User;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -181,7 +182,7 @@ public class ProfileManagementSalesController implements ControllerInterface {
 
     @FXML
     private void handleLogout() {
-        // Handle logout action
+        Platform.exit();
     }
 
     @FXML
