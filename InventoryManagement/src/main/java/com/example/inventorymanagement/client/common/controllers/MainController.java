@@ -71,6 +71,8 @@ public class MainController implements ControllerInterface {
 
     static LowStocksAdminController lowStocksAdminController;
     static BorderPane lowStocksAdminPanel;
+    static AddUserAdminController addUserAdminController;
+    static BorderPane addUserAdminPanel;
 
     /**
      * Purchaser Controller and Panel Variables
@@ -133,6 +135,7 @@ public class MainController implements ControllerInterface {
 
     public static BorderPane getLowStocksPurchaserPanel() { return lowStocksPurchaserPanel;}
     public static BorderPane getLowStocksAdminPanel() { return lowStocksAdminPanel;}
+    public static BorderPane getAddUserAdminPanel() { return addUserAdminPanel;}
 
     /**
      * Getters of all Controllers
@@ -166,6 +169,7 @@ public class MainController implements ControllerInterface {
 
     public static LowStocksPurchaserController getLowStocksPurchaserController() {return lowStocksPurchaserController;}
     public static LowStocksAdminController getLowStocksAdminController() {return lowStocksAdminController;}
+    public static AddUserAdminController getAddUserAdminController() {return addUserAdminController;}
 
     public ClientCallback getClientCallback() { return clientCallback;}
 
@@ -300,6 +304,7 @@ public class MainController implements ControllerInterface {
         FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/dashboard/dashboardAdmin-view.fxml"));
         dashboardAdminPanel = dashboardLoader.load();
         dashboardAdminController = dashboardLoader.getController();
+        dashboardAdminController.setMainController(this);
 
         FXMLLoader financesLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/finances/financesAdmin-view.fxml"));
         financesAdminPanel = financesLoader.load();
@@ -308,6 +313,7 @@ public class MainController implements ControllerInterface {
         FXMLLoader userManagementLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/userManagement/userManagementAdmin-view.fxml"));
         userManagementAdminPanel = userManagementLoader.load();
         userManagementAdminController = userManagementLoader.getController();
+        userManagementAdminController.setMainController(this);
 
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
 
@@ -673,6 +679,37 @@ public class MainController implements ControllerInterface {
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.setTitle("Add Item");
             Scene scene = new Scene(addListingAdminPanel);
+            dialogStage.setScene(scene);
+
+            // Set the stage not resizable
+            dialogStage.setResizable(false);
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void openAddUserAdminPanel(){
+        try {
+            Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
+            FXMLLoader addUserAdminPanelLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/userManagement/addUserAdmin-view.fxml"));
+            addUserAdminPanel = addUserAdminPanelLoader.load();
+            addUserAdminController = addUserAdminPanelLoader.getController();
+
+            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                stage.getIcons().add(image);
+            } else {
+                System.err.println("Failed to load image: logo.png");
+            }
+
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(stage);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setTitle("Add User");
+            Scene scene = new Scene(addUserAdminPanel);
             dialogStage.setScene(scene);
 
             // Set the stage not resizable
