@@ -13,7 +13,7 @@ public class ItemOrder implements Serializable {
      * Default constructor
      */
     public ItemOrder(){
-        orderID = -1;
+        orderID = 0;
         byUser = null;
         date = null;
     }

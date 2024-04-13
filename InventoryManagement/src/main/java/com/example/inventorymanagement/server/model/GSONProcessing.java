@@ -6,6 +6,7 @@ import com.example.inventorymanagement.util.objects.User;
 import com.example.inventorymanagement.util.objects.ItemOrder;
 import com.example.inventorymanagement.util.objects.Stock;
 import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -137,13 +138,13 @@ public class GSONProcessing {
 
             int currentID = 0;
 
-            if (orderJsonArray.size() > 0) {
+            if (!orderJsonArray.isEmpty()) {
                 JsonElement latestElement = orderJsonArray.get(orderJsonArray.size() - 1);
                 ItemOrder latestOrder = gson.fromJson(latestElement, ItemOrder.class);
                 currentID = latestOrder.getOrderID();
             }
 
-            newOrder.setOrderID(currentID + 1);
+            newOrder.setOrderID(++currentID);
 
             String ioString = gson.toJson(newOrder);
             JsonElement ioElement = JsonParser.parseString(ioString);
@@ -166,13 +167,24 @@ public class GSONProcessing {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         File itemFile = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/items.json");
 
-        try (FileReader reader = new FileReader(itemFile);
-             BufferedReader bReader = new BufferedReader(reader);
-             FileWriter writer = new FileWriter(itemFile)) {
+        try {
+            JsonElement rootElement;
+            if (itemFile.exists()) {
+                try (FileReader reader = new FileReader(itemFile);
+                     JsonReader jsonReader = new JsonReader(reader)) {
+                    rootElement = gson.fromJson(jsonReader, JsonElement.class);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+            } else {
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.add("items", new JsonArray());
+                rootElement = jsonObject;
+            }
 
-            JsonElement rootElement = JsonParser.parseReader(bReader);
-            if (rootElement.isJsonNull()) {
-                System.err.println("Error: items.json is empty or not valid JSON");
+            if (!rootElement.isJsonObject()) {
+                System.err.println("Error: items.json is not valid JSON");
                 return;
             }
 
@@ -183,43 +195,53 @@ public class GSONProcessing {
                 updateItemQuantity(itemArray, detail, type);
             }
 
-            gson.toJson(rootElement, writer);
-        } catch (IOException e) {
+            try (FileWriter writer = new FileWriter(itemFile)) {
+                gson.toJson(rootElement, writer);
+                writer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (JsonParseException e) {
-            System.err.println("Error parsing items.json: " + e.getMessage());
         }
     }
+
 
     private static void updateItemQuantity(JsonArray itemArray, OrderDetail detail, String type) {
         String batch = detail.getBatchNo();
         for (int i = 0; i < itemArray.size(); i++) {
             JsonObject item = itemArray.get(i).getAsJsonObject();
-            if (Integer.parseInt(item.get("itemID").getAsString()) == detail.getItemId()) {
+            if (Integer.parseInt(item.get("itemId").getAsString()) == detail.getItemId()) {
                 JsonArray stocks = item.getAsJsonArray("stocks");
                 if (stocks == null) {
                     stocks = new JsonArray();
                     item.add("stocks", stocks);
                 }
 
-                updateStockQuantity(stocks, batch, detail, type);
+                Stock updatedStock = updateStockQuantity(stocks, batch, detail, type);
 
-                int initialTQty = item.get("totalQty").getAsInt();
-                item.remove("totalQty");
+                int initialTQty = Integer.parseInt(item.get("totalQty").getAsString());
                 item.addProperty("totalQty", String.valueOf(initialTQty + (type.equals("sales") ? -detail.getQty() : detail.getQty())));
                 break;
             }
         }
     }
 
-    private static void updateStockQuantity(JsonArray stocks, String batch, OrderDetail detail, String type) {
+    private static Stock updateStockQuantity(JsonArray stocks, String batch, OrderDetail detail, String type) {
         for (int j = 0; j < stocks.size(); j++) {
             JsonObject stockObject = stocks.get(j).getAsJsonObject();
             if (stockObject != null && stockObject.has("batchNo") && stockObject.get("batchNo").getAsString().equals(batch)) {
-                int initialQty = stockObject.get("qty").getAsInt();
-                stockObject.remove("qty");
-                stockObject.addProperty("qty", String.valueOf(type.equals("sales") ? initialQty - detail.getQty() : initialQty + detail.getQty()));
-                return;
+                int initialQty = Integer.parseInt(stockObject.get("qty").getAsString());
+                int updatedQty = type.equals("sales") ? initialQty - detail.getQty() : initialQty + detail.getQty();
+                stockObject.addProperty("qty", String.valueOf(updatedQty));
+                return new Stock(
+                        stockObject.get("batchNo").getAsString(),
+                        updatedQty,
+                        stockObject.get("price").getAsFloat(),
+                        stockObject.get("cost").getAsFloat(),
+                        stockObject.get("supplier").getAsString(),
+                        stockObject.get("date").getAsString()
+                );
             }
         }
 
@@ -229,10 +251,11 @@ public class GSONProcessing {
             Stock newStock = new Stock(detail.getBatchNo(), detail.getQty(), price, detail.getQty(), disseminatedBatch[0], disseminatedBatch[1]);
             Gson gson = new Gson();
             stocks.add(JsonParser.parseString(gson.toJson(newStock)));
+            return newStock;
         }
+
+        return null;
     }
-
-
 
     // TODO: Update object of item as well inside the items.json
     /**
