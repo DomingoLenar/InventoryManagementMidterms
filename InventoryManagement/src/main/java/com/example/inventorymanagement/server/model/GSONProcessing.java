@@ -374,15 +374,18 @@ public class GSONProcessing {
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray userJsonArray = rootObject.getAsJsonArray("users");
 
-            String jsonString = gson.toJson(newUser);
-            JsonElement userElement = JsonParser.parseString(jsonString);
-            JsonObject userObject = userElement.getAsJsonObject();
-            userObject.addProperty("isActive","false");
-            userJsonArray.add(userElement);
-            try(FileWriter writer = new FileWriter(file)) {
-                gson.toJson(rootElement, writer);
+            if(!(userExists(userJsonArray, newUser.getUsername()))) {
+                String jsonString = gson.toJson(newUser);
+                JsonElement userElement = JsonParser.parseString(jsonString);
+                JsonObject userObject = userElement.getAsJsonObject();
+                userObject.addProperty("isActive", "false");
+                userJsonArray.add(userElement);
+                try (FileWriter writer = new FileWriter(file)) {
+                    gson.toJson(rootElement, writer);
+                }
+                return true;
             }
-            return true;
+            return false;
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
             return false;
