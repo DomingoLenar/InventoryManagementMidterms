@@ -123,8 +123,12 @@ public class UserManagementAdminController implements ControllerInterface {
     }
 
     @FXML
-    private void handleAddUser() {
-        //
+    private void handleSave() {
+        if (mainController != null) {
+            mainController.openAddUserAdminPanel();
+        } else {
+            System.out.println("MainController is not set.");
+        }
     }
 
     private void handleRowClick() {
@@ -140,7 +144,7 @@ public class UserManagementAdminController implements ControllerInterface {
         addHoverEffect(addUserButton);
         // initialize the panel and model objects
 
-        addUserButton.setOnAction(event -> handleAddUser());
+        addUserButton.setOnAction(event -> handleSave());
         // Add listener to handle row selection events
         userManagementTableView.setOnMouseClicked(event -> handleRowClick());
         userManagementAdminModel = new UserManagementAdminModel(MainController.registry, MainController.clientCallback);
@@ -150,7 +154,7 @@ public class UserManagementAdminController implements ControllerInterface {
             // check ui components if not null
             if (userManagementTableView != null & addUserButton != null) {
                 addHoverEffect(addUserButton);
-                addUserButton.setOnAction(event -> handleAddUser());
+                addUserButton.setOnAction(event -> handleSave());
 
                 try {
                     if (userManagementAdminModel != null) {
