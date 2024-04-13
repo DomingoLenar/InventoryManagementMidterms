@@ -62,6 +62,9 @@ public class AddUserAdminController implements ControllerInterface {
     public AddUserAdminController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController){
         this.addUserAdminModel = new AddUserAdminModel(registry, clientCallback);
     }
+    public AddUserAdminController(){
+        //Default Constructor
+    }
 
     boolean initialized = false;
 
@@ -69,12 +72,13 @@ public class AddUserAdminController implements ControllerInterface {
     }
 
     public String getObjectsUsed() throws RemoteException {
-        return "User";
+        return "user";
     }
     private void addHoverEffect (Button button){
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
+
     @FXML
     private void handleSave() {
         String newUserUsername = usernameField.getText(); // Get the new username from the input field
@@ -117,16 +121,10 @@ public class AddUserAdminController implements ControllerInterface {
         alert.setContentText(content);
         alert.showAndWait();
     }
-    private void showAlert(String message){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
     public void initialize() {
+        addUserAdminModel = new AddUserAdminModel(registry,clientCallback);
         // Create a list of choices
-        ObservableList<String> choices = FXCollections.observableArrayList("Sales", "Purchaser");
+        ObservableList<String> choices = FXCollections.observableArrayList("Sales", "Purchaser", "Admin");
 
         // Set the choices to the ComboBox
         roleComboBox.setItems(choices);
@@ -140,7 +138,6 @@ public class AddUserAdminController implements ControllerInterface {
 
         // action handlers
         saveButton.setOnAction(event -> handleSave());
-        addUserAdminModel = new AddUserAdminModel(registry,clientCallback);
         if (!initialized) {
             initialized = true;
             try {
@@ -156,14 +153,5 @@ public class AddUserAdminController implements ControllerInterface {
         }else {
             System.out.println("Error: Save button is null. Cannot Initialize");
         }
-        try {
-            MainController.clientCallback.setCurrentPanel(this);
-            UpdateCallback.process(MainController.clientCallback, MainController.registry);
-        } catch (NotLoggedInException e){
-            showAlert("User is not logged in");
-        } catch (RemoteException e) {
-            System.out.println(e.getMessage());
-        }
-
     }
 }
