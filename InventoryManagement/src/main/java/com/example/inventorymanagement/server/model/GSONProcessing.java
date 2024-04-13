@@ -501,28 +501,47 @@ public class GSONProcessing {
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray userJsonArray = rootObject.getAsJsonArray("users");
 
-            for(JsonElement element: userJsonArray){
-                JsonObject object = element.getAsJsonObject();
-                if(object.get("username").getAsString().equals(newUser.getUsername())){
-                    return false;
+            if(!(userExists(userJsonArray, newUser.getUsername()))) {
+                String jsonString = gson.toJson(newUser);
+                JsonElement userElement = JsonParser.parseString(jsonString);
+                JsonObject userObject = userElement.getAsJsonObject();
+                userObject.addProperty("isActive", "false");
+                userJsonArray.add(userElement);
+                try (FileWriter writer = new FileWriter(file)) {
+                    gson.toJson(rootElement, writer);
                 }
+                return true;
             }
-
-            String jsonString = gson.toJson(newUser);
-            JsonElement userElement = JsonParser.parseString(jsonString);
-            JsonObject userObject = userElement.getAsJsonObject();
-            userObject.addProperty("isActive","false");
-            userJsonArray.add(userElement);
-            try(FileWriter writer = new FileWriter(file)) {
-                gson.toJson(rootElement, writer);
-            }
-            return true;
+            return false;
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
             return false;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static boolean userExists(JsonArray usersArray, String username){
+        Gson gson = new Gson();
+
+        for(JsonElement jsonElement : usersArray){
+            User cUser = gson.fromJson(jsonElement, User.class);
+            if(cUser.getUsername().equals(username)) return true;
+        }
+        return false;
+    }
+
+    private static boolean itemExists(JsonArray itemArray, String itemName){
+        Gson gson = new Gson();
+
+        for(JsonElement jsonElement : itemArray){
+            Item cItem = gson.fromJson(jsonElement, Item.class);
+            if(cItem.getItemName().equals(itemName)){
+                return false;
+            }
+        }
+
+        return false;
     }
 
     public static synchronized boolean removeUser(User toRemove){

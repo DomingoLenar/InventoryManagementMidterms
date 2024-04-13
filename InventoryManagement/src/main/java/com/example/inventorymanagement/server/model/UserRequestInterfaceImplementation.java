@@ -24,30 +24,30 @@ public class UserRequestInterfaceImplementation extends UnicastRemoteObject impl
     //This method changes the object of user inside the callback for the user to be able to access their role
     @Override
     public void login(ClientCallback clientCallback) throws RemoteException, AlreadyLoggedInException, UserExistenceException {
-        if(clientCallbacks.contains(clientCallback)){
-            throw new AlreadyLoggedInException("User is already logged in");
-        }else{
-            User toLogIn = clientCallback.getUser();
-            User localUserData = GSONProcessing.fetchUser(toLogIn.getUsername());
-            if(localUserData!=null && toLogIn.getPassword().equals(localUserData.getPassword())){
-                clientCallbacks.addFirst(clientCallback);
-                clientCallback.setUser(localUserData);
-                callUpdate("user");
-            }else{
-                throw new UserExistenceException("Invalid credentials");
-            }
+
+        if(isLoggedIn(clientCallback)) throw new AlreadyLoggedInException(clientCallback.getUser().getUsername() + " is already logged in");
+
+        User toLogIn = clientCallback.getUser();
+        User localUserData = GSONProcessing.fetchUser(toLogIn.getUsername());
+        if (localUserData != null && toLogIn.getPassword().equals(localUserData.getPassword())) {
+            clientCallbacks.addFirst(clientCallback);
+            clientCallback.setUser(localUserData);
+            callUpdate("user");
+        } else {
+            throw new UserExistenceException("Invalid credentials");
         }
+
 
     }
 
     @Override
     public void logout(ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
-        if(!clientCallbacks.contains(clientCallback)){
-            throw new NotLoggedInException("User is not logged in");
-        }else{
-            clientCallbacks.remove(clientCallback);
-            callUpdate("user");
-        }
+
+        if(!(isLoggedIn(clientCallback))) throw new NotLoggedInException(clientCallback.getUser().getUsername()+ "is not logged in");
+
+        clientCallbacks.remove(clientCallback);
+        callUpdate("user");
+
     }
 
     // This returns an object of LinkedList of object User
@@ -136,7 +136,7 @@ public class UserRequestInterfaceImplementation extends UnicastRemoteObject impl
     }
 
     @Override
-    public boolean isLoggedIn(ClientCallback clientCallback) throws RemoteException, NotLoggedInException, OutOfRoleException {
+    public boolean isLoggedIn(ClientCallback clientCallback) throws RemoteException {
         return clientCallbacks.stream().anyMatch(callbacks ->{
             try {
                 return (callbacks.getUser().equals(clientCallback.getUser()));

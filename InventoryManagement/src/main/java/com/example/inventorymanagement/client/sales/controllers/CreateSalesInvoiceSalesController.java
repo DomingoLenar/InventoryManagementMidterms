@@ -31,6 +31,9 @@ import java.util.Map;
 import java.util.Optional;
 
 public class CreateSalesInvoiceSalesController implements ControllerInterface {
+    /**
+     * FXML Elements
+     */
     @FXML
     private ComboBox<String> itemNameComboBox;
     @FXML
@@ -49,13 +52,38 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
     private Button clearButton;
     @FXML
     private Button okButton;
+
+    // Other variables
     private Map<String, Item> itemMap = new HashMap<>();
     private LinkedList<OrderDetail> orderDetailsList = new LinkedList<>();
-    boolean initialized = false;
-
+    private boolean initialized = false;
     private CreateSalesInvoiceSalesModel createSalesInvoiceSalesModel;
     private MainController mainController;
 
+    /**
+     * Default Constructor
+     */
+    public CreateSalesInvoiceSalesController() {
+        // Default Constructor
+    }
+
+    /**
+     * Parameterized Constructor
+     *
+     * @param clientCallback The client callback.
+     * @param userService    The user service.
+     * @param iOService      The item order service.
+     * @param itemService    The item service.
+     * @param registry       The RMI registry.
+     * @param mainController The main controller.
+     */
+    public CreateSalesInvoiceSalesController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
+        this.createSalesInvoiceSalesModel = new CreateSalesInvoiceSalesModel(registry, clientCallback);
+    }
+
+    /**
+     * Getters
+     */
     public ComboBox getItemNameComboBox() {
         return itemNameComboBox;
     }
@@ -84,14 +112,14 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
         return okButton;
     }
 
-    public CreateSalesInvoiceSalesController() {
-        // Default Constructor
-    }
+    //Interface implementation
 
-    public CreateSalesInvoiceSalesController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
-        this.createSalesInvoiceSalesModel = new CreateSalesInvoiceSalesModel(registry, clientCallback);
-    }
-
+    /**
+     * Fetches data from the model and updates the UI components accordingly.
+     * This method is called to refresh the UI with the latest data.
+     *
+     * @throws RemoteException If there is a problem with the remote communication.
+     */
     @Override
     public void fetchAndUpdate() throws RemoteException {
         okButton.setOnAction(actionEvent -> {
@@ -116,11 +144,29 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
         }
     }
 
+    /**
+     * Retrieves a string representation of the objects used by this controller.
+     * This method is typically used for logging or debugging purposes.
+     *
+     * @return A string representation of the objects used by this controller.
+     * @throws RemoteException If there is a problem with the remote communication.
+     */
     @Override
     public String getObjectsUsed() throws RemoteException {
         return "item";
     }
 
+    //UI Event Handlers
+
+    /**
+     * Handles the action when the Add button is clicked.
+     * This method retrieves the selected item from the combo box,
+     * validates the quantity input, checks for available stock,
+     * and adds the item to the order details list.
+     * It also updates the UI components to reflect the changes.
+     *
+     * @throws RemoteException if a remote exception occurs
+     */
     @FXML
     private void handleAddButton() throws RemoteException {
         String selectedItemName = itemNameComboBox.getValue();
@@ -166,6 +212,12 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
         updateTotalPriceLabel();
 
     }
+
+    /**
+     * Handles the action when the Clear button is clicked.
+     * This method prompts the user for confirmation before clearing all items in the order.
+     * If the user confirms, it clears the order details and resets the combo box and quantity field.
+     */
     @FXML
     private void handleClearButton() {
         if (confirmAction("Are you sure you want to clear all items in your order?")) {
@@ -175,17 +227,13 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
         }
     }
 
-    private boolean confirmAction(String message) {
-        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmation.setHeaderText("Confirmation Required");
-        confirmation.setContentText(message);
-        ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.YES);
-        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-        confirmation.getButtonTypes().setAll(okButton, cancelButton);
-        Optional<ButtonType> result = confirmation.showAndWait();
-        return result.orElse(ButtonType.CANCEL) == okButton;
-    }
-
+    /**
+     * Event handler for the Ok button click event.
+     *
+     * @param actionEvent The ActionEvent representing the Ok button click event.
+     * @throws NotLoggedInException If the user is not logged in.
+     * @throws OutOfRoleException   If the user does not have the required permission.
+     */
     @FXML
     private void handleOkButton(ActionEvent actionEvent) throws NotLoggedInException, OutOfRoleException {
         try {
@@ -204,122 +252,10 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
     }
 
     /**
-     * @throws NotLoggedInException
-     * @throws OutOfRoleException
-     */
-    private void validateAndProcessSalesInvoice() throws NotLoggedInException, OutOfRoleException {
-        try {
-            String formattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
-            ItemOrder itemOrder = new ItemOrder(0, MainController.clientCallback.getUser().getUsername(), formattedDate, orderDetailsList);
-
-            boolean success = createSalesInvoiceSalesModel.createSalesInvoice(itemOrder);
-            if (success) {
-                showSuccess("Sale invoiced successfully");
-                updateStockControlTable();
-            } else {
-                showAlert("Failed to create sales invoice.");
-            }
-        } catch (NotLoggedInException | OutOfRoleException e) {
-            showAlert("Error: " + e.getMessage());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Get selected Item from String
+     * Event handler for the Create Sales Invoice button click event.
      *
-     * @return selectedItem object of Item from String input
+     * @param event The ActionEvent representing the Create Sales Invoice button click event.
      */
-    private Item getSelectedItem() {
-        String selectedItemName = itemNameComboBox.getValue();
-        if (selectedItemName == null) {
-            showAlert("Please select an item.");
-            return null;
-        }
-
-        Item selectedItem = itemMap.get(selectedItemName);
-        if (selectedItem == null) {
-            showAlert("Error: Item not found.");
-            return null;
-        }
-        return selectedItem;
-    }
-//        private Stock getSelectedStock(Item selectedItem) {
-//        if (selectedItem == null) {
-//            return null;
-//        }
-//        LinkedList<Stock> stocks = selectedItem.getStocks();
-//        if (stocks.isEmpty()) {
-//            showAlert("No stock available for selected item.");
-//            return null;
-//        }
-//        return stocks.getFirst();
-//    }
-//
-//    /**
-//     * Method to get int quantity from textfield
-//     * @return int value obtained from itemQuantityField
-//     */
-//    private int getQuantity() {
-//        if (itemQuantityField.getText().trim().isEmpty()) {
-//            showAlert("Please enter quantity.");
-//        }
-//        try {
-//            return Integer.parseInt(itemQuantityField.getText().trim());
-//        } catch (NumberFormatException e) {
-//            showAlert("Please enter a valid quantity.");
-//            return -1;
-//        }
-//    }
-//
-    private void updateTotalPriceLabel() {
-        float totalPrice = 0.0f;
-        for (OrderDetail orderDetail : orderDetailsList) {
-            totalPrice += orderDetail.getQty() * orderDetail.getUnitPrice();
-        }
-        itemPriceLabel.setText(String.format("%.2f", totalPrice));
-    }
-
-    private void clearOrderDetails() {
-        orderDetailsList.clear();
-        itemNameListView.getItems().clear();
-        priceListView.getItems().clear();
-        quantityListView.getItems().clear();
-        updateTotalPriceLabel();
-    }
-
-
-//    private float calculateTotalPrice(float unitPrice, int quantity) {
-//        return unitPrice * quantity;
-//    }
-//
-//    private void updateItemPriceLabel(float totalPrice) {
-//        itemPriceLabel.setText(String.format("%.2f", totalPrice));
-//    }
-
-    //
-//    private ItemOrder createItemOrder(Item selectedItem, int quantity, float unitPrice) {
-//        OrderDetail orderDetail = new OrderDetail(selectedItem.getItemId(), quantity, unitPrice, "");
-//        ItemOrder itemOrder = new ItemOrder();
-//        itemOrder.addOrderDetail(orderDetail);
-//        return itemOrder;
-//    }
-//
-//    private void createSalesInvoice(ItemOrder itemOrder) throws NotLoggedInException, OutOfRoleException {
-//        if (createSalesInvoiceSalesModel.createSalesInvoice(itemOrder)) {
-//            showSuccess("Sale invoiced successfully!");
-//        } else {
-//            showAlert("Failed to create sales invoice.");
-//        }
-//    }
-//
-//
-    private Item lookupItem(String itemName) {
-        return itemMap.get(itemName);
-    }
-
     @FXML
     private void handleCreateSalesInvoice(ActionEvent event) throws RemoteException {
         try {
@@ -378,36 +314,9 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
         }
     }
 
-    private void updateStockControlTable() {
-        try {
-            // Call fetchAndUpdate method of StockControlSalesController to update the table
-            MainController.getStockControlSalesController().fetchAndUpdate();
-        } catch (RemoteException e) {
-            showAlert("Error updating stock control table: " + e.getMessage());
-        }
-    }
-
-    private void addHoverEffect(Button button) {
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
-    }
-
-    private void showSuccess(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Success!");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    private void showAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
+    /**
+     * Initializes the controller.
+     */
     @FXML
     public void initialize() {
 
@@ -462,6 +371,155 @@ public class CreateSalesInvoiceSalesController implements ControllerInterface {
             } catch (RemoteException e) {
                 System.out.println(e.getMessage());
             }
+        }
+    }
+
+    //Helper Methods
+
+    /**
+     * Get selected Item from String
+     *
+     * @return selectedItem object of Item from String input
+     */
+    private Item getSelectedItem() {
+        String selectedItemName = itemNameComboBox.getValue();
+        if (selectedItemName == null) {
+            showAlert("Please select an item.");
+            return null;
+        }
+
+        Item selectedItem = itemMap.get(selectedItemName);
+        if (selectedItem == null) {
+            showAlert("Error: Item not found.");
+            return null;
+        }
+        return selectedItem;
+    }
+
+    /**
+     * Updates the total price label based on the current order details.
+     * Calculates the total price by summing the price of each item in the order.
+     * Updates the itemPriceLabel with the calculated total price.
+     */
+    private void updateTotalPriceLabel() {
+        float totalPrice = 0.0f;
+        for (OrderDetail orderDetail : orderDetailsList) {
+            totalPrice += orderDetail.getQty() * orderDetail.getUnitPrice();
+        }
+        itemPriceLabel.setText(String.format("%.2f", totalPrice));
+    }
+
+    /**
+     * Clears all the order details.
+     * Removes all items from the orderDetailsList, itemNameListView, priceListView, and quantityListView.
+     * Updates the total price label to reflect the cleared order.
+     */
+    private void clearOrderDetails() {
+        orderDetailsList.clear();
+        itemNameListView.getItems().clear();
+        priceListView.getItems().clear();
+        quantityListView.getItems().clear();
+        updateTotalPriceLabel();
+    }
+
+    /**
+     * Looks up an item in the item map by its name.
+     *
+     * @param itemName The name of the item to look up.
+     * @return The item associated with the given name, or null if not found.
+     */
+    private Item lookupItem(String itemName) {
+        return itemMap.get(itemName);
+    }
+
+    /**
+     * Updates the stock control table.
+     */
+    private void updateStockControlTable() {
+        try {
+            // Call fetchAndUpdate method of StockControlSalesController to update the table
+            MainController.getStockControlSalesController().fetchAndUpdate();
+        } catch (RemoteException e) {
+            showAlert("Error updating stock control table: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Adds hover effect to the specified button.
+     *
+     * @param button The button to which hover effect needs to be added.
+     */
+    private void addHoverEffect(Button button) {
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
+    }
+
+    /**
+     * Displays a success message in an alert dialog.
+     *
+     * @param message The message to be displayed in the alert.
+     */
+    private void showSuccess(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success!");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    /**
+     * Displays an alert with the given message.
+     *
+     * @param message The message to be displayed in the alert.
+     */
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    /**
+     * Displays a confirmation dialog with the specified message.
+     *
+     * @param message The message to be displayed in the confirmation dialog.
+     * @return {@code true} if the user confirms the action, {@code false} otherwise.
+     */
+    private boolean confirmAction(String message) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setHeaderText("Confirmation Required");
+        confirmation.setContentText(message);
+        ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.YES);
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        confirmation.getButtonTypes().setAll(okButton, cancelButton);
+        Optional<ButtonType> result = confirmation.showAndWait();
+        return result.orElse(ButtonType.CANCEL) == okButton;
+    }
+
+    /**
+     * Validates the user input and processes the creation of the sales invoice.
+     *
+     * @throws NotLoggedInException If the user is not logged in.
+     * @throws OutOfRoleException   If the user does not have the required permission.
+     */
+    private void validateAndProcessSalesInvoice() throws NotLoggedInException, OutOfRoleException {
+        try {
+            String formattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+            ItemOrder itemOrder = new ItemOrder(0, MainController.clientCallback.getUser().getUsername(), formattedDate, orderDetailsList);
+
+            boolean success = createSalesInvoiceSalesModel.createSalesInvoice(itemOrder);
+            if (success) {
+                showSuccess("Sale invoiced successfully");
+                updateStockControlTable();
+            } else {
+                showAlert("Failed to create sales invoice.");
+            }
+        } catch (NotLoggedInException | OutOfRoleException e) {
+            showAlert("Error: " + e.getMessage());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
         }
     }
 }
