@@ -194,7 +194,11 @@ public class SalesHistorySalesController implements ControllerInterface {
 
     @FXML
     private void handleSalesInvoice() {
-        // Handle the event when the sales invoice button is clicked
+        if (mainController != null) {
+            mainController.openSalesInvoiceSalesPanel();
+        } else {
+            System.out.println("MainController is not set.");
+        }
     }
 
     @FXML
