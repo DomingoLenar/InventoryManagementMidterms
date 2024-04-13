@@ -92,6 +92,8 @@ public class MainController implements ControllerInterface {
 
     static LowStocksPurchaserController lowStocksPurchaserController;
     static BorderPane lowStocksPurchaserPanel;
+    static ProfileManagementChangePassPurchaserController profileManagementChangePassPurchaserController;
+    static BorderPane profileManagementChangePassPurchaserPanel;
 
     /**
      * Sales Controller and Panel Variables
@@ -109,6 +111,8 @@ public class MainController implements ControllerInterface {
 
     static CreateSalesInvoiceSalesController createSalesInvoiceSalesController;
     static DialogPane createSalesInvoiceSalesPanel;
+    static ProfileManagementChangePassSalesController profileManagementChangePassSalesController;
+    static BorderPane getProfileManagementChangePassSalesPanel;
 
     /**
      * Getters of all Panels
@@ -174,6 +178,8 @@ public class MainController implements ControllerInterface {
     public static LowStocksAdminController getLowStocksAdminController() {return lowStocksAdminController;}
     public static AddUserAdminController getAddUserAdminController() {return addUserAdminController;}
     public static ProfileManagementChangePassAdminController getProfileManagementChangePassAdminController(){return profileManagementChangePassAdminController;}
+    public static ProfileManagementChangePassPurchaserController getProfileManagementChangePassPurchaserController(){return profileManagementChangePassPurchaserController;}
+    public static ProfileManagementChangePassSalesController getProfileManagementChangePassSalesController(){return profileManagementChangePassSalesController;}
 
     public ClientCallback getClientCallback() { return clientCallback;}
 
@@ -366,6 +372,7 @@ public class MainController implements ControllerInterface {
         FXMLLoader profileManagementLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagementPurchaser-view.fxml"));
         profileManagementPurchaserPanel = profileManagementLoader.load();
         profileManagementPurchaserController = profileManagementLoader.getController();
+        profileManagementPurchaserController.setMainController(this);
 
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
 
@@ -418,7 +425,7 @@ public class MainController implements ControllerInterface {
         FXMLLoader profileManagementLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagementSales-view.fxml"));
         profileManagementSalesPanel = profileManagementLoader.load();
         profileManagementSalesController = profileManagementLoader.getController();
-
+        profileManagementSalesController.setMainController(this);
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
         if (inputStream != null) {
             Image image = new Image(inputStream);
@@ -746,6 +753,68 @@ public class MainController implements ControllerInterface {
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.setTitle("Change Password");
             Scene scene = new Scene(profileManagementChangePassAdminPanel);
+            dialogStage.setScene(scene);
+
+            // Set the stage not resizable
+            dialogStage.setResizable(false);
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void openProfileManagementCPPurchaserPanel(){
+        try {
+            Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
+            FXMLLoader profileManagementCPPurchaserLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagementChangePassPurchaser-view.fxml"));
+            profileManagementChangePassPurchaserPanel = profileManagementCPPurchaserLoader.load();
+            profileManagementChangePassPurchaserController = profileManagementCPPurchaserLoader.getController();
+
+            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                stage.getIcons().add(image);
+            } else {
+                System.err.println("Failed to load image: logo.png");
+            }
+
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(stage);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setTitle("Change Password");
+            Scene scene = new Scene(profileManagementChangePassPurchaserPanel);
+            dialogStage.setScene(scene);
+
+            // Set the stage not resizable
+            dialogStage.setResizable(false);
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void openProfileManagementCPSalesPanel(){
+        try {
+            Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
+            FXMLLoader profileManagementCPSalesLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagementChangePassSales-view.fxml"));
+            profileManagementSalesPanel = profileManagementCPSalesLoader.load();
+            profileManagementChangePassSalesController = profileManagementCPSalesLoader.getController();
+
+            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                stage.getIcons().add(image);
+            } else {
+                System.err.println("Failed to load image: logo.png");
+            }
+
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(stage);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setTitle("Change Password");
+            Scene scene = new Scene(profileManagementSalesPanel);
             dialogStage.setScene(scene);
 
             // Set the stage not resizable
