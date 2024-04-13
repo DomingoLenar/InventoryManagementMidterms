@@ -282,20 +282,20 @@ public class DashboardAdminController implements ControllerInterface {
         alert.showAndWait();
     }
 
-    private void populateUsersActiveTableView(LinkedList<User> activeUser) {
-        // for active users table
+    private void populateUsersActiveTableView(LinkedList<User> activeUsers) {
         // Check if the TableView and TableColumn are not null
-        if (usersActiveTableView != null && usernameTableColumn !=null & roleTableColumn !=null){
-            ObservableList<User> observableUsers = FXCollections.observableArrayList(activeUser);
-            usersActiveTableView.setUserData(observableUsers);
+        if (usersActiveTableView != null && usernameTableColumn != null && roleTableColumn != null) {
+            ObservableList<User> observableUsers = FXCollections.observableArrayList(activeUsers);
+            usersActiveTableView.setItems(observableUsers);
 
-            //Make sure the cell value factories are set for the table columns
+            // Make sure the cell value factories are set for the table columns
             usernameTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUsername()));
             roleTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRole()));
         } else {
-            System.out.println("Error: Table or columns are null. Cannot populate table.");
+            System.out.println("Error: Table or columns are null. Cannot populate active users table.");
         }
     }
+
     private void populateLowStockProductsTableView( LinkedList<Item> lowStockItems){
         // for lowest stock product table
         // Check if the TableView and TableColumn are not null
@@ -361,7 +361,7 @@ public class DashboardAdminController implements ControllerInterface {
         // Set up table columns
         transactionIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
         dateTableColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-        amountTableColumn.setCellValueFactory(new PropertyValueFactory<>(   "totalAmount"));
+        amountTableColumn.setCellValueFactory(new PropertyValueFactory<>("totalAmount"));
 
         addHoverEffect(addUserButton);
         addUserButton.setOnAction(event -> handleSave());
@@ -369,27 +369,29 @@ public class DashboardAdminController implements ControllerInterface {
         if (!initialized){
             initialized = true;
 
-            //check if ui components are not null
-            if (usersActiveTableView !=null && usernameTableColumn !=null & roleTableColumn !=null){
+            // Check if UI components are not null
+            if (usersActiveTableView !=null && usernameTableColumn !=null && roleTableColumn !=null){
                 addHoverEffect(addUserButton);
                 addUserButton.setOnAction(event -> handleSave());
 
                 try{
+                    // Fetch and populate active users count
+                    int activeUsersCount = dashboardAdminModel.fetchActiveUsers().size();
+                    updateActiveUsersLabel(activeUsersCount);
+
+                    // Populate active users table
+                    populateUsersActiveTableView(dashboardAdminModel.fetchActiveUsers());
+
+                    // Populate other tables
                     if (dashboardAdminModel !=null){
-                        populateUsersActiveTableView(dashboardAdminModel.fetchActiveUsers());
-                    }else {
-                        System.out.println("Dashboard Admin Model is null. No usage for active users");
-                    }
-                    if (dashboardAdminModel !=null) {
                         populateLowStockProductsTableView(dashboardAdminModel.fetchLowestStock());
-                    } else {
-                        System.out.println("Dashboard Admin Model is null. No usage for lowest stock product");
-                    }
-                    if (dashboardAdminModel !=null){
                         populateTransTodayTableView(dashboardAdminModel.fetchTransactionsToday());
-                    } else {
-                        System.out.println("Dashboard Admin Model is null. No usage for transaction today");
                     }
+
+                    // Fetch and update monthly revenue chart
+                    LinkedHashMap<Integer, Float> monthlyRevenueData = dashboardAdminModel.fetchMonthlyRevenue();
+                    updateMonthlyRevenueChart(monthlyRevenueData);
+
                 } catch (NotLoggedInException e) {
                     System.out.println("User not logged in.");
                 } catch (OutOfRoleException e) {
@@ -397,8 +399,8 @@ public class DashboardAdminController implements ControllerInterface {
                 }
             } else {
                 System.out.println("Error: Table or button is null. Cannot initialize table.");
-
             }
+
             try {
                 MainController.clientCallback.setCurrentPanel(this);
                 UpdateCallback.process(MainController.clientCallback, MainController.registry);
@@ -409,6 +411,8 @@ public class DashboardAdminController implements ControllerInterface {
             }
         }
     }
+
+
 
 
     private void addHoverEffect(Button button) {
