@@ -26,6 +26,7 @@ import java.rmi.registry.Registry;
 import java.util.LinkedList;
 
 public class SalesHistorySalesController implements ControllerInterface {
+    //Variables
     @FXML
     private BorderPane borderPaneSalesHistorySales;
     @FXML
@@ -45,63 +46,54 @@ public class SalesHistorySalesController implements ControllerInterface {
     @FXML
     private TableColumn<ItemOrder, String> quantityColumn;
     @FXML
-    private TableColumn<ItemOrder, Float> totalSalesColumn;
-
-    @FXML
-    public BorderPane getBorderPaneSalesHistorySales() {
-        return borderPaneSalesHistorySales;
-    }
-
-    @FXML
-    public Button getcreateSalesInvoiceSalesSalesButton() {
-        return createSalesInvoiceSalesButton;
-    }
-
-    @FXML
-    public TextField getSearchFieldSales() {
-        return searchFieldSales;
-    }
-
-    @FXML
-    public TableView getsalesHistorySalesTable() {
-        return salesHistorySalesTable;
-    }
-
-    public TableColumn getOrderIDColumn() {
-        return orderIDColumn;
-    }
-
-    public TableColumn getDateColumn() {
-        return dateColumn;
-    }
-
-    public TableColumn getProductColumn() {
-        return productColumn;
-    }
-
-    public TableColumn getPriceColumn() {
-        return priceColumn;
-    }
-
-    public TableColumn getQuantityColumn() {
-        return quantityColumn;
-    }
-
-    public TableColumn getTotalSalesColumn() {
-        return totalSalesColumn;
-    }
-
+    private TableColumn<ItemOrder, String> totalSalesColumn;
+    boolean initialized = false;
     private MainController mainController;
     private SalesHistorySalesModel salesHistorySalesModel;
+
+    //Constructors
     public SalesHistorySalesController() {
 
     }
-
     public SalesHistorySalesController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
         this.salesHistorySalesModel = new SalesHistorySalesModel(registry, clientCallback);
     }
 
-    boolean initialized = false;
+    //MainController Setter
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+    //Getters
+    public BorderPane getBorderPaneSalesHistorySales() {
+        return borderPaneSalesHistorySales;
+    }
+    public Button getcreateSalesInvoiceSalesSalesButton() {
+        return createSalesInvoiceSalesButton;
+    }
+    public TextField getSearchFieldSales() {
+        return searchFieldSales;
+    }
+    public TableView getsalesHistorySalesTable() {
+        return salesHistorySalesTable;
+    }
+    public TableColumn getOrderIDColumn() {
+        return orderIDColumn;
+    }
+    public TableColumn getDateColumn() {
+        return dateColumn;
+    }
+    public TableColumn getProductColumn() {
+        return productColumn;
+    }
+    public TableColumn getPriceColumn() {
+        return priceColumn;
+    }
+    public TableColumn getQuantityColumn() {
+        return quantityColumn;
+    }
+    public TableColumn getTotalSalesColumn() {
+        return totalSalesColumn;
+    }
 
     @Override
     public void fetchAndUpdate() throws RemoteException {
@@ -164,7 +156,9 @@ public class SalesHistorySalesController implements ControllerInterface {
             ItemOrder itemOrder = cellData.getValue();
             StringBuilder priceList = new StringBuilder();
             for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
-                priceList.append(orderDetail.getUnitPrice()).append("\n");
+                priceList.append("₱")
+                        .append(String.format("%.2f", orderDetail.getUnitPrice()))
+                        .append("\n");
             }
             return new SimpleStringProperty(priceList.toString().trim());
         });//lamda to populate priceColumn
@@ -176,7 +170,7 @@ public class SalesHistorySalesController implements ControllerInterface {
                         return detail.getQty() * detail.getUnitPrice();
                     })
                     .reduce(0.0f, Float::sum);
-            return new SimpleFloatProperty(totalCost).asObject();
+            return new SimpleStringProperty("₱" + String.format("%.2f", totalCost));
         });//lambda to populate total sales column
     }
 
