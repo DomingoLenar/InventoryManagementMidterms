@@ -89,10 +89,11 @@ public class Item implements Serializable {
     }
     public Stock findFirstAvailableStock() {
         for (Stock stock : stocks) {
-            if (stock.getQty() != 0) {
+            if (stock.getQty() > 0) {
                 return stock;
             }
         }
         return null;
     }
+
 }
