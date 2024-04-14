@@ -18,12 +18,14 @@ public class MainApp extends Application {
 
         System.setProperty("java.util.logging.config.file", "logging.properties");
         System.out.println("Connecting...");
-        Registry registry = LocateRegistry.getRegistry("localhost", 2018);
+        Registry registry = LocateRegistry.getRegistry("localhost", 1099);
         System.out.println("Connected");
         UserRequestInterface userService = (UserRequestInterface) registry.lookup("userRequest");
         System.out.println("userStub Retrieved");
         ItemOrderRequestInterface iOService = (ItemOrderRequestInterface) registry.lookup("itemOrder");
+        System.out.println("itemOrderStub Retrieved");
         ItemRequestInterface itemService = (ItemRequestInterface) registry.lookup("item");
+        System.out.println("itemStub Retrieved");
         MainController mainController = new MainController(userService, iOService, itemService, registry);
         mainController.setStage(primaryStage);
         mainController.loadWelcomeView();
