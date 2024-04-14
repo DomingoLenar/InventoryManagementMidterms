@@ -63,6 +63,7 @@ public class SalesHistorySalesController implements ControllerInterface {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
+
     //Getters
     public BorderPane getBorderPaneSalesHistorySales() {
         return borderPaneSalesHistorySales;
