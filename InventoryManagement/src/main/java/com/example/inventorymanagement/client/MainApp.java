@@ -18,7 +18,7 @@ public class MainApp extends Application {
 
         System.setProperty("java.util.logging.config.file", "logging.properties");
         System.out.println("Connecting...");
-        Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+        Registry registry = LocateRegistry.getRegistry("serverMachine", 1099);
         System.out.println("Connected");
         UserRequestInterface userService = (UserRequestInterface) registry.lookup("userRequest");
         System.out.println("userStub Retrieved");
