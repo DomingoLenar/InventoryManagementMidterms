@@ -282,10 +282,10 @@ public class FinancesAdminController implements ControllerInterface {
             float grossRevenue = financesAdminModel.computeGrossRevenue(monthlyRevenueData);
 
             // Compute tax deductible
-            float taxDeductable = financesAdminModel.computeTaxDeductible(grossRevenue, costTodayData);
+            float taxDeductable = financesAdminModel.computeTaxDeductible(monthlyRevenueData);
 
             // Compute stock worth
-            float stockWorth = financesAdminModel.computeStockWorth(grossRevenue, taxDeductable);
+            float stockWorth = financesAdminModel.computeStockWorth(monthlyCostData);
 
             // Compute gross profit
             float grossProfit = financesAdminModel.computeGrossProfit(grossRevenue, costTodayData);
@@ -339,7 +339,7 @@ public class FinancesAdminController implements ControllerInterface {
             float taxDeductable = financesAdminModel.computeTaxDeductible(grossRevenue, grossCost);
             taxDeductableAmount.setText("Amount: P " + taxDeductable);
 
-            float salesWorth = financesAdminModel.computeStockWorth(grossRevenue, taxDeductable);
+            float salesWorth = financesAdminModel.computeStockWorth(financesAdminModel.fetchMonthlyCost());
             salesWorthAmount.setText("Amount: P " + salesWorth);
 
             float grossProfit = financesAdminModel.computeGrossProfit(grossRevenue, grossCost);

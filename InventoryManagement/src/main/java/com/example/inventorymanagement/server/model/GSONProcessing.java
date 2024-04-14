@@ -9,6 +9,7 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 
 import java.io.*;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -553,7 +554,13 @@ public class GSONProcessing {
                 User user = gson.fromJson(jsonElement, User.class);
                 if(user.getUsername().equals(toRemove.getUsername())){
                     userArray.remove(jsonElement);
-                    return true;
+                    try(FileWriter fileWriter = new FileWriter(file)){
+                        gson.toJson(rootElement, fileWriter);
+                        return true;
+                    }catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
                 }else{
                     return false;
                 }

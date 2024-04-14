@@ -48,14 +48,21 @@ public class FinancesAdminModel {
         return totalRevenue;
     }
 
-    public float computeTaxDeductible(float grossRevenue, float grossCost) {
-        // Assuming tax-deductible is 30% of the gross revenue minus total monthly cost
-        return 0.3f * (grossRevenue - grossCost);
+    public float computeTaxDeductible(LinkedHashMap<Integer, Float> monthlyRevenue) {
+        float totalTax = 0;
+        for(int x=1; x<= 12; x++){
+            totalTax += 0.12f * (monthlyRevenue.get(x));
+        }
+        return totalTax;
     }
 
-    public float computeStockWorth(float grossRevenue, float taxDeductible) {
-        // Assuming stock worth is 70% of the gross revenue minus tax-deductible
-        return 0.7f * (grossRevenue - taxDeductible);
+    public float computeStockWorth(LinkedHashMap<Integer, Float> monthlyCost) {
+        float grossCost = 0;
+        for(int x = 1; x <= 12; x++){
+            float cost = monthlyCost.get(x);
+            grossCost += cost;
+        }
+        return grossCost;
     }
 
     public float computeGrossProfit(float grossRevenue, float grossCost) {
