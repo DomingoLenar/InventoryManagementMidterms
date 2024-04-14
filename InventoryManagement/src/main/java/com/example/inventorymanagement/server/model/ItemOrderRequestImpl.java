@@ -212,7 +212,7 @@ public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrd
     @Override
     public void checkIfLoggedIn(ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
         try {
-            Registry reg = LocateRegistry.getRegistry("localhost", 2018);
+            Registry reg = LocateRegistry.getRegistry("serverMachine",1099);
             UserRequestInterface userStub = (UserRequestInterface) reg.lookup("userRequest");
             if (!(userStub.isLoggedIn(clientCallback))) throw new NotLoggedInException("Not Logged In");
         } catch (AccessException e) {
@@ -235,7 +235,7 @@ public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrd
     @Override
     public void callUpdate(String panel) throws RemoteException {
         try{
-            Registry reg = LocateRegistry.getRegistry("localhost",2018);
+            Registry reg = LocateRegistry.getRegistry(1099);
             UserRequestInterface userStub = (UserRequestInterface) reg.lookup("userRequest");
             userStub.callUpdate(panel);
         } catch (AccessException e) {
