@@ -35,7 +35,7 @@
                   <Font name="Share Tech Mono" size="17.0" />
                </font>
             </Label>
-            <Button fx:id="okButton" layoutX="405.0" layoutY="362.0" mnemonicParsing="false" onAction="#handleOkButton" prefHeight="25.0" prefWidth="80.0" text="Ok" />
+            <Button fx:id="okButton" layoutX="405.0" layoutY="362.0" mnemonicParsing="false" onAction="#handleCreateSalesInvoice" prefHeight="25.0" prefWidth="80.0" text="Ok" />
             <Label layoutX="32.0" layoutY="268.0" opacity="0.5" text="Total Price">
                <font>
                   <Font name="Share Tech Mono" size="17.0" />

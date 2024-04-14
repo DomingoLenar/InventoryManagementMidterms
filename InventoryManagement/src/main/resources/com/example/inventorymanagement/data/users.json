@@ -3,26 +3,22 @@
     {
       "username": "testadmin",
       "password": "admintest",
-      "role": "admin",
-      "isActive": "false"
+      "role": "admin"
     },
     {
       "username": "testpurchase",
       "password": "purchasetest",
-      "role": "purchase",
-      "isActive": "false"
+      "role": "purchase"
     },
     {
       "username": "testsales",
       "password": "salestest",
-      "role": "sales",
-      "isActive": "false"
+      "role": "sales"
     },
     {
       "username": "testUser",
       "password": "password123",
-      "role": "admin",
-      "isActive": "false"
+      "role": "admin"
     }
   ]
 }

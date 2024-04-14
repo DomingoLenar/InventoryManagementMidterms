@@ -40,15 +40,17 @@ public class SalesHistoryAdminController implements ControllerInterface {
     @FXML
     private TableView salesHistoryAdminTable;
     @FXML
+    private TableColumn<ItemOrder, Integer> orderIDColumn;
+    @FXML
     private TableColumn<ItemOrder, String> dateColumn;
     @FXML
     private TableColumn<ItemOrder, String> productColumn;
     @FXML
-    private TableColumn<ItemOrder, Float> priceColumn;
+    private TableColumn<ItemOrder, String> priceColumn;
     @FXML
-    private TableColumn<ItemOrder, Integer> quantityColumn;
+    private TableColumn<ItemOrder, String> quantityColumn;
     @FXML
-    private TableColumn<ItemOrder, Float> totalSalesColumn;
+    private TableColumn<ItemOrder, String> totalSalesColumn;
 
     /**
      * Controller Variables
@@ -56,6 +58,37 @@ public class SalesHistoryAdminController implements ControllerInterface {
     private MainController mainController;
     private SalesHistoryAdminModel salesHistoryAdminModel;
     boolean initialized = false;
+
+    /**
+     * Default constructor for SalesHistorySalesController.
+     */
+    public SalesHistoryAdminController() {
+        // Default Constructor
+    }
+
+    /**
+     * Constructor for SalesHistoryAdminController.
+     * Initializes the controller with necessary services and references.
+     *
+     * @param clientCallback The client callback for server communication.
+     * @param userService The user service interface.
+     * @param iOService The item order service interface.
+     * @param itemService The item service interface.
+     * @param registry The RMI registry.
+     * @param mainController The main controller instance.
+     */
+    public SalesHistoryAdminController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
+        this.salesHistoryAdminModel = new SalesHistoryAdminModel(registry, clientCallback);
+    }
+
+    /**
+     * Sets the main controller instance.
+     *
+     * @param mainController The main controller instance.
+     */
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
 
     /**
      * Getters
@@ -82,107 +115,44 @@ public class SalesHistoryAdminController implements ControllerInterface {
     public TableColumn getQuantityColumn() { return quantityColumn;}
     public TableColumn getTotalSalesColumn() { return totalSalesColumn;}
 
-    /**
-     * Default constructor for SalesHistorySalesController.
-     */
-    public SalesHistoryAdminController() {
-        // Default Constructor
-    }
+    //Controller Implementation
 
     /**
-     * Constructor for SalesHistorySalesController.
-     * Initializes the controller with necessary services and references.
+     * Fetches and updates data remotely.
+     * This method is called to update the data displayed in the UI.
      *
-     * @param clientCallback The client callback for server communication.
-     * @param userService The user service interface.
-     * @param iOService The item order service interface.
-     * @param itemService The item service interface.
-     * @param registry The RMI registry.
-     * @param mainController The main controller instance.
+     * @throws RemoteException If a remote communication error occurs.
      */
-    public SalesHistoryAdminController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
-        this.salesHistoryAdminModel = new SalesHistoryAdminModel(registry, clientCallback);
+    @Override
+    public void fetchAndUpdate() throws RemoteException {
+        try {
+            LinkedList<ItemOrder> itemOrders = salesHistoryAdminModel.fetchItems();
+            populateTableView(itemOrders);
+        } catch (NotLoggedInException e) {
+            showAlert("Error occurred while fetching items: " + e.getMessage());
+        }
     }
 
     /**
-     * Populates the table view with the given list of items.
-     * @param itemOrders The list of items to populate the table with.
-     */
-    private void populateTableView(LinkedList<ItemOrder> itemOrders) {
-        ObservableList<ItemOrder> observableItems = FXCollections.observableArrayList(itemOrders);
-        salesHistoryAdminTable.setItems(observableItems);
-
-        dateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate()));
-        productColumn.setCellValueFactory(cellData -> {
-            ItemOrder itemOrder = cellData.getValue();
-            String itemName = "No Item";
-
-            for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
-                int itemId = orderDetail.getItemId();
-                try {
-                    Item item = salesHistoryAdminModel.fetchItem(itemId);
-                    if (item != null) {
-                        itemName = item.getItemName();
-                        break; // Exit the loop once an item is found
-                    }
-                } catch (NotLoggedInException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            return new SimpleStringProperty(itemName);
-        });
-        quantityColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getOrderDetails().get(0).getQty()).asObject());
-        priceColumn.setCellValueFactory(cellData -> new SimpleFloatProperty(cellData.getValue().getOrderDetails().get(0).getUnitPrice()).asObject());
-        totalSalesColumn.setCellValueFactory(cellData -> {
-            ItemOrder order = cellData.getValue();
-            float totalCost = order.getOrderDetails().stream()
-                    .map(detail -> {
-                        return detail.getQty() * detail.getUnitPrice();
-                    })
-                    .reduce(0.0f, Float::sum);
-            return new SimpleFloatProperty(totalCost).asObject();
-        });
-    }
-
-    /**
-     * Sets the main controller instance.
+     * Gets the objects used.
+     * This method returns a string indicating the type of objects used by the controller.
      *
-     * @param mainController The main controller instance.
+     * @return A string representing the objects used.
+     * @throws RemoteException If a remote communication error occurs.
      */
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
+    @Override
+    public String getObjectsUsed() throws RemoteException {
+        return "itemOrder";
     }
 
-    /**
-     * Adds hover effect to the given button.
-     *
-     * @param button The button to add hover effect to.
-     */
-    private void addHoverEffect(Button button) {
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
-    }
-
-    /**
-     * Shows an alert dialog with the given message.
-     *
-     * @param message The message to display in the alert dialog.
-     */
-    private void showAlert(String message){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
+    //UI Handling
     /**
      * Handles the action event for sales invoice.
      */
     @FXML
     private void handleCreateSalesInvoice() {
         if (mainController != null) {
-            mainController.openSalesInvoiceSalesPanel();
+            mainController.openSalesInvoiceAdminPanel();
         } else {
             System.out.println("MainController is not set.");
         }
@@ -233,30 +203,94 @@ public class SalesHistoryAdminController implements ControllerInterface {
     }
 
     /**
-     * Fetches and updates data remotely.
-     * This method is called to update the data displayed in the UI.
-     *
-     * @throws RemoteException If a remote communication error occurs.
+     * Populates the table view with the given list of items.
+     * @param itemOrders The list of items to populate the table with.
      */
-    @Override
-    public void fetchAndUpdate() throws RemoteException {
-        try {
-            LinkedList<ItemOrder> itemOrders = salesHistoryAdminModel.fetchItems();
-            populateTableView(itemOrders);
-        } catch (NotLoggedInException e) {
-            showAlert("Error occurred while fetching items: " + e.getMessage());
-        }
+    private void populateTableView(LinkedList<ItemOrder> itemOrders) {
+        ObservableList<ItemOrder> observableItems = FXCollections.observableArrayList(itemOrders);
+        salesHistoryAdminTable.setItems(observableItems);
+
+        orderIDColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getOrderID()).asObject());
+        dateColumn.setCellValueFactory(cellData -> {
+            ItemOrder itemOrder = cellData.getValue();
+            if (itemOrder.getOrderDetails().isEmpty()) {
+                return new SimpleStringProperty("");
+            }
+            StringBuilder dateString = new StringBuilder();
+            for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
+                dateString.append(itemOrder.getDate()).append("\n");
+            }
+            return new SimpleStringProperty(dateString.toString().trim());
+        });//Lambda for populating dateColumn
+
+        productColumn.setCellValueFactory(cellData -> {
+            ItemOrder itemOrder = cellData.getValue();
+            StringBuilder itemList = new StringBuilder();
+            for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
+                int itemId = orderDetail.getItemId();
+                try {
+                    Item item = salesHistoryAdminModel.fetchItem(itemId);
+                    if (item != null) {
+                        itemList.append(item.getItemName()).append("\n");
+                    }
+                } catch (NotLoggedInException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return new SimpleStringProperty(itemList.toString().trim());
+        });//Lambda to populate product column
+
+        quantityColumn.setCellValueFactory(cellData -> {
+            ItemOrder itemOrder = cellData.getValue();
+            StringBuilder quantityList = new StringBuilder();
+            for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
+                quantityList.append(orderDetail.getQty()).append("\n");
+            }
+            return new SimpleStringProperty(quantityList.toString().trim());
+        });//lambda to populate quantity column
+
+        priceColumn.setCellValueFactory(cellData -> {
+            ItemOrder itemOrder = cellData.getValue();
+            StringBuilder priceList = new StringBuilder();
+            for (OrderDetail orderDetail : itemOrder.getOrderDetails()) {
+                priceList.append("₱")
+                        .append(String.format("%.2f", orderDetail.getUnitPrice()))
+                        .append("\n");
+            }
+            return new SimpleStringProperty(priceList.toString().trim());
+        });//lamda to populate priceColumn
+
+        totalSalesColumn.setCellValueFactory(cellData -> {
+            ItemOrder order = cellData.getValue();
+            float totalCost = order.getOrderDetails().stream()
+                    .map(detail -> {
+                        return detail.getQty() * detail.getUnitPrice();
+                    })
+                    .reduce(0.0f, Float::sum);
+            return new SimpleStringProperty("₱" + String.format("%.2f", totalCost));
+        });//lambda to populate total sales column
     }
 
     /**
-     * Gets the objects used.
-     * This method returns a string indicating the type of objects used by the controller.
+     * Adds hover effect to the given button.
      *
-     * @return A string representing the objects used.
-     * @throws RemoteException If a remote communication error occurs.
+     * @param button The button to add hover effect to.
      */
-    @Override
-    public String getObjectsUsed() throws RemoteException {
-        return "itemOrder";
+    private void addHoverEffect(Button button) {
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
+    }
+
+    /**
+     * Shows an alert dialog with the given message.
+     *
+     * @param message The message to display in the alert dialog.
+     */
+    private void showAlert(String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

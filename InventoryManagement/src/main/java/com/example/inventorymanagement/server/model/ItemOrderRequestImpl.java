@@ -235,7 +235,7 @@ public class ItemOrderRequestImpl extends UnicastRemoteObject implements ItemOrd
     @Override
     public void callUpdate(String panel) throws RemoteException {
         try{
-            Registry reg = LocateRegistry.getRegistry(1099);
+            Registry reg = LocateRegistry.getRegistry("serverMachine",1099);
             UserRequestInterface userStub = (UserRequestInterface) reg.lookup("userRequest");
             userStub.callUpdate(panel);
         } catch (AccessException e) {

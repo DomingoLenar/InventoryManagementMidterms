@@ -179,7 +179,7 @@ public class AddItemAdminController implements ControllerInterface {
      */
     @Override
     public String getObjectsUsed() throws RemoteException {
-        return "item";
+        return "itemorder";
     }
 
     /**
@@ -223,9 +223,10 @@ public class AddItemAdminController implements ControllerInterface {
                     String currentDate = java.time.LocalDate.now().toString();
                     String batchNo = selectedSupplier + "_" + currentDate + "_" + unitPrice;
 
-                    // Create ItemOrder
-                    ItemOrder itemOrder = new ItemOrder();
-                    itemOrder.addOrderDetail(new OrderDetail(selectedItem.getItemId(), quantity, unitPrice, batchNo));
+                   OrderDetail orderDetail = new OrderDetail(selectedItem.getItemId(), quantity, unitPrice, batchNo);
+                   LinkedList<OrderDetail> orderDetailsList = new LinkedList<>();
+                   orderDetailsList.add(orderDetail);
+                   ItemOrder itemOrder = new ItemOrder(0, MainController.clientCallback.getUser().getUsername(), currentDate, orderDetailsList);
 
                     // Call createPurchaseOrder method from the model
                     boolean orderCreated = addItemAdminModel.createPurchaseOrder(itemOrder);
@@ -244,6 +245,8 @@ public class AddItemAdminController implements ControllerInterface {
             showAlert("Please provide valid quantity and price.");
         } catch (NotLoggedInException | OutOfRoleException e) {
             showAlert("Error occurred: " + e.getMessage());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
         }
     }
 

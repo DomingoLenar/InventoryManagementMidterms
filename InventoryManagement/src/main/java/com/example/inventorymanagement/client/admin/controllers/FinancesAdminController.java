@@ -36,6 +36,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -270,6 +271,7 @@ public class FinancesAdminController implements ControllerInterface {
     }
 
 
+    @Override
     public void fetchAndUpdate() throws RemoteException {
         try {
             // Fetch data from the model
@@ -288,13 +290,14 @@ public class FinancesAdminController implements ControllerInterface {
             float stockWorth = financesAdminModel.computeStockWorth(monthlyCostData);
 
             // Compute gross profit
-            float grossProfit = financesAdminModel.computeGrossProfit(grossRevenue, costTodayData);
+            float grossProfit = financesAdminModel.computeGrossProfit(grossRevenue, stockWorth);
 
-            // Update labels or other UI elements with computed values
-            grossRevenueAmount.setText(String.format("$%.2f", grossRevenue));
-            taxDeductableAmount.setText(String.format("$%.2f", taxDeductable));
-            salesWorthAmount.setText(String.format("$%.2f", stockWorth));
-            grossProfitsAmount.setText(String.format("$%.2f", grossProfit));
+            DecimalFormat df = new DecimalFormat("###,###,###,##0.00");
+
+            grossRevenueAmount.setText("₱" + df.format(grossRevenue));
+            taxDeductableAmount.setText("₱" + df.format(taxDeductable));
+            salesWorthAmount.setText("₱" + df.format(stockWorth));
+            grossProfitsAmount.setText("₱" + df.format(grossProfit));
 
             // Update the stacked bar chart for monthly revenue vs. cost
             updateRevenueCostChart(monthlyRevenueData, monthlyCostData);
@@ -315,6 +318,8 @@ public class FinancesAdminController implements ControllerInterface {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    @FXML
     public void initialize() {
         financesAdminModel = new FinancesAdminModel(MainController.registry, MainController.clientCallback);
 
@@ -344,6 +349,7 @@ public class FinancesAdminController implements ControllerInterface {
 
             float grossProfit = financesAdminModel.computeGrossProfit(grossRevenue, grossCost);
             grossProfitsAmount.setText("Amount: P " + grossProfit);
+
         } catch (NotLoggedInException | OutOfRoleException e) {
             e.printStackTrace();
             // Handle exceptions

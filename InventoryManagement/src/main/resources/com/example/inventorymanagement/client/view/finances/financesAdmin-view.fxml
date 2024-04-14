@@ -69,10 +69,10 @@
    <center>
       <AnchorPane prefHeight="229.0" prefWidth="850.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="grossRevenueBg" layoutX="17.0" layoutY="82.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="142.0" prefWidth="192.0" style="-fx-background-color: #FFFFFF;" />
-            <Button fx:id="taxDeductibleBg" layoutX="225.0" layoutY="82.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="142.0" prefWidth="192.0" style="-fx-background-color: #FFFFFF;" />
-            <Button fx:id="salesWorthBg" layoutX="433.0" layoutY="82.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="142.0" prefWidth="192.0" style="-fx-background-color: #FFFFFF;" />
-            <Button fx:id="grossProfitsBg" layoutX="641.0" layoutY="82.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="142.0" prefWidth="192.0" style="-fx-background-color: #FFFFFF;" />
+            <Button fx:id="grossRevenueBg" layoutX="13.0" layoutY="80.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="142.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;" />
+            <Button fx:id="taxDeductibleBg" layoutX="221.0" layoutY="80.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="142.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;" />
+            <Button fx:id="salesWorthBg" layoutX="429.0" layoutY="80.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="142.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;" />
+            <Button fx:id="grossProfitsBg" layoutX="637.0" layoutY="80.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="142.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;" />
             <Label fx:id="helloLabel" layoutX="23.0" layoutY="28.0" text="Hello, User!">
                <font>
                   <Font name="Share Tech Mono" size="24.0" />
@@ -83,7 +83,7 @@
                   <Font name="Share Tech Mono" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="salesWorthLabel" layoutX="503.0" layoutY="96.0" text="AOV">
+            <Label fx:id="salesWorthLabel" layoutX="503.0" layoutY="96.0" text="COGS">
                <font>
                   <Font name="Share Tech Mono" size="18.0" />
                </font>
@@ -98,22 +98,22 @@
                   <Font name="Share Tech Mono" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="grossRevenueAmount" layoutX="48.0" layoutY="153.0" text="P 22,000">
+            <Label fx:id="grossRevenueAmount" layoutX="19.0" layoutY="144.0" text="P 22,000">
                <font>
                   <Font name="Share Tech Mono" size="30.0" />
                </font>
             </Label>
-            <Label fx:id="taxDeductableAmount" layoutX="256.0" layoutY="153.0" text="P 2,000">
+            <Label fx:id="taxDeductableAmount" layoutX="229.0" layoutY="144.0" text="P 2,000">
                <font>
                   <Font name="Share Tech Mono" size="30.0" />
                </font>
             </Label>
-            <Label fx:id="salesWorthAmount" layoutX="464.0" layoutY="154.0" text="P 34,000">
+            <Label fx:id="salesWorthAmount" layoutX="433.0" layoutY="144.0" text="P 34,000">
                <font>
                   <Font name="Share Tech Mono" size="30.0" />
                </font>
             </Label>
-            <Label fx:id="grossProfitsAmount" layoutX="672.0" layoutY="153.0" text="P 21,000">
+            <Label fx:id="grossProfitsAmount" layoutX="640.0" layoutY="144.0" text="P 21,000">
                <font>
                   <Font name="Share Tech Mono" size="30.0" />
                </font>

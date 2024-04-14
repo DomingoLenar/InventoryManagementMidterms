@@ -1,15 +1,18 @@
 package com.example.inventorymanagement.client.common.controllers;
 
 import com.example.inventorymanagement.client.admin.controllers.*;
+import com.example.inventorymanagement.client.microservices.LogOutMicroservice;
 import com.example.inventorymanagement.client.model.ClientCallbackImpl;
 import com.example.inventorymanagement.client.purchaser.controllers.*;
 import com.example.inventorymanagement.client.admin.controllers.StockControlAdminController;
 import com.example.inventorymanagement.client.sales.controllers.*;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
+import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.DialogPane;
@@ -19,6 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -349,6 +353,17 @@ public class MainController implements ControllerInterface {
         stage.setScene(scene);
         stage.setTitle("Stock Pilot - " + clientCallback.getUser().getRole().toUpperCase());
         stage.setResizable(false);
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                try {
+                    LogOutMicroservice.process(MainController.clientCallback, MainController.registry);
+                } catch (NotLoggedInException e) {
+                    throw new RuntimeException(e);
+                }
+                System.exit(0);
+            }
+        });
         stage.show();
 
         navigationBarAdminController.setMainPane(root);
@@ -397,6 +412,17 @@ public class MainController implements ControllerInterface {
         stage.setScene(scene);
         stage.setTitle("Stock Pilot - " + clientCallback.getUser().getRole().toUpperCase());
         stage.setResizable(false);
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                try {
+                    LogOutMicroservice.process(MainController.clientCallback, MainController.registry);
+                } catch (NotLoggedInException e) {
+                    throw new RuntimeException(e);
+                }
+                System.exit(0);
+            }
+        });
         stage.show();
 
         navigationBarPurchaserController.setMainPane(root);
@@ -448,6 +474,17 @@ public class MainController implements ControllerInterface {
         stage.setScene(scene);
         stage.setTitle("Stock Pilot - " + clientCallback.getUser().getRole().toUpperCase());
         stage.setResizable(false);
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                try {
+                    LogOutMicroservice.process(MainController.clientCallback, MainController.registry);
+                } catch (NotLoggedInException e) {
+                    throw new RuntimeException(e);
+                }
+                System.exit(0);
+            }
+        });
         stage.show();
 
         navigationBarSalesController.setMainPane(root);
