@@ -14,10 +14,14 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Comparator;
 import java.util.LinkedList;
 
-public class ItemRequestImpl implements ItemRequestInterface, Serializable {
+public class ItemRequestImpl extends UnicastRemoteObject implements ItemRequestInterface, Serializable {
+    protected ItemRequestImpl() throws RemoteException {
+    }
+
     @Override
     public LinkedList<Item> fetchLisOfItems(ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
         checkIfLoggedIn(clientCallback);
@@ -59,7 +63,7 @@ public class ItemRequestImpl implements ItemRequestInterface, Serializable {
     @Override
     public void checkIfLoggedIn(ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
         try{
-            Registry reg = LocateRegistry.getRegistry("localhost",2018);
+            Registry reg = LocateRegistry.getRegistry("serverMachine",1099);
             UserRequestInterface userStub = (UserRequestInterface) reg.lookup("userRequest");
             if (!(userStub.isLoggedIn(clientCallback))) throw new NotLoggedInException("Not Logged In");
         } catch (AccessException e) {
@@ -76,7 +80,7 @@ public class ItemRequestImpl implements ItemRequestInterface, Serializable {
     @Override
     public void callUpdate(String panel) throws RemoteException{
         try{
-            Registry reg = LocateRegistry.getRegistry("localhost",2018);
+            Registry reg = LocateRegistry.getRegistry(1099);
             UserRequestInterfaceImplementation userStub = (UserRequestInterfaceImplementation) reg.lookup("userRequest");
             userStub.callUpdate(panel);
         }catch(Exception e){
