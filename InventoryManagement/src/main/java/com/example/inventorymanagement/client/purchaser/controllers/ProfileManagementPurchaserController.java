@@ -3,6 +3,7 @@ package com.example.inventorymanagement.client.purchaser.controllers;
 import com.example.inventorymanagement.client.admin.controllers.ProfileManagementAdminController;
 import com.example.inventorymanagement.client.admin.models.ProfileManagementChangePassAdminModel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.client.microservices.LogOutMicroservice;
 import com.example.inventorymanagement.client.microservices.UpdateCallback;
 import com.example.inventorymanagement.client.purchaser.models.ProfileManagementChangePassPurchaserModel;
 import com.example.inventorymanagement.client.purchaser.models.ProfileManagementPurchaserModel;
@@ -135,6 +136,11 @@ public class ProfileManagementPurchaserController  implements ControllerInterfac
 
     @FXML
     private void handleLogout() {
+        try {
+            LogOutMicroservice.process(MainController.clientCallback, MainController.registry);
+        } catch (NotLoggedInException e) {
+            showAlert("User is already Logged Out");
+        }
         Platform.exit();
         System.exit(0);
     }

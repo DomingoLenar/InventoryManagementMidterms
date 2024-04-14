@@ -3,6 +3,7 @@ package com.example.inventorymanagement.client.admin.controllers;
 import com.example.inventorymanagement.client.admin.models.ProfileManagementAdminModel;
 import com.example.inventorymanagement.client.admin.models.ProfileManagementChangePassAdminModel;
 import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.client.microservices.LogOutMicroservice;
 import com.example.inventorymanagement.client.microservices.UpdateCallback;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
@@ -182,8 +183,13 @@ public class ProfileManagementAdminController implements ControllerInterface {
 
     @FXML
     private void handleLogout() {
-        Platform.exit();
-        System.exit(0);
+        try {
+            LogOutMicroservice.process(MainController.clientCallback, MainController.registry);
+            Platform.exit();
+            System.exit(0);
+        }catch (NotLoggedInException e){
+            showAlert("User is already Logged Out");
+        }
     }
     @FXML
     private void handleSave(){
