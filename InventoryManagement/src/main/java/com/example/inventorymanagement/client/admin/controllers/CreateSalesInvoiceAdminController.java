@@ -199,25 +199,47 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
             return;
         }
 
-        Stock firstAvailableStock = selectedItem.findFirstAvailableStock();
-        if (firstAvailableStock == null) {
-            showAlert("Error: No available stock for selected item.");
+        int totalAvailableQuantity = selectedItem.getTotalQty();
+        if (quantity > totalAvailableQuantity) {
+            showAlert("Insufficient stock for selected item. Only " + totalAvailableQuantity + " available.");
             return;
         }
 
-        float unitPrice = selectedItem.findFirstAvailableStock().getPrice();
-        String batchNo = firstAvailableStock.getBatchNo();
-        OrderDetail newOrderDetail = new OrderDetail(selectedItem.getItemId(), quantity, unitPrice, batchNo);
-        orderDetailsList.add(newOrderDetail);
+        int remainingQuantity = quantity;
+        LinkedList<Stock> remainingStocks = selectedItem.getStocks();
 
-        itemNameListView.getItems().add(selectedItemName);
-        quantityListView.getItems().add(quantity);
-        priceListView.getItems().add(unitPrice);
-        itemQuantityField.setText("");
-        itemNameComboBox.getSelectionModel().select(null);
+        while (remainingQuantity > 0 && !remainingStocks.isEmpty()) {
+            Stock currentStock = remainingStocks.pollFirst();
+            int currentStockQty = currentStock.getQty();
 
-        updateTotalPriceLabel();
+            if (currentStockQty >= remainingQuantity) {
+                OrderDetail newOrderDetail = new OrderDetail(selectedItem.getItemId(), remainingQuantity, currentStock.getPrice(), currentStock.getBatchNo());
+                orderDetailsList.add(newOrderDetail);
 
+                itemNameListView.getItems().add(selectedItemName);
+                quantityListView.getItems().add(remainingQuantity);
+                priceListView.getItems().add(currentStock.getPrice());
+                itemQuantityField.setText("");
+                itemNameComboBox.getSelectionModel().select(null);
+
+                updateTotalPriceLabel();
+                remainingQuantity = 0;
+            } else {
+                remainingQuantity -= currentStockQty;
+                currentStock.setQty(0);
+
+                OrderDetail orderDetail = new OrderDetail(selectedItem.getItemId(), currentStockQty, currentStock.getPrice(), currentStock.getBatchNo());
+                orderDetailsList.add(orderDetail);
+
+                itemNameListView.getItems().add(selectedItemName);
+                quantityListView.getItems().add(currentStockQty);
+                priceListView.getItems().add(currentStock.getPrice());
+            }
+        }
+
+        if (remainingQuantity > 0) {
+            showAlert("An error occurred while processing the request. Please try again.");
+        }
     }
 
     /**
@@ -264,7 +286,7 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
      * @param event The ActionEvent representing the Create Sales Invoice button click event.
      */
     @FXML
-    private void handleCreateSalesInvoice(ActionEvent event) {
+    private void handleCreateSalesInvoice(ActionEvent event) throws RemoteException {
         try {
             String selectedItemName = itemNameComboBox.getValue();
             if (selectedItemName == null) {
@@ -318,8 +340,6 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
             }
         } catch (NotLoggedInException | OutOfRoleException e) {
             showAlert("Error: " + e.getMessage());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
         }
     }
 
