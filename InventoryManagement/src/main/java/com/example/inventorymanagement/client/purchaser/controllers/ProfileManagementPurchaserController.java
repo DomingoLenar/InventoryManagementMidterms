@@ -136,6 +136,7 @@ public class ProfileManagementPurchaserController  implements ControllerInterfac
     @FXML
     private void handleLogout() {
         Platform.exit();
+        System.exit(0);
     }
     @FXML
     private void handleSave(){

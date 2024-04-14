@@ -183,6 +183,7 @@ public class ProfileManagementAdminController implements ControllerInterface {
     @FXML
     private void handleLogout() {
         Platform.exit();
+        System.exit(0);
     }
     @FXML
     private void handleSave(){
