@@ -148,30 +148,24 @@ public class UserRequestInterfaceImplementation extends UnicastRemoteObject impl
 
     //PLease use this whenever you change panels
     public boolean updateCallback(User user, ClientCallback clientCallback) throws RemoteException, NotLoggedInException {
-        Optional<ClientCallback> client = clientCallbacks.stream().filter(callbacks -> {
-            try {
-                return callbacks.getUser().equals(user);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+
+        for(int x = 0; x < clientCallbacks.size();x++){
+            User owner = clientCallbacks.get(x).getUser();
+            if(owner.getUsername().equals(user.getUsername())){
+                clientCallbacks.set(x, clientCallback);
+                return true;
             }
-
-        }).findFirst();
-
-        if(client.isPresent()){
-            ClientCallback callback = client.get();
-            clientCallbacks.set(clientCallbacks.indexOf(callback), clientCallback);
-            return true;
-        }else{
-            throw new NotLoggedInException("Not logged in");
         }
+        return false;
     }
 
     //panel = csv of objects used in panel ex user,item
     public void callUpdate(String object) throws RemoteException {
         for(int x=0; x<clientCallbacks.size();x++){
             ClientCallback clientCallback = clientCallbacks.get(x);
-            ArrayList<String> objects = new ArrayList(Arrays.asList((clientCallback.getObjectsUsedByPanel().split(","))));
+            ArrayList<String> objects = new ArrayList<>(Arrays.asList((clientCallback.getObjectsUsedByPanel().split(","))));
             if(objects.contains(object)){
+                System.out.println("Updating "+clientCallback.getUser());
                 clientCallback.updateUICall();
             }
         }

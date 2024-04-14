@@ -238,6 +238,8 @@ public class DashboardAdminController implements ControllerInterface {
         ObservableList<ItemOrder> itemOrderList = FXCollections.observableArrayList(transactionsTodayData);
         transTodayTableView.setItems(itemOrderList);
     }
+
+    @Override
     public void fetchAndUpdate() throws RemoteException {
         System.out.println("updated");
         try {
@@ -403,7 +405,8 @@ public class DashboardAdminController implements ControllerInterface {
 
             try {
                 MainController.clientCallback.setCurrentPanel(this);
-                UpdateCallback.process(MainController.clientCallback, MainController.registry);
+                boolean success = UpdateCallback.process(MainController.clientCallback, MainController.registry);
+                System.out.println(success);
             } catch (NotLoggedInException e){
                 showAlert("User is not logged in");
             } catch (RemoteException e) {

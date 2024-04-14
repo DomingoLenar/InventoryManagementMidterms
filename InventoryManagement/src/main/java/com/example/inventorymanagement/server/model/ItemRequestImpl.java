@@ -81,10 +81,10 @@ public class ItemRequestImpl extends UnicastRemoteObject implements ItemRequestI
     public void callUpdate(String panel) throws RemoteException{
         try{
             Registry reg = LocateRegistry.getRegistry("serverMachine",1099);
-            UserRequestInterfaceImplementation userStub = (UserRequestInterfaceImplementation) reg.lookup("userRequest");
+            UserRequestInterface userStub = (UserRequestInterface) reg.lookup("userRequest");
             userStub.callUpdate(panel);
         }catch(Exception e){
-
+            System.out.println(e.getMessage());
         }
     }
 }

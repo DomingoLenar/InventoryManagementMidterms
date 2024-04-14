@@ -57,6 +57,7 @@ public class ClientCallbackImpl extends UnicastRemoteObject implements ClientCal
 
     @Override
     public void updateUICall() throws RemoteException{
+        System.out.println("Updating UI");
         currentController.fetchAndUpdate();
     }
 

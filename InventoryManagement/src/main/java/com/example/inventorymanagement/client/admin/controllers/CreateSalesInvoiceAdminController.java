@@ -394,14 +394,14 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
                     showAlert("User does not meet required permissions");
                 }
             });
-            try {
-                MainController.clientCallback.setCurrentPanel(this);
-                UpdateCallback.process(MainController.clientCallback, MainController.registry);
-            } catch (NotLoggedInException e) {
-                showAlert("User is not logged in");
-            } catch (RemoteException e) {
-                System.out.println(e.getMessage());
-            }
+//            try {
+//                MainController.clientCallback.setCurrentPanel(this);
+//                UpdateCallback.process(MainController.clientCallback, MainController.registry);
+//            } catch (NotLoggedInException e) {
+//                showAlert("User is not logged in");
+//            } catch (RemoteException e) {
+//                System.out.println(e.getMessage());
+//            }
         }
     }
 

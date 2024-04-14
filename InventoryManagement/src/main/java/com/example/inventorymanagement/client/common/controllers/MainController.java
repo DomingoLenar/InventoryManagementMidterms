@@ -316,11 +316,6 @@ public class MainController implements ControllerInterface {
         profileManagementAdminController = profileManagementLoader.getController();
         profileManagementAdminController.setMainController(this);
 
-        FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/dashboard/dashboardAdmin-view.fxml"));
-        dashboardAdminPanel = dashboardLoader.load();
-        dashboardAdminController = dashboardLoader.getController();
-        dashboardAdminController.setMainController(this);
-
         FXMLLoader financesLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/finances/financesAdmin-view.fxml"));
         financesAdminPanel = financesLoader.load();
         financesAdminController = financesLoader.getController();
@@ -329,6 +324,11 @@ public class MainController implements ControllerInterface {
         userManagementAdminPanel = userManagementLoader.load();
         userManagementAdminController = userManagementLoader.getController();
         userManagementAdminController.setMainController(this);
+
+        FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/dashboard/dashboardAdmin-view.fxml"));
+        dashboardAdminPanel = dashboardLoader.load();
+        dashboardAdminController = dashboardLoader.getController();
+        dashboardAdminController.setMainController(this);
 
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
 
@@ -379,15 +379,16 @@ public class MainController implements ControllerInterface {
         BorderPane navigationBar = navLoader.load();
         navigationBarPurchaserController = navLoader.getController();
 
-        FXMLLoader stockPurchaserLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlPurchaser-view.fxml"));
-        stockControlPurchaserPanel = stockPurchaserLoader.load();
-        stockControlPurchaserController = stockPurchaserLoader.getController();
-        stockControlPurchaserController.setMainController(this);
 
         FXMLLoader profileManagementLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/profileManagement/profileManagementPurchaser-view.fxml"));
         profileManagementPurchaserPanel = profileManagementLoader.load();
         profileManagementPurchaserController = profileManagementLoader.getController();
         profileManagementPurchaserController.setMainController(this);
+
+        FXMLLoader stockPurchaserLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlPurchaser-view.fxml"));
+        stockControlPurchaserPanel = stockPurchaserLoader.load();
+        stockControlPurchaserController = stockPurchaserLoader.getController();
+        stockControlPurchaserController.setMainController(this);
 
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
 
@@ -438,11 +439,6 @@ public class MainController implements ControllerInterface {
         BorderPane navigationBar = navLoader.load();
         navigationBarSalesController = navLoader.getController();
 
-        FXMLLoader stockSalesLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlSales-view.fxml"));
-        stockControlSalesPanel = stockSalesLoader.load();
-        stockControlSalesController = stockSalesLoader.getController();
-        stockControlSalesController.setMainController(this);
-
         FXMLLoader salesHistoryLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/salesHistory/salesHistorySales-view.fxml"));
         salesHistorySalesPanel = salesHistoryLoader.load();
         salesHistorySalesController = salesHistoryLoader.getController();
@@ -452,6 +448,12 @@ public class MainController implements ControllerInterface {
         profileManagementSalesPanel = profileManagementLoader.load();
         profileManagementSalesController = profileManagementLoader.getController();
         profileManagementSalesController.setMainController(this);
+
+        FXMLLoader stockSalesLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/stockControl/stockControlSales-view.fxml"));
+        stockControlSalesPanel = stockSalesLoader.load();
+        stockControlSalesController = stockSalesLoader.getController();
+        stockControlSalesController.setMainController(this);
+
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
         if (inputStream != null) {
             Image image = new Image(inputStream);

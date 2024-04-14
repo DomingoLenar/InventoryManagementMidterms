@@ -1,8 +1,10 @@
 package com.example.inventorymanagement.client.admin.controllers;
 
 import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.client.microservices.UpdateCallback;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
+import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
@@ -83,8 +85,12 @@ public class NavigationBarAdminController implements ControllerInterface {
         try {
             MainController.getDashboardAdminController().fetchAndUpdate();
             mainPane.setRight(MainController.getDashboardAdminPanel());
+            MainController.clientCallback.setCurrentPanel(MainController.getDashboardAdminController());
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
         } catch (IOException e){
             throw new RuntimeException();
+        } catch (NotLoggedInException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -92,8 +98,12 @@ public class NavigationBarAdminController implements ControllerInterface {
       try{
           MainController.getFinancesAdminController().fetchAndUpdate();
           mainPane.setRight(MainController.getFinancesAdminPanel());
+          MainController.clientCallback.setCurrentPanel(MainController.getFinancesAdminController());
+          UpdateCallback.process(MainController.clientCallback, MainController.registry);
       } catch (IOException e){
           throw new RuntimeException();
+      } catch (NotLoggedInException e) {
+          throw new RuntimeException(e);
       }
     }
 
@@ -101,8 +111,12 @@ public class NavigationBarAdminController implements ControllerInterface {
         try{
             MainController.getUserManagementAdminController().fetchAndUpdate();
             mainPane.setRight(MainController.getUserManagementAdminPanel());
+            MainController.clientCallback.setCurrentPanel(MainController.getUserManagementAdminController());
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
         } catch (IOException e){
             throw new RuntimeException();
+        } catch (NotLoggedInException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -110,7 +124,11 @@ public class NavigationBarAdminController implements ControllerInterface {
         try {
             MainController.getStockControlAdminController().fetchAndUpdate(); // triggered when btn stock control is click
             mainPane.setRight(MainController.getStockControlAdminPanel()); // get the refresh components of stock control of admin
+            MainController.clientCallback.setCurrentPanel(MainController.getStockControlAdminController());
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (NotLoggedInException e) {
             throw new RuntimeException(e);
         }
     }
@@ -119,8 +137,12 @@ public class NavigationBarAdminController implements ControllerInterface {
         try {
             MainController.getSalesHistoryAdminController().fetchAndUpdate();
             mainPane.setRight(MainController.getSalesHistoryAdminPanel());
+            MainController.clientCallback.setCurrentPanel(MainController.getSalesHistoryAdminController());
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (NotLoggedInException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -128,7 +150,11 @@ public class NavigationBarAdminController implements ControllerInterface {
         try {
             MainController.getProfileManagementAdminController().fetchAndUpdate();
             mainPane.setRight(MainController.getProfileManagementAdminPanel());
+            MainController.clientCallback.setCurrentPanel(MainController.getProfileManagementAdminController());
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (NotLoggedInException e) {
             throw new RuntimeException(e);
         }
     }
