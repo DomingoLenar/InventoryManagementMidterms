@@ -76,6 +76,9 @@ public class MainController implements ControllerInterface {
     static ProfileManagementChangePassAdminController profileManagementChangePassAdminController;
     static BorderPane profileManagementChangePassAdminPanel;
 
+    static EditUserAdminController editUserAdminController;
+    static BorderPane editUserAdminPanel;
+
     /**
      * Purchaser Controller and Panel Variables
      */
@@ -815,6 +818,38 @@ public class MainController implements ControllerInterface {
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.setTitle("Change Password");
             Scene scene = new Scene(profileManagementSalesPanel);
+            dialogStage.setScene(scene);
+
+            // Set the stage not resizable
+            dialogStage.setResizable(false);
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openEditUserAdminPanel(){
+        try {
+            Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
+
+            FXMLLoader editUserLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/userManagement/editUserAdmin-view.fxml"));
+            editUserAdminPanel = editUserLoader.load();
+            editUserAdminController = editUserLoader.getController();
+
+            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
+            if (inputStream != null) {
+                Image image = new Image(inputStream);
+                stage.getIcons().add(image);
+            } else {
+                System.err.println("Failed to load image: logo.png");
+            }
+
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(stage);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setTitle("Change Password");
+            Scene scene = new Scene(editUserAdminPanel);
             dialogStage.setScene(scene);
 
             // Set the stage not resizable
