@@ -523,7 +523,7 @@ public class GSONProcessing {
     }
 
     public static synchronized boolean removeUser(User toRemove){
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/users.json");
         try{
             JsonElement rootElement = JsonParser.parseReader(new FileReader(file));
@@ -531,7 +531,9 @@ public class GSONProcessing {
             JsonArray userArray = rootObject.getAsJsonArray("users");
             for(JsonElement jsonElement: userArray){
                 User user = gson.fromJson(jsonElement, User.class);
-                if(user.getUsername().equals(toRemove.getUsername())){
+                String cUsername = user.getUsername();
+                String toRemoveUsername = toRemove.getUsername();
+                if(cUsername.equals(toRemoveUsername)){
                     userArray.remove(jsonElement);
                     try(FileWriter fileWriter = new FileWriter(file)){
                         gson.toJson(rootElement, fileWriter);
@@ -540,8 +542,6 @@ public class GSONProcessing {
                         throw new RuntimeException(e);
                     }
 
-                }else{
-                    return false;
                 }
             }
         } catch (FileNotFoundException e) {
