@@ -52,6 +52,10 @@ public class EditUserAdminController implements ControllerInterface {
 
     private MainController mainController;
 
+    public EditUserAdminController() {
+
+    }
+
     // getter methods of FXML components
     public BorderPane getBorderPaneEditUser() {
         return borderPaneEditUser;
@@ -154,8 +158,6 @@ public class EditUserAdminController implements ControllerInterface {
         alert.showAndWait();
     }
 
-
-
     public void initialize() {
         changeRoleComboBox.getItems().addAll("Sales Person", "Purchaser");
         changeRoleComboBox.setPromptText("Change Role...");
@@ -205,12 +207,12 @@ public class EditUserAdminController implements ControllerInterface {
 
     public void editUser(User selectedUser) {
         // Set the selected user's username to the usernameLabel
-        usernameLabel.setText(selectedUser.getUsername());
+        usernameLabel = new Label();
 
         // Set the selected user's data as user data of the usernameLabel
         usernameLabel.setUserData(selectedUser);
 
         // Set the selected user's current role as the default value of the changeRoleComboBox
-        changeRoleComboBox.setValue(selectedUser.getRole());
+        changeRoleComboBox = new ComboBox<>();
     }
 }

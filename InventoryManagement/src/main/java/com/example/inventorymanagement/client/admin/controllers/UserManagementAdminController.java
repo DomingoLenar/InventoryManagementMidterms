@@ -133,9 +133,15 @@ public class UserManagementAdminController implements ControllerInterface {
     }
 
     private void handleRowClick() {
+        if (mainController !=null){
+            mainController.openEditUserAdminPanel();
+        } else {
+            System.out.println("Main Controller is not set.");
+        }
         User selectedUser = userManagementTableView.getSelectionModel().getSelectedItem();
         if (selectedUser != null) {
             // Call the editUser method of the editUserAdminController class
+
             editUserAdminController.editUser(selectedUser);
         }
     }
@@ -180,13 +186,9 @@ public class UserManagementAdminController implements ControllerInterface {
         } catch (RemoteException e) {
             System.out.println(e.getMessage());
         }
-    }
 
-        public void setAddUserAdminController (AddUserAdminController addUserAdminController){
-            this.addUserAdminController = addUserAdminController;
-        }
-        public void setEditUserAdminController (EditUserAdminController editUserAdminController){
-            this.editUserAdminController = editUserAdminController;
-        }
+        // Initialize editUserAdminController here
+        editUserAdminController = new EditUserAdminController();
     }
+}
 
