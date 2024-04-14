@@ -43,11 +43,13 @@ public class GSONProcessing {
      */
     public synchronized static boolean addItem(Item newItem) {
         try {
-            String filePath = "src/main/resources/com/example/inventorymanagement/data/items.json";
+            String filePath = "InventoryManagement/src/main/resources/com/example/inventorymanagement/data/items.json";
             JsonParser jsonParser = new JsonParser();
             JsonElement rootElement = jsonParser.parse(new FileReader(filePath));
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray itemJsonArray = rootObject.getAsJsonArray("items");
+
+            newItem.setItemId(itemJsonArray.size()+1);
 
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement newItemJson = gson.toJsonTree(newItem);
@@ -136,25 +138,21 @@ public class GSONProcessing {
             JsonObject rootObject = rootElement.getAsJsonObject();
             JsonArray orderJsonArray = rootObject.getAsJsonArray(orderArrayName);
 
-            int currentID = 0;
+            int currentID = orderJsonArray.size()+1;
 
-            if (!orderJsonArray.isEmpty()) {
-                JsonElement latestElement = orderJsonArray.get(orderJsonArray.size() - 1);
-                ItemOrder latestOrder = gson.fromJson(latestElement, ItemOrder.class);
-                currentID = latestOrder.getOrderID();
-            }
+            //Somehow setter method for order id does not set correctly i dont know why, this is the work around
+            ItemOrder updatedOrder = new ItemOrder(currentID, newOrder.getByUser(), newOrder.getDate(), newOrder.getOrderDetails());
 
-            newOrder.setOrderID(++currentID);
+            updateItem(updatedOrder, orderType);
 
-            String ioString = gson.toJson(newOrder);
+
+            String ioString = gson.toJson(updatedOrder);
             JsonElement ioElement = JsonParser.parseString(ioString);
             orderJsonArray.add(ioElement);
 
             try (FileWriter writer = new FileWriter(filePath)) {
                 gson.toJson(rootElement, writer);
             }
-
-            updateItem(newOrder, orderType);
 
             return true;
         } catch (IOException e) {

@@ -79,6 +79,10 @@ public class ProfileManagementPurchaserController  implements ControllerInterfac
     public ProfileManagementPurchaserController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
         this.profileManagementPurchaserModel = new ProfileManagementPurchaserModel(registry, clientCallback);
     }
+    public void setMainController(MainController mainController){
+        this.mainController = mainController;
+    }
+
 
     boolean initialized = false;
 
@@ -91,14 +95,7 @@ public class ProfileManagementPurchaserController  implements ControllerInterfac
             System.out.println("Error fetching current user information.");
         }
     }
-
-    // Helper method to display alerts for remove user
-    private void showAlert(Alert.AlertType type, String title, String content) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
+    // Helper method to display alerts
     private void showAlert(String message){ // for main controller alerts
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -106,7 +103,6 @@ public class ProfileManagementPurchaserController  implements ControllerInterfac
         alert.setContentText(message);
         alert.showAndWait();
     }
-
 
     public String getObjectsUsed() throws RemoteException {
         return "user";
@@ -140,6 +136,15 @@ public class ProfileManagementPurchaserController  implements ControllerInterfac
     @FXML
     private void handleLogout() {
         Platform.exit();
+        System.exit(0);
+    }
+    @FXML
+    private void handleSave(){
+        if (mainController !=null){
+            mainController.openProfileManagementCPPurchaserPanel();
+        } else {
+            System.out.println("Main controller is not set.");
+        }
     }
 
     @FXML
@@ -154,14 +159,14 @@ public class ProfileManagementPurchaserController  implements ControllerInterfac
 
     @FXML
     public void initialize() {
+        profileManagementPurchaserModel = new ProfileManagementPurchaserModel(registry, clientCallback);
 
         addHoverEffect(changePasswordButton);
         addHoverEffect(logoutButton);
 
         // Add action handlers
-        changePasswordButton.setOnAction(event -> handleChangePassword());
+        changePasswordButton.setOnAction(event -> handleSave());
         logoutButton.setOnAction(event -> handleLogout());
-        profileManagementPurchaserModel = new ProfileManagementPurchaserModel(registry, clientCallback);
         if (!initialized) { // Check if already initialized
             initialized = true; // Set the flag to true
 
@@ -169,7 +174,7 @@ public class ProfileManagementPurchaserController  implements ControllerInterfac
             if (changePasswordButton != null && logoutButton != null) {
                 addHoverEffect(changePasswordButton);
                 addHoverEffect(logoutButton);
-                changePasswordButton.setOnAction(event -> handleChangePassword());
+                changePasswordButton.setOnAction(event -> handleSave());
                 logoutButton.setOnAction(event -> handleLogout());
 
                 try {

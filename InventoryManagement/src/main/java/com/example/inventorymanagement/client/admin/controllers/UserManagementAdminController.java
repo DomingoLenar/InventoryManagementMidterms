@@ -95,14 +95,15 @@ public class UserManagementAdminController implements ControllerInterface {
     private void populateTableView(LinkedList<User> users) {
         if (userManagementTableView != null && nameTableColumn != null && roleTableColumn != null) {
             ObservableList<User> observableList = FXCollections.observableArrayList(users);
-            userManagementTableView.setUserData(observableList);
+            userManagementTableView.setItems(observableList); // Set items to populate the TableView
 
             nameTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUsername()));
             roleTableColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRole()));
         } else {
-            System.out.println("Error:Table or columns are null. Cannot populate table");
+            System.out.println("Error: Table or columns are null. Cannot populate table");
         }
     }
+
 
     @Override
     public String getObjectsUsed() throws RemoteException {

@@ -103,7 +103,7 @@ public class ProfileManagementChangePassPurchaserController  implements Controll
     }
 
     public String getObjectsUsed() throws RemoteException {
-        return "User";
+        return "user";
     }
 
     private void addHoverEffect (Button button){
@@ -111,51 +111,29 @@ public class ProfileManagementChangePassPurchaserController  implements Controll
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
     @FXML
-    private void handleSave() {
+    public void handleSave() {
+        String oldPassword = oldPasswordTextField.getText();
         String newPassword = newPasswordTextField.getText();
 
-        try {
-            // Fetch the list of users
-            LinkedList<User> userList = profileManagementChangePassPurchaserModel.fetchListOfUsers();
+        try{
+            User currentUser = MainController.clientCallback.getUser();
+            if(!(currentUser.getPassword().equals(oldPassword))) throw new RuntimeException("Incorrect Password");
 
-            // Check if the user list is not null and not empty
-            if (userList != null && !userList.isEmpty()) {
-                // Get the first user from the list
-                User user = userList.getFirst();
+            if(!(newPassword.equals(null))) profileManagementChangePassPurchaserModel.changePassword(currentUser,newPassword);
+            showErrorDialog("Error", "Please fill in new password field.");
+        }catch(RemoteException  e){
 
-                // Call the changePassword method from the model
-                try {
-                    boolean success = profileManagementChangePassPurchaserModel.changePassword(user, newPassword);
-                    if (success) {
-                        // Password change was successful
-                        showInformationDialog("Success", "Password changed successfully.");
-                    } else {
-                        // Password change failed
-                        showErrorDialog("Error", "Failed to change password.");
-                    }
-                } catch (UserExistenceException | OutOfRoleException | NotLoggedInException e) {
-                    // Handle specific exceptions
-                    e.printStackTrace();
-                    showErrorDialog("Error", e.getMessage());
-                }
-            } else {
-                // Handle the case where user list is empty or null
-                showErrorDialog("Error", "No users found.");
+        } catch (UserExistenceException e) {
+            throw new RuntimeException(e);
+        } catch (OutOfRoleException e) {
+            throw new RuntimeException(e);
+        } catch (NotLoggedInException e) {
+            throw new RuntimeException(e);
+        }catch(RuntimeException e){
+            if(e.getMessage().equals("Incorrect Password")){
+                showAlert("Incorrect Password" + e.getMessage());
             }
-        } catch (NotLoggedInException | OutOfRoleException e) {
-            // Handle exceptions related to user authentication and authorization
-            e.printStackTrace();
-            showErrorDialog("Error", e.getMessage());
         }
-    }
-
-
-    // Helper method to show an information dialog
-    private void showInformationDialog(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setContentText(content);
-        alert.showAndWait();
     }
 
     // Helper method to show an error dialog

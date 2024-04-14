@@ -11,11 +11,11 @@
    <content>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
          <children>
-            <Button fx:id="okButton" layoutX="448.0" layoutY="324.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Ok" onAction="#handleAddListing"/>
+            <Button fx:id="okButton" layoutX="448.0" layoutY="324.0" mnemonicParsing="false" onAction="#handleAddListing" prefHeight="25.0" prefWidth="80.0" text="Ok" />
             <TextField fx:id="itemNameField" layoutX="72.0" layoutY="132.0" prefHeight="38.0" prefWidth="456.0" promptText="Product Name" />
-            <Label layoutX="72.0" layoutY="87.0" text="Product">
+            <Label layoutX="72.0" layoutY="87.0" opacity="0.5" text="Product">
                <font>
-                  <Font size="30.0" />
+                  <Font name="Share Tech Mono" size="30.0" />
                </font>
             </Label>
          </children>

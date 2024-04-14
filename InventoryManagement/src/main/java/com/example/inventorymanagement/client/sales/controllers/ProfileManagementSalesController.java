@@ -78,6 +78,10 @@ public class ProfileManagementSalesController implements ControllerInterface {
     public ProfileManagementSalesController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
         this.profileManagementSalesModel = new ProfileManagementSalesModel(registry, clientCallback);
     }
+    public void setMainController(MainController mainController){
+        this.mainController = mainController;
+    }
+
 
     boolean initialized = false;
 
@@ -99,7 +103,6 @@ public class ProfileManagementSalesController implements ControllerInterface {
         alert.setContentText(content);
         alert.showAndWait();
     }
-
 
     public String getObjectsUsed() throws RemoteException {
         return "user";
@@ -141,6 +144,16 @@ public class ProfileManagementSalesController implements ControllerInterface {
     @FXML
     private void handleLogout() {
         Platform.exit();
+        System.exit(0);
+    }
+
+    @FXML
+    private void handleSave(){
+        if (mainController !=null){
+            mainController.openProfileManagementCPSalesPanel();
+        } else {
+            System.out.println("Main Controller is not set.");
+        }
     }
 
     @FXML
@@ -160,7 +173,7 @@ public class ProfileManagementSalesController implements ControllerInterface {
         addHoverEffect(logoutButton);
 
         // Add action handlers
-        changePasswordButton.setOnAction(event -> handleChangePassword());
+        changePasswordButton.setOnAction(event -> handleSave());
         logoutButton.setOnAction(event -> handleLogout());
         profileManagementSalesModel = new ProfileManagementSalesModel(registry, clientCallback);
         if (!initialized) { // Check if already initialized
@@ -170,7 +183,7 @@ public class ProfileManagementSalesController implements ControllerInterface {
             if ( changePasswordButton != null && logoutButton != null) {
                 addHoverEffect(changePasswordButton);
                 addHoverEffect(logoutButton);
-                changePasswordButton.setOnAction(event -> handleChangePassword());
+                changePasswordButton.setOnAction(event -> handleSave());
                 logoutButton.setOnAction(event -> handleLogout());
 
                 try {
