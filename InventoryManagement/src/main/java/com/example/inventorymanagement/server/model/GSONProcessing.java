@@ -43,7 +43,7 @@ public class GSONProcessing {
      */
     public synchronized static boolean addItem(Item newItem) {
         try {
-            String filePath = "src/main/resources/com/example/inventorymanagement/data/items.json";
+            String filePath = "InventoryManagement/src/main/resources/com/example/inventorymanagement/data/items.json";
             JsonParser jsonParser = new JsonParser();
             JsonElement rootElement = jsonParser.parse(new FileReader(filePath));
             JsonObject rootObject = rootElement.getAsJsonObject();
