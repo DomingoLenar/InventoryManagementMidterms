@@ -27,13 +27,13 @@
         {
           "itemID": "3",
           "qty": "75",
-          "unitPrice": "7.20",
+          "unitPrice": "8.64",
           "batchNo": "SweetTreats_2024-02-12_7.20"
         },
         {
           "itemID": "4",
           "qty": "150",
-          "unitPrice": "250.00",
+          "unitPrice": "300.00",
           "batchNo": "SteelCraft_2024-02-12_250.00"
         }
       ]
@@ -46,7 +46,7 @@
         {
           "itemID": "1",
           "qty": "25",
-          "unitPrice": "200.00",
+          "unitPrice": "240.00",
           "batchNo": "FeatherFarms_2024-01-03_200.00"
         }
       ]
@@ -59,7 +59,7 @@
         {
           "itemID": "5",
           "qty": "30",
-          "unitPrice": "6.00",
+          "unitPrice": "7.02",
           "batchNo": "ComMeats_2024-03-16_6.00"
         }
       ]
@@ -72,19 +72,19 @@
         {
           "itemID": "5",
           "qty": "30",
-          "unitPrice": "6.00",
+          "unitPrice": "7.02",
           "batchNo": "ComMeats_2024-03-16_6.00"
         },
         {
           "itemID": "4",
           "qty": "126",
-          "unitPrice": "250.00",
+          "unitPrice": "300.00",
           "batchNo": "SteelCraft_2024-02-12_250.00"
         },
         {
           "itemID": "3",
           "qty": "30",
-          "unitPrice": "7.20",
+          "unitPrice": "8.64",
           "batchNo": "SweetTreats_2024-02-12_7.20"
         }
       ]
