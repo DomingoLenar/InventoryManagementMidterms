@@ -20,19 +20,22 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class AddItemPurchaserController implements ControllerInterface {
 
     /**
-     * FXML Controller Variables
+     * Variables
      */
     @FXML
-    private ComboBox<Item> itemNameComboBox;
+    private ComboBox<String> itemNameComboBox;
     @FXML
     private ComboBox<String> supplierComboBox;
     @FXML
@@ -41,9 +44,10 @@ public class AddItemPurchaserController implements ControllerInterface {
     private TextField quantityField;
     @FXML
     private Button okButton;
+    private Map<String, Item> itemMap = new HashMap<>();
 
     /**
-     * Controller Variables
+     * Other Variables
      */
     private MainController mainController;
     private AddItemPurchaserModel addItemPurchaserModel;
@@ -55,15 +59,26 @@ public class AddItemPurchaserController implements ControllerInterface {
     public AddItemPurchaserModel getAddItemPurchaserModel() {
         return addItemPurchaserModel;
     }
-    public ComboBox<Item> getItemNameComboBox() {
+
+    public ComboBox<String> getItemNameComboBox() {
         return itemNameComboBox;
     }
-    public ComboBox<String> getSupplierComboBox() { return supplierComboBox; }
+
+    public ComboBox<String> getSupplierComboBox() {
+        return supplierComboBox;
+    }
+
     public TextField getItemPriceField() {
         return itemPriceField;
     }
-    public Button getOkButton() { return okButton; }
-    public TextField getQuantityField() { return quantityField; }
+
+    public Button getOkButton() {
+        return okButton;
+    }
+
+    public TextField getQuantityField() {
+        return quantityField;
+    }
 
     /**
      * Default constructor.
@@ -74,19 +89,23 @@ public class AddItemPurchaserController implements ControllerInterface {
 
     /**
      * Parameterized constructor.
+     *
      * @param clientCallback Callback for client communication.
-     * @param userService User service interface.
-     * @param iOService Item order service interface.
-     * @param itemService Item service interface.
-     * @param registry RMI registry.
+     * @param userService    User service interface.
+     * @param iOService      Item order service interface.
+     * @param itemService    Item service interface.
+     * @param registry       RMI registry.
      * @param mainController Main controller reference.
      */
-    public AddItemPurchaserController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController){
+    public AddItemPurchaserController(ClientCallback clientCallback, UserRequestInterface userService, ItemOrderRequestInterface iOService, ItemRequestInterface itemService, Registry registry, MainController mainController) {
         this.addItemPurchaserModel = new AddItemPurchaserModel(registry, clientCallback);
     }
 
+    //Helper Methods
+
     /**
      * Fetches list of suppliers and updates the UI.
+     *
      * @throws RemoteException if a remote communication error occurs.
      */
     private void fetchSuppliersAndUpdate() throws RemoteException {
@@ -110,6 +129,7 @@ public class AddItemPurchaserController implements ControllerInterface {
 
     /**
      * Adds hover effect to a button.
+     *
      * @param button The button to add hover effect to.
      */
     private void addHoverEffect(Button button) {
@@ -119,9 +139,10 @@ public class AddItemPurchaserController implements ControllerInterface {
 
     /**
      * Shows an alert with the given message.
+     *
      * @param message The message to display in the alert.
      */
-    private void showAlert(String message){
+    private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setHeaderText(null);
@@ -130,7 +151,32 @@ public class AddItemPurchaserController implements ControllerInterface {
     }
 
     /**
+     * Shows a process success prompt
+     * @param message to be shown
+     */
+    private void showSucess(String message){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success!");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    /**
+     * Looks up an item in the item map by its name.
+     *
+     * @param itemName The name of the item to look up.
+     * @return The item associated with the given name, or null if not found.
+     */
+    private Item lookupItem(String itemName) {
+        return itemMap.get(itemName);
+    }
+
+    //Controller Implementation
+
+    /**
      * Fetches and updates the list of items in the ComboBox.
+     *
      * @throws RemoteException if a remote communication error occurs.
      */
     @Override
@@ -138,7 +184,10 @@ public class AddItemPurchaserController implements ControllerInterface {
         try {
             // Fetch list of items and populate the ComboBox
             LinkedList<Item> itemList = addItemPurchaserModel.fetchListOfItems();
-            itemNameComboBox.getItems().addAll(itemList);
+            for (Item item : itemList) {
+                itemNameComboBox.getItems().add(item.getItemName());
+                itemMap.put(item.getItemName(), item); // Add item to the map
+            }
         } catch (NotLoggedInException e) {
             showAlert("Error occurred while fetching items: " + e.getMessage());
         }
@@ -146,6 +195,7 @@ public class AddItemPurchaserController implements ControllerInterface {
 
     /**
      * Gets the objects used in this controller.
+     *
      * @return A string representing the object used.
      * @throws RemoteException if a remote communication error occurs.
      */
@@ -154,17 +204,41 @@ public class AddItemPurchaserController implements ControllerInterface {
         return "item";
     }
 
+    //UI Event Handlers
+
     /**
      * Handles the action event when the OK button is clicked.
+     *
      * @param actionEvent The action event triggered by clicking the OK button.
      * @throws NotLoggedInException if the user is not logged in.
-     * @throws OutOfRoleException if the user does not have the required permission.
+     * @throws OutOfRoleException   if the user does not have the required permission.
      */
     @FXML
     private void handleOkButton(ActionEvent actionEvent) throws NotLoggedInException, OutOfRoleException {
+        handleAddItem();
+        Stage stage = (Stage) okButton.getScene().getWindow();
+        stage.close();
+    }
+
+    /**
+     * Handles the action event when the Add Item Button is clicked.
+     */
+    @FXML
+    private void handleAddItem() {
         try {
             if (okButton != null && itemNameComboBox != null && supplierComboBox != null) {
-                Item selectedItem = itemNameComboBox.getValue();
+                String selectedItemName = itemNameComboBox.getValue();
+                if (selectedItemName == null) {
+                    showAlert("Please select an item.");
+                    return;
+                }
+                // Retrieve the actual Item object using the selected name (replace with your implementation
+                Item selectedItem = lookupItem(selectedItemName);
+                if (selectedItem == null) {
+                    showAlert("Error: Item not found.");
+                    return;
+                }
+
                 String selectedSupplier = supplierComboBox.getValue();
                 float unitPrice = Float.parseFloat(itemPriceField.getText());
                 int quantity = Integer.parseInt(quantityField.getText());
@@ -181,7 +255,7 @@ public class AddItemPurchaserController implements ControllerInterface {
                     // Call createPurchaseOrder method from the model
                     boolean orderCreated = addItemPurchaserModel.createPurchaseOrder(itemOrder);
                     if (orderCreated) {
-                        showAlert("Item order created successfully.");
+                        showSucess("Item order created successfully.");
                     } else {
                         showAlert("Failed to create item order.");
                     }
@@ -196,14 +270,6 @@ public class AddItemPurchaserController implements ControllerInterface {
         } catch (NotLoggedInException | OutOfRoleException e) {
             showAlert("Error occurred: " + e.getMessage());
         }
-    }
-
-    /**
-     * Handles the action event when the Add Item Button is clicked.
-     */
-    @FXML
-    private void handleAddItem() {
-        // TODO: Logic
     }
 
     /**
@@ -248,7 +314,7 @@ public class AddItemPurchaserController implements ControllerInterface {
         try {
             MainController.clientCallback.setCurrentPanel(this);
             UpdateCallback.process(MainController.clientCallback, MainController.registry);
-        } catch (NotLoggedInException e){
+        } catch (NotLoggedInException e) {
             showAlert("User is not logged in");
         } catch (RemoteException e) {
             System.out.println(e.getMessage());
