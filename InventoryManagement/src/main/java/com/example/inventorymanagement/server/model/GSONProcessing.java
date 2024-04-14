@@ -245,8 +245,8 @@ public class GSONProcessing {
 
         if (type.equals("purchase")) {
             String[] disseminatedBatch = detail.getBatchNo().split("_");
-            float price = detail.getUnitPrice() + (detail.getUnitPrice() * 20);
-            Stock newStock = new Stock(detail.getBatchNo(), detail.getQty(), price, detail.getQty(), disseminatedBatch[0], disseminatedBatch[1]);
+            float price = (float) (detail.getUnitPrice() + (detail.getUnitPrice() * 0.20));
+            Stock newStock = new Stock(detail.getBatchNo(), detail.getQty(), price, Float.parseFloat(disseminatedBatch[2]) , disseminatedBatch[0], disseminatedBatch[1]);
             Gson gson = new Gson();
             stocks.add(JsonParser.parseString(gson.toJson(newStock)));
             return newStock;
@@ -502,8 +502,6 @@ public class GSONProcessing {
             if(!(userExists(userJsonArray, newUser.getUsername()))) {
                 String jsonString = gson.toJson(newUser);
                 JsonElement userElement = JsonParser.parseString(jsonString);
-                JsonObject userObject = userElement.getAsJsonObject();
-                userObject.addProperty("isActive", "false");
                 userJsonArray.add(userElement);
                 try (FileWriter writer = new FileWriter(file)) {
                     gson.toJson(rootElement, writer);
