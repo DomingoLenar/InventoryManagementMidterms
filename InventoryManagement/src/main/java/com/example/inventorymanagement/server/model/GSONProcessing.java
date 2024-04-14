@@ -140,17 +140,19 @@ public class GSONProcessing {
 
             int currentID = orderJsonArray.size()+1;
 
-            newOrder.setOrderID(currentID);
+            //Somehow setter method for order id does not set correctly i dont know why, this is the work around
+            ItemOrder updatedOrder = new ItemOrder(currentID, newOrder.getByUser(), newOrder.getDate(), newOrder.getOrderDetails());
 
-            String ioString = gson.toJson(newOrder);
+            updateItem(updatedOrder, orderType);
+
+
+            String ioString = gson.toJson(updatedOrder);
             JsonElement ioElement = JsonParser.parseString(ioString);
             orderJsonArray.add(ioElement);
 
             try (FileWriter writer = new FileWriter(filePath)) {
                 gson.toJson(rootElement, writer);
             }
-
-            updateItem(newOrder, orderType);
 
             return true;
         } catch (IOException e) {
