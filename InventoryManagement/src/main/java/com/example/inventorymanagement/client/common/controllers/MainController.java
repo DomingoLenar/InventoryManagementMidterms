@@ -344,7 +344,7 @@ public class MainController implements ControllerInterface {
 
         Scene scene = new Scene(root, 1080, 650);
         stage.setScene(scene);
-        stage.setTitle("Stock Pilot");
+        stage.setTitle("Stock Pilot - " + clientCallback.getUser().getRole().toUpperCase());
         stage.setResizable(false);
         stage.show();
 
@@ -392,7 +392,7 @@ public class MainController implements ControllerInterface {
 
         Scene scene = new Scene(root, 1080, 650);
         stage.setScene(scene);
-        stage.setTitle("Stock Pilot");
+        stage.setTitle("Stock Pilot - " + clientCallback.getUser().getRole().toUpperCase());
         stage.setResizable(false);
         stage.show();
 
@@ -443,7 +443,7 @@ public class MainController implements ControllerInterface {
 
         Scene scene = new Scene(root, 1080, 650);
         stage.setScene(scene);
-        stage.setTitle("Stock Pilot");
+        stage.setTitle("Stock Pilot - " + clientCallback.getUser().getRole().toUpperCase());
         stage.setResizable(false);
         stage.show();
 
