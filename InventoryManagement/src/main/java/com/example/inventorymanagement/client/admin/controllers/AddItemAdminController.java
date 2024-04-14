@@ -20,11 +20,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class AddItemAdminController implements ControllerInterface {
 
@@ -32,7 +35,7 @@ public class AddItemAdminController implements ControllerInterface {
      * FXML Controller Variables
      */
     @FXML
-    private ComboBox<Item> itemNameComboBox;
+    private ComboBox<String> itemNameComboBox;
     @FXML
     private ComboBox<String> supplierComboBox;
     @FXML
@@ -41,6 +44,7 @@ public class AddItemAdminController implements ControllerInterface {
     private TextField quantityField;
     @FXML
     private Button okButton;
+    private Map<String, Item> itemMap = new HashMap<>();
 
     /**
      * Controller Variables
@@ -55,7 +59,7 @@ public class AddItemAdminController implements ControllerInterface {
     public AddItemAdminModel getAddItemAdminModel() {
         return addItemAdminModel;
     }
-    public ComboBox<Item> geItemNameComboBox() { return itemNameComboBox;}
+    public ComboBox<String> geItemNameComboBox() { return itemNameComboBox;}
     public ComboBox<String> getSupplierComboBox() { return supplierComboBox; }
     public TextField getItemPriceField() {
         return itemPriceField;
@@ -129,6 +133,28 @@ public class AddItemAdminController implements ControllerInterface {
     }
 
     /**
+     * Shows a process success prompt
+     * @param message to be shown
+     */
+    private void showSuccess(String message){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success!");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    /**
+     * Looks up an item in the item map by its name.
+     *
+     * @param itemName The name of the item to look up.
+     * @return The item associated with the given name, or null if not found.
+     */
+    private Item lookupItem(String itemName) {
+        return itemMap.get(itemName);
+    }
+
+    /**
      * Fetches and updates the list of items in the ComboBox.
      * @throws RemoteException if a remote communication error occurs.
      */
@@ -137,7 +163,10 @@ public class AddItemAdminController implements ControllerInterface {
         try {
             // Fetch list of items and populate the ComboBox
             LinkedList<Item> itemList = addItemAdminModel.fetchListOfItems();
-            itemNameComboBox.getItems().addAll(itemList);
+            for (Item item : itemList) {
+                itemNameComboBox.getItems().add(item.getItemName());
+                itemMap.put(item.getItemName(), item); // Add item to the map
+            }
         } catch (NotLoggedInException e) {
             showAlert("Error occurred while fetching items: " + e.getMessage());
         }
@@ -161,9 +190,30 @@ public class AddItemAdminController implements ControllerInterface {
      */
     @FXML
     private void handleOkButton(ActionEvent actionEvent) throws NotLoggedInException, OutOfRoleException {
+        handleAddItem();
+        Stage stage = (Stage) okButton.getScene().getWindow();
+        stage.close();
+    }
+
+    /**
+     * Handles the action event when the Add Item Button is clicked.
+     */
+    @FXML
+    private void handleAddItem() {
         try {
             if (okButton != null && itemNameComboBox != null && supplierComboBox != null) {
-                Item selectedItem = itemNameComboBox.getValue();
+                String selectedItemName = itemNameComboBox.getValue();
+                if (selectedItemName == null) {
+                    showAlert("Please select an item.");
+                    return;
+                }
+                // Retrieve the actual Item object using the selected name (replace with your implementation
+                Item selectedItem = lookupItem(selectedItemName);
+                if (selectedItem == null) {
+                    showAlert("Error: Item not found.");
+                    return;
+                }
+
                 String selectedSupplier = supplierComboBox.getValue();
                 float unitPrice = Float.parseFloat(itemPriceField.getText());
                 int quantity = Integer.parseInt(quantityField.getText());
@@ -180,7 +230,7 @@ public class AddItemAdminController implements ControllerInterface {
                     // Call createPurchaseOrder method from the model
                     boolean orderCreated = addItemAdminModel.createPurchaseOrder(itemOrder);
                     if (orderCreated) {
-                        showAlert("Item order created successfully.");
+                        showSuccess("Item order created successfully.");
                     } else {
                         showAlert("Failed to create item order.");
                     }
@@ -195,14 +245,6 @@ public class AddItemAdminController implements ControllerInterface {
         } catch (NotLoggedInException | OutOfRoleException e) {
             showAlert("Error occurred: " + e.getMessage());
         }
-    }
-
-    /**
-     * Handles the action event when the Add Item Button is clicked.
-     */
-    @FXML
-    private void handleAddItem() {
-        // TODO: Logic
     }
 
     /**
