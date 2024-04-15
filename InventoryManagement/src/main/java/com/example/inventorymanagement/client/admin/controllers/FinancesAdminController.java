@@ -245,7 +245,7 @@ public class FinancesAdminController implements ControllerInterface {
     }
 
     public void updateRevenueCostChart(LinkedHashMap<Integer, Float> monthlyRevenueData, LinkedHashMap<Integer, Float> monthlyCostData){
-        revenueCostChart.getData().clear();
+        MainController.getFinancesAdminController().revenueCostChart.getData().clear();
 
         XYChart.Series<String, Number> revenueSeries = new XYChart.Series<>();
         revenueSeries.setName("this month's Revenue");
@@ -262,7 +262,7 @@ public class FinancesAdminController implements ControllerInterface {
         for (Integer month : monthlyCostData.keySet()) {
             costSeries.getData().add(new XYChart.Data<>(getMonthName(month), monthlyCostData.get(month)));
         }
-        revenueCostChart.getData().addAll(revenueSeries, costSeries);
+        MainController.getFinancesAdminController().revenueCostChart.getData().addAll(revenueSeries, costSeries);
     }
 
     // Method to get the name of the month from its number (1-based)
@@ -273,38 +273,46 @@ public class FinancesAdminController implements ControllerInterface {
 
     @Override
     public void fetchAndUpdate() throws RemoteException {
-        try {
-            // Fetch data from the model
-            LinkedHashMap<Integer, Float> monthlyRevenueData = financesAdminModel.fetchMonthlyRevenue();
-            LinkedHashMap<Integer, Float> monthlyCostData = financesAdminModel.fetchMonthlyCost();
+        Platform.runLater(() -> {
+            try {
+                // Fetch data from the model
+                LinkedHashMap<Integer, Float> monthlyRevenueData = financesAdminModel.fetchMonthlyRevenue();
+                LinkedHashMap<Integer, Float> monthlyCostData = financesAdminModel.fetchMonthlyCost();
 //            float revenueTodayData = financesAdminModel.fetchRevenueToday();
 //            float costTodayData = financesAdminModel.fetchCostToday();
 
-            // Compute gross revenue
-            float grossRevenue = financesAdminModel.computeGrossRevenue(monthlyRevenueData);
+                // Compute gross revenue
+                float grossRevenue = financesAdminModel.computeGrossRevenue(monthlyRevenueData);
 
-            // Compute tax deductible
-            float taxDeductable = financesAdminModel.computeTaxDeductible(monthlyRevenueData);
+                // Compute tax deductible
+                float taxDeductable = financesAdminModel.computeTaxDeductible(monthlyRevenueData);
 
-            // Compute stock worth
-            float stockWorth = financesAdminModel.computeStockWorth(monthlyCostData);
+                // Compute stock worth
+                float stockWorth = financesAdminModel.computeStockWorth(monthlyCostData);
 
-            // Compute gross profit
-            float grossProfit = financesAdminModel.computeGrossProfit(grossRevenue, stockWorth);
+                // Compute gross profit
+                float grossProfit = financesAdminModel.computeGrossProfit(grossRevenue, stockWorth);
 
-            DecimalFormat df = new DecimalFormat("###,###,###,##0.00");
+                DecimalFormat df = new DecimalFormat("###,###,###,##0.00");
 
-            grossRevenueAmount.setText("₱" + df.format(grossRevenue));
-            taxDeductableAmount.setText("₱" + df.format(taxDeductable));
-            salesWorthAmount.setText("₱" + df.format(stockWorth));
-            grossProfitsAmount.setText("₱" + df.format(grossProfit));
+                MainController.getFinancesAdminController().grossRevenueAmount.setText("₱" + df.format(grossRevenue));
+                System.out.println("₱" + df.format(grossRevenue));
+                MainController.getFinancesAdminController().taxDeductableAmount.setText("₱" + df.format(taxDeductable));
+                System.out.println("₱" + df.format(taxDeductable));
+                MainController.getFinancesAdminController().salesWorthAmount.setText("₱" + df.format(stockWorth));
+                System.out.println("₱" + df.format(stockWorth));
+                MainController.getFinancesAdminController().grossProfitsAmount.setText("₱" + df.format(grossProfit));
+                System.out.println("₱" + df.format(grossProfit));
 
-            // Update the stacked bar chart for monthly revenue vs. cost
-            updateRevenueCostChart(monthlyRevenueData, monthlyCostData);
+                // Update the stacked bar chart for monthly revenue vs. cost
+                updateRevenueCostChart(monthlyRevenueData, monthlyCostData);
 
-        } catch (NotLoggedInException | OutOfRoleException e) {
-            e.printStackTrace();
-        }
+
+            } catch (NotLoggedInException | OutOfRoleException e) {
+                e.printStackTrace();
+            }
+        });
+
     }
     @Override
     public String getObjectsUsed() throws RemoteException {

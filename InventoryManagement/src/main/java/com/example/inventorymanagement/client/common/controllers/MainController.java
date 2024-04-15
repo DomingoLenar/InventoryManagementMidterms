@@ -14,6 +14,7 @@ import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
@@ -369,6 +370,26 @@ public class MainController implements ControllerInterface {
 
         navigationBarAdminController.setMainPane(root);
     }
+
+//    // Method to load FXML file dynamically
+//    private void loadFXML(String fxmlFileName) {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFileName));
+//            Parent newContent = loader.load();
+//            root.getChildren().setAll(newContent);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    // Method to reload FXML file
+//    private void reloadFXML(String fxmlFileName) {
+//        // Clear existing content
+//        root.getChildren().clear();
+//
+//        // Load new FXML content
+//        loadFXML(fxmlFileName);
+//    }
 
     /**
      * Displays the main menu for the purchaser user.

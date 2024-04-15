@@ -3,7 +3,7 @@
     {
       "itemName": "Whole Chicken",
       "itemId": 1,
-      "totalQty": "90",
+      "totalQty": "20",
       "stocks": [
         {
           "batchNo": "FeatherFarms_2023-12-29_200.00",
@@ -15,7 +15,7 @@
         },
         {
           "batchNo": "FeatherFarms_2024-01-03_200.00",
-          "qty": "40",
+          "qty": "20",
           "price": 299.75,
           "cost": 200.00,
           "supplier": "FeatherFarms",
@@ -26,11 +26,11 @@
     {
       "itemName": "A4 Printing Paper",
       "itemId": 2,
-      "totalQty": "300",
+      "totalQty": "290",
       "stocks": [
         {
           "batchNo": "OfficeEase_2023-12-29_500",
-          "qty": "200",
+          "qty": "190",
           "price": 525.00,
           "cost": 500.00,
           "supplier": "OfficeEase",
@@ -57,11 +57,11 @@
     {
       "itemName": "Chocolate Muffins",
       "itemId": 3,
-      "totalQty": "150",
+      "totalQty": "140",
       "stocks": [
         {
           "batchNo": "SweetTreats_2024-02-11_7.00",
-          "qty": "100",
+          "qty": "90",
           "price": 7.70,
           "cost": 7.00,
           "supplier": "SweetTreats",
