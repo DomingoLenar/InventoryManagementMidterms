@@ -113,15 +113,19 @@ public class ProfileManagementChangePassAdminController  implements ControllerIn
     }
     @FXML
     public void handleSave() {
-        String oldPassword = oldPasswordTextField.getText();
-        String newPassword = newPasswordTextField.getText();
+        String oldPassword = MainController.getProfileManagementChangePassAdminController().oldPasswordTextField.getText();
+        String newPassword = MainController.getProfileManagementChangePassAdminController().newPasswordTextField.getText();
 
         try{
             User currentUser = MainController.clientCallback.getUser();
-            if(!(currentUser.getPassword().equals(oldPassword))) throw new RuntimeException("Incorrect Password");
-
-            if(!(newPassword.equals(null))) profileManagementChangePassAdminModel.changePassword(currentUser,newPassword);
-            showErrorDialog("Error", "Please fill in new password field.");
+            if(!(currentUser.getPassword().equals(oldPassword))) {
+                throw new RuntimeException("Incorrect Password");
+            } else if(newPassword != null) {
+                profileManagementChangePassAdminModel.changePassword(currentUser,newPassword);
+                showSuccessDialog("Your password has been change.");
+            } else {
+                showErrorDialog("Error", "Please fill in new password field.");
+            }
         }catch(RemoteException  e){
 
         } catch (UserExistenceException e) {
@@ -147,6 +151,14 @@ public class ProfileManagementChangePassAdminController  implements ControllerIn
     private void showAlert(String message){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showSuccessDialog(String message){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Success");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

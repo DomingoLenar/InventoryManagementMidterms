@@ -23,7 +23,7 @@
                         <Font name="Share Tech Mono" size="13.0" />
                     </font>
                 </TextField>
-                <TextField fx:id="NewPasswordTextField" layoutX="281.0" layoutY="277.0" prefHeight="37.0" prefWidth="287.0" promptText="New Password">
+                <TextField fx:id="newPasswordTextField" layoutX="281.0" layoutY="277.0" prefHeight="37.0" prefWidth="287.0" promptText="New Password">
                     <font>
                         <Font name="Share Tech Mono" size="13.0" />
                     </font>
