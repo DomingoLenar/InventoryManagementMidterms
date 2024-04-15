@@ -115,24 +115,24 @@ public class ProfileManagementPurchaserController  implements ControllerInterfac
     }
 
     // Action handlers
-    @FXML
-    private void handleChangePassword() {
-        ProfileManagementChangePassPurchaserModel pManagementCPPC = new ProfileManagementChangePassPurchaserModel(MainController.registry, clientCallback);
-        try {
-            new ProfileManagementChangePassPurchaserController(new Stage());
-        } catch (Exception e) {
-            // Show an error dialog to the user
-            showErrorDialog("Error", "Failed to open change password window.");
-            e.printStackTrace();
-        }
-    }
+//    @FXML
+//    private void handleChangePassword() {
+//        ProfileManagementChangePassPurchaserModel pManagementCPPC = new ProfileManagementChangePassPurchaserModel(MainController.registry, clientCallback);
+//        try {
+//            new ProfileManagementChangePassPurchaserController(new Stage());
+//        } catch (Exception e) {
+//            // Show an error dialog to the user
+//            showErrorDialog("Error", "Failed to open change password window.");
+//            e.printStackTrace();
+//        }
+//    }
     // Helper method to display an error dialog
-    private void showErrorDialog(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+//    private void showErrorDialog(String title, String message) {
+//        Alert alert = new Alert(Alert.AlertType.ERROR);
+//        alert.setTitle(title);
+//        alert.setContentText(message);
+//        alert.showAndWait();
+//    }
 
     @FXML
     private void handleLogout() {
@@ -206,10 +206,6 @@ public class ProfileManagementPurchaserController  implements ControllerInterfac
             showAlert("User is not logged in");
         } catch (RemoteException e) {
             System.out.println(e.getMessage());
-        }
-    }
-    private class ProfileManagementChangePassPurchaserController {
-        public ProfileManagementChangePassPurchaserController(Stage stage) {
         }
     }
 }

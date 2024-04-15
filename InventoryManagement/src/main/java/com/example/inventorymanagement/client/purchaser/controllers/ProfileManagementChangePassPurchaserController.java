@@ -34,7 +34,7 @@ import java.util.ResourceBundle;
 import static com.example.inventorymanagement.client.common.controllers.MainController.clientCallback;
 import static com.example.inventorymanagement.client.common.controllers.MainController.registry;
 
-public class ProfileManagementChangePassPurchaserController  implements ControllerInterface {
+public class ProfileManagementChangePassPurchaserController implements ControllerInterface {
     @FXML
     private BorderPane borderPaneProfileManagementChangePass;
     @FXML
@@ -80,10 +80,11 @@ public class ProfileManagementChangePassPurchaserController  implements Controll
     public Button getSaveButton() {
         return saveButton;
     }
+
     private ProfileManagementChangePassPurchaserModel profileManagementChangePassPurchaserModel;
     private MainController mainController;
 
-    public ProfileManagementChangePassPurchaserController(){
+    public ProfileManagementChangePassPurchaserController() {
         // Default Constructor
     }
 
@@ -92,9 +93,9 @@ public class ProfileManagementChangePassPurchaserController  implements Controll
     }
 
     boolean initialized = false;
+
     public void fetchAndUpdate() throws RemoteException {
         try {
-            // Update UI components with current user's username
             updateUsernameLabel();
         } catch (Exception e) {
             e.printStackTrace();
@@ -106,22 +107,27 @@ public class ProfileManagementChangePassPurchaserController  implements Controll
         return "user";
     }
 
-    private void addHoverEffect (Button button){
+    private void addHoverEffect(Button button) {
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: derive(#EAD7D7, -10%);"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #EAD7D7;"));
     }
+
     @FXML
     public void handleSave() {
-        String oldPassword = oldPasswordTextField.getText();
-        String newPassword = newPasswordTextField.getText();
+        String oldPassword = MainController.getProfileManagementChangePassPurchaserController().oldPasswordTextField.getText();
+        String newPassword = MainController.getProfileManagementChangePassPurchaserController().newPasswordTextField.getText();
 
-        try{
+        try {
             User currentUser = MainController.clientCallback.getUser();
-            if(!(currentUser.getPassword().equals(oldPassword))) throw new RuntimeException("Incorrect Password");
-
-            if(!(newPassword.equals(null))) profileManagementChangePassPurchaserModel.changePassword(currentUser,newPassword);
-            showErrorDialog("Error", "Please fill in new password field.");
-        }catch(RemoteException  e){
+            if(!(currentUser.getPassword().equals(oldPassword))) {
+                throw new RuntimeException("Incorrect Password");
+            } else if(newPassword != null) {
+                profileManagementChangePassPurchaserModel.changePassword(currentUser,newPassword);
+                showSuccessDialog("Your password has been change.");
+            } else {
+                showErrorDialog("Error", "Please fill in new password field.");
+            }
+        } catch (RemoteException e) {
 
         } catch (UserExistenceException e) {
             throw new RuntimeException(e);
@@ -129,8 +135,8 @@ public class ProfileManagementChangePassPurchaserController  implements Controll
             throw new RuntimeException(e);
         } catch (NotLoggedInException e) {
             throw new RuntimeException(e);
-        }catch(RuntimeException e){
-            if(e.getMessage().equals("Incorrect Password")){
+        } catch (RuntimeException e) {
+            if (e.getMessage().equals("Incorrect Password")) {
                 showAlert("Incorrect Password" + e.getMessage());
             }
         }
@@ -143,13 +149,23 @@ public class ProfileManagementChangePassPurchaserController  implements Controll
         alert.setContentText(content);
         alert.showAndWait();
     }
-    private void showAlert(String message){
+
+    private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    private void showSuccessDialog(String message){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     public void updateUsernameLabel() {
         try {
             usernameLabel.setText(clientCallback.getUser().getUsername());
@@ -168,26 +184,18 @@ public class ProfileManagementChangePassPurchaserController  implements Controll
         profileManagementChangePassPurchaserModel = new ProfileManagementChangePassPurchaserModel(registry, clientCallback);
         if (!initialized) {
             initialized = true;
-            try {
-                if (profileManagementChangePassPurchaserModel != null) {
+
+            if (profileManagementChangePassPurchaserModel != null && newPasswordTextField != null && oldPasswordTextField != null && saveButton != null) {
+                addHoverEffect(saveButton);
+                try {
                     fetchAndUpdate();
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
                 }
-                else {
-                    System.out.println("Profile Management Change Pass Admin Model is null");
-                }
-            } catch (Exception e) {
-                System.out.println("User is not logged in");
+            } else {
+                System.out.println("Profile Management Change Pass Admin Model is null");
             }
-        }else {
-            System.out.println("Error: Save button is null. Cannot Initialize");
-        }
-        try {
-            MainController.clientCallback.setCurrentPanel(this);
-            UpdateCallback.process(MainController.clientCallback, MainController.registry);
-        } catch (NotLoggedInException e){
-            showAlert("User is not logged in");
-        } catch (RemoteException e) {
-            System.out.println(e.getMessage());
+            saveButton.setOnAction(actionEvent -> handleSave());
         }
     }
 }
