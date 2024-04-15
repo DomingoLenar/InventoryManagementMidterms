@@ -215,6 +215,6 @@ public class StockControlSalesController implements ControllerInterface {
      */
     @Override
     public String getObjectsUsed() throws RemoteException {
-        return "item";
+        return "item,itemorder";
     }
 }

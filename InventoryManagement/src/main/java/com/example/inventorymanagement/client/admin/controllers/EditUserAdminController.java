@@ -186,14 +186,6 @@ public class EditUserAdminController implements ControllerInterface {
         } else {
             System.out.println("Error: Save button is null. cannot initialize");
         }
-        try {
-            clientCallback.setCurrentPanel(this);
-            UpdateCallback.process(clientCallback, registry);
-        } catch (NotLoggedInException e){
-            showAlert("User is not logged in");
-        } catch (RemoteException e) {
-            System.out.println(e.getMessage());
-        }
 
     }
 

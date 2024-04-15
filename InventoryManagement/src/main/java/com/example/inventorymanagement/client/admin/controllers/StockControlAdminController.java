@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.LinkedList;
@@ -202,6 +203,16 @@ public class StockControlAdminController implements ControllerInterface {
      */
     @FXML
     public void initialize() { // initialize components -> better approach is to initialize just the components and let nav___bar buttons handle the population of data/realtime
+
+        try {
+            MainController.clientCallback.setCurrentPanel(this);
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
+        } catch (NotLoggedInException e){
+            showAlert("User is not logged in");
+        } catch (RemoteException e) {
+            System.out.println(e.getMessage());
+        }
+
         addHoverEffect(lowStocksButtonAdmin);
         addHoverEffect(addItemButtonAdmin);
         addHoverEffect(addListingButtonAdmin);
@@ -243,14 +254,7 @@ public class StockControlAdminController implements ControllerInterface {
                 System.out.println("Error: Table or button is null. Cannot initialize.");
             }
         }
-        try {
-            MainController.clientCallback.setCurrentPanel(this);
-            UpdateCallback.process(MainController.clientCallback, MainController.registry);
-        } catch (NotLoggedInException e){
-            showAlert("User is not logged in");
-        } catch (RemoteException e) {
-            System.out.println(e.getMessage());
-        }
+
     }
 
     /**
@@ -278,6 +282,6 @@ public class StockControlAdminController implements ControllerInterface {
      */
     @Override
     public String getObjectsUsed() throws RemoteException {
-        return "item";
+        return "item,itemorder";
     }
 }

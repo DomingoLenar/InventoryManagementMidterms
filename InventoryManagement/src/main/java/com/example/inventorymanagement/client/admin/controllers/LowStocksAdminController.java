@@ -139,7 +139,7 @@ public class LowStocksAdminController implements ControllerInterface {
      */
     @Override
     public String getObjectsUsed() throws RemoteException {
-        return "Item";
+        return "item";
     }
 
     /**

@@ -1,8 +1,10 @@
 package com.example.inventorymanagement.client.purchaser.controllers;
 
 import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.client.microservices.UpdateCallback;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
+import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
@@ -67,7 +69,11 @@ public class NavigationBarPurchaserController implements ControllerInterface {
         try {
             MainController.getStockControlPurchaserController().fetchAndUpdate(); // triggered when btn stock control is click
             mainPane.setRight(MainController.getStockControlPurchaserPanel()); // get the refresh components of stock control of purchaser
+            MainController.clientCallback.setCurrentPanel(MainController.getStockControlPurchaserController());
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (NotLoggedInException e) {
             throw new RuntimeException(e);
         }
     }
@@ -76,8 +82,12 @@ public class NavigationBarPurchaserController implements ControllerInterface {
         try{
         MainController.getProfileManagementPurchaserController().fetchAndUpdate();
         mainPane.setRight(MainController.getProfileManagementPurchaserPanel());
+        MainController.clientCallback.setCurrentPanel(MainController.getProfileManagementPurchaserController());
+        UpdateCallback.process(MainController.clientCallback, MainController.registry);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (NotLoggedInException e) {
+            throw new RuntimeException(e);
         }
     }
 
