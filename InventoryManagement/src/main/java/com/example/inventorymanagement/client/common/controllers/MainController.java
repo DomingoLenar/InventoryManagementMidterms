@@ -66,8 +66,6 @@ public class MainController implements ControllerInterface {
     static BorderPane dashboardAdminPanel;
     static FinancesAdminController financesAdminController;
     static BorderPane financesAdminPanel;
-    static UserManagementAdminController userManagementAdminController;
-    static BorderPane userManagementAdminPanel;
 
     static CreateSalesInvoiceAdminController createSalesInvoiceAdminController;
     static DialogPane createSalesInvoiceAdminPanel;
@@ -80,10 +78,15 @@ public class MainController implements ControllerInterface {
 
     static LowStocksAdminController lowStocksAdminController;
     static BorderPane lowStocksAdminPanel;
+
     static AddUserAdminController addUserAdminController;
     static BorderPane addUserAdminPanel;
+
     static ProfileManagementChangePassAdminController profileManagementChangePassAdminController;
     static BorderPane profileManagementChangePassAdminPanel;
+
+    static EditUserAdminController editUserAdminController;
+    static BorderPane editUserAdminPanel;
 
     /**
      * Purchaser Controller and Panel Variables
@@ -138,7 +141,7 @@ public class MainController implements ControllerInterface {
     public static BorderPane getProfileManagementAdminPanel() { return profileManagementAdminPanel;}
     public static BorderPane getDashboardAdminPanel(){ return dashboardAdminPanel;}
     public static BorderPane getFinancesAdminPanel(){ return financesAdminPanel;}
-    public static BorderPane getUserManagementAdminPanel(){return userManagementAdminPanel;}
+    public static BorderPane getEditUserAdminPanel() {return editUserAdminPanel;}
 
     public static DialogPane getCreateSalesInvoiceSalesPanel() { return createSalesInvoiceSalesPanel;}
     public static DialogPane getCreateSalesInvoiceAdminPanel() { return createSalesInvoiceAdminPanel;}
@@ -172,7 +175,7 @@ public class MainController implements ControllerInterface {
     public static ProfileManagementAdminController getProfileManagementAdminController() { return profileManagementAdminController;}
     public static DashboardAdminController getDashboardAdminController(){ return dashboardAdminController;}
     public static FinancesAdminController getFinancesAdminController(){ return financesAdminController;}
-    public static UserManagementAdminController getUserManagementAdminController(){ return userManagementAdminController;}
+    public static EditUserAdminController getEditUserAdminController() {return editUserAdminController;}
 
     public static CreateSalesInvoiceSalesController getCreateSalesInvoiceSalesController() { return createSalesInvoiceSalesController;}
     public static CreateSalesInvoiceAdminController getCreateSalesInvoiceAdminController() { return createSalesInvoiceAdminController;}
@@ -325,15 +328,15 @@ public class MainController implements ControllerInterface {
         financesAdminPanel = financesLoader.load();
         financesAdminController = financesLoader.getController();
 
-        FXMLLoader userManagementLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/userManagement/userManagementAdmin-view.fxml"));
-        userManagementAdminPanel = userManagementLoader.load();
-        userManagementAdminController = userManagementLoader.getController();
-        userManagementAdminController.setMainController(this);
-
         FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/dashboard/dashboardAdmin-view.fxml"));
         dashboardAdminPanel = dashboardLoader.load();
         dashboardAdminController = dashboardLoader.getController();
         dashboardAdminController.setMainController(this);
+
+        FXMLLoader editUserLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/userManagement/editUserAdmin-view.fxml"));
+        editUserAdminPanel = editUserLoader.load();
+        editUserAdminController = editUserLoader.getController();
+        editUserAdminController.setMainController(this);
 
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
 
@@ -345,7 +348,7 @@ public class MainController implements ControllerInterface {
         }
 
         VBox rightComponents = new VBox();
-        rightComponents.getChildren().addAll(dashboardAdminPanel, stockControlAdminPanel, salesHistoryAdminPanel, profileManagementAdminPanel, financesAdminPanel, userManagementAdminPanel);
+        rightComponents.getChildren().addAll(dashboardAdminPanel, stockControlAdminPanel, salesHistoryAdminPanel, profileManagementAdminPanel, financesAdminPanel, editUserAdminPanel);
 
         BorderPane root = new BorderPane();
         root.setLeft(navigationBar);

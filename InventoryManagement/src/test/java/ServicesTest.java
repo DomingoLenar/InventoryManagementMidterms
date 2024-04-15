@@ -33,7 +33,7 @@ public class ServicesTest implements ControllerInterface{
    public static void setUp() {
       try {
          ServicesTest tester = new ServicesTest();
-         registry = LocateRegistry.getRegistry("localhost", 2018);
+         registry = LocateRegistry.getRegistry("serverMachine", 2018);
          UserRequestInterface userStub = (UserRequestInterface) registry.lookup("userRequest");
 
          User user = new User("testadmin", "admintest", "admin");

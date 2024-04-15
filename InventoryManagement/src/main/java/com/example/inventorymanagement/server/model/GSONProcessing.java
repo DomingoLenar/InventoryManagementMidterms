@@ -9,6 +9,7 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 
 import java.io.*;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -541,7 +542,7 @@ public class GSONProcessing {
     }
 
     public static synchronized boolean removeUser(User toRemove){
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         File file = new File("InventoryManagement/src/main/resources/com/example/inventorymanagement/data/users.json");
         try{
             JsonElement rootElement = JsonParser.parseReader(new FileReader(file));
@@ -549,11 +550,17 @@ public class GSONProcessing {
             JsonArray userArray = rootObject.getAsJsonArray("users");
             for(JsonElement jsonElement: userArray){
                 User user = gson.fromJson(jsonElement, User.class);
-                if(user.getUsername().equals(toRemove.getUsername())){
+                String cUsername = user.getUsername();
+                String toRemoveUsername = toRemove.getUsername();
+                if(cUsername.equals(toRemoveUsername)){
                     userArray.remove(jsonElement);
-                    return true;
-                }else{
-                    return false;
+                    try(FileWriter fileWriter = new FileWriter(file)){
+                        gson.toJson(rootElement, fileWriter);
+                        return true;
+                    }catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
                 }
             }
         } catch (FileNotFoundException e) {

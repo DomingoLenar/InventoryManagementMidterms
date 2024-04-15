@@ -80,7 +80,7 @@
                   <Font name="Share Tech Mono" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="todayTransactionLabel" layoutX="471.0" layoutY="14.0" text="Today's Transactions">
+            <Label fx:id="todayTransactionsLabel" layoutX="471.0" layoutY="14.0" text="Today's Transactions">
                <font>
                   <Font name="Share Tech Mono" size="18.0" />
                </font>
@@ -90,6 +90,9 @@
                <columns>
                   <TableColumn fx:id="lowStockProductTableColumn" prefWidth="181.59998741149903" text="Products" />
                </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
             </TableView>
             <TableView fx:id="transTodayTableView" layoutX="323.0" layoutY="54.0" prefHeight="238.0" prefWidth="491.0">
               <columns>
@@ -97,6 +100,9 @@
                 <TableColumn fx:id="dateTableColumn" prefWidth="103.99993896484375" text="Date" />
                   <TableColumn fx:id="amountTableColumn" prefWidth="123.99996948242188" text="Amount" />
               </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
             </TableView>
          </children>
       </AnchorPane>
