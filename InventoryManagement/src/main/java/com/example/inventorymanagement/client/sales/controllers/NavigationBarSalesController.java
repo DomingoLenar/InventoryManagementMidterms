@@ -1,8 +1,11 @@
 package com.example.inventorymanagement.client.sales.controllers;
 
 import com.example.inventorymanagement.client.common.controllers.MainController;
+import com.example.inventorymanagement.client.microservices.UpdateCallback;
+import com.example.inventorymanagement.client.sales.views.StockControlSalesPanel;
 import com.example.inventorymanagement.util.ClientCallback;
 import com.example.inventorymanagement.util.ControllerInterface;
+import com.example.inventorymanagement.util.exceptions.NotLoggedInException;
 import com.example.inventorymanagement.util.requests.ItemOrderRequestInterface;
 import com.example.inventorymanagement.util.requests.ItemRequestInterface;
 import com.example.inventorymanagement.util.requests.UserRequestInterface;
@@ -71,7 +74,11 @@ public class NavigationBarSalesController implements ControllerInterface {
         try {
             MainController.getStockControlSalesController().fetchAndUpdate(); // triggered when btn stock control is click
             mainPane.setRight(MainController.getStockControlSalesPanel()); // get the refresh components of stock control of sales
+            MainController.clientCallback.setCurrentPanel(MainController.getStockControlSalesController());
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (NotLoggedInException e) {
             throw new RuntimeException(e);
         }
     }
@@ -80,8 +87,12 @@ public class NavigationBarSalesController implements ControllerInterface {
         try {
             MainController.getSalesHistorySalesController().fetchAndUpdate();
             mainPane.setRight(MainController.getSalesHistorySalesPanel());
+            MainController.clientCallback.setCurrentPanel(MainController.getSalesHistorySalesController());
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (NotLoggedInException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -89,8 +100,12 @@ public class NavigationBarSalesController implements ControllerInterface {
         try {
             MainController.getProfileManagementSalesController().fetchAndUpdate();
             mainPane.setRight(MainController.getProfileManagementSalesPanel());
+            MainController.clientCallback.setCurrentPanel(MainController.getProfileManagementSalesController());
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (NotLoggedInException e) {
+            throw new RuntimeException(e);
         }
     }
 

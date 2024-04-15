@@ -177,7 +177,7 @@ public class SalesHistorySalesController implements ControllerInterface {
 
     @Override
     public String getObjectsUsed() throws RemoteException {
-        return "itemOrder";
+        return "itemorder";
     }
 
     private void addHoverEffect(Button button) {

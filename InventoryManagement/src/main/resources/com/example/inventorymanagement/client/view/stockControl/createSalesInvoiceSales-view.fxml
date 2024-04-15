@@ -35,7 +35,6 @@
                   <Font name="Share Tech Mono" size="17.0" />
                </font>
             </Label>
-            <Button fx:id="clearButton" layoutX="489.0" layoutY="362.0" mnemonicParsing="false" onAction="#handleClearButton" prefHeight="25.0" prefWidth="80.0" text="Clear" />
             <Label layoutX="32.0" layoutY="268.0" opacity="0.5" text="Total Price">
                <font>
                   <Font name="Share Tech Mono" size="17.0" />
@@ -47,7 +46,7 @@
                </font>
             </Label>
             <Button fx:id="addButton" layoutX="28.0" layoutY="362.0" mnemonicParsing="false" onAction="#handleAddButton" prefHeight="25.0" prefWidth="80.0" text="Add" />
-            <Button fx:id="okButton" layoutX="405.0" layoutY="362.0" mnemonicParsing="false" onAction="#handleCreateSalesInvoice" prefHeight="25.0" prefWidth="80.0" text="Ok" />
+            <Button fx:id="okButton" layoutX="490.0" layoutY="362.0" mnemonicParsing="false" onAction="#handleCreateSalesInvoice" prefHeight="25.0" prefWidth="80.0" text="Ok" />
             <ListView fx:id="itemNameListView" layoutX="320.0" layoutY="98.0" prefHeight="225.0" prefWidth="116.0" />
             <ListView fx:id="priceListView" layoutX="435.0" layoutY="98.0" prefHeight="225.0" prefWidth="95.0" />
             <ListView fx:id="quantityListView" layoutX="528.0" layoutY="98.0" prefHeight="225.0" prefWidth="41.0" />

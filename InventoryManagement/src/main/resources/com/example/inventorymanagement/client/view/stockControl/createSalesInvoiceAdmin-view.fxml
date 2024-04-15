@@ -35,13 +35,12 @@
                   <Font name="Share Tech Mono" size="17.0" />
                </font>
             </Label>
-            <Button fx:id="okButton" layoutX="405.0" layoutY="362.0" mnemonicParsing="false" onAction="#handleCreateSalesInvoice" prefHeight="25.0" prefWidth="80.0" text="Ok" />
+            <Button fx:id="okButton" layoutX="493.0" layoutY="362.0" mnemonicParsing="false" onAction="#handleCreateSalesInvoice" prefHeight="25.0" prefWidth="80.0" text="Ok" />
             <Label layoutX="32.0" layoutY="268.0" opacity="0.5" text="Total Price">
                <font>
                   <Font name="Share Tech Mono" size="17.0" />
                </font>
             </Label>
-            <Button fx:id="clearButton" layoutX="489.0" layoutY="362.0" mnemonicParsing="false" onAction="#handleClearButton" prefHeight="25.0" prefWidth="80.0" text="Clear" />
             <Label fx:id="itemPriceLabel1" contentDisplay="CENTER" layoutX="32.0" layoutY="288.0" prefHeight="35.0" prefWidth="16.0" text="₱" textAlignment="CENTER">
                <font>
                   <Font name="Share Tech Mono" size="24.0" />

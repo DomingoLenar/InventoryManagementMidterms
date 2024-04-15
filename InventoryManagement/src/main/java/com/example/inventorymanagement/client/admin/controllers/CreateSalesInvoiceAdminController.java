@@ -48,8 +48,6 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
     @FXML
     private Button addButton;
     @FXML
-    private Button clearButton;
-    @FXML
     private Button okButton;
 
     //Other Variables
@@ -109,10 +107,6 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
 
     public Button getAddButton() {
         return addButton;
-    }
-
-    public Button getClearButton() {
-        return clearButton;
     }
 
     public Button getOkButton() {
@@ -179,6 +173,7 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
         String selectedItemName = itemNameComboBox.getValue();
         if (selectedItemName == null) {
             showAlert("Please select an item.");
+            itemQuantityField.setText("0"); // Reset quantity field to zero when no item is selected
             return;
         }
         Item selectedItem = getSelectedItem();
@@ -187,17 +182,7 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
             return;
         }
 
-        int quantity;
-        try {
-            quantity = Integer.parseInt(itemQuantityField.getText().trim());
-            if (quantity <= 0) {
-                showAlert("Quantity must be greater than zero.");
-                return;
-            }
-        } catch (NumberFormatException e) {
-            showAlert("Please enter a valid quantity.");
-            return;
-        }
+        int quantity = getQuantity();
 
         int totalAvailableQuantity = selectedItem.getTotalQty();
         if (quantity > totalAvailableQuantity) {
@@ -205,54 +190,33 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
             return;
         }
 
-        int remainingQuantity = quantity;
         LinkedList<Stock> remainingStocks = selectedItem.getStocks();
+        boolean processedQuantity = false;
 
-        while (remainingQuantity > 0 && !remainingStocks.isEmpty()) {
+        while (quantity > 0 && !remainingStocks.isEmpty()) {
             Stock currentStock = remainingStocks.pollFirst();
             int currentStockQty = currentStock.getQty();
 
-            if (currentStockQty >= remainingQuantity) {
-                OrderDetail newOrderDetail = new OrderDetail(selectedItem.getItemId(), remainingQuantity, currentStock.getPrice(), currentStock.getBatchNo());
+            if (currentStockQty > 0) {
+                int processedQty = Math.min(quantity, currentStockQty);
+
+                OrderDetail newOrderDetail = new OrderDetail(selectedItem.getItemId(), processedQty, currentStock.getPrice(), currentStock.getBatchNo());
                 orderDetailsList.add(newOrderDetail);
 
                 itemNameListView.getItems().add(selectedItemName);
-                quantityListView.getItems().add(remainingQuantity);
+                quantityListView.getItems().add(processedQty);
                 priceListView.getItems().add(currentStock.getPrice());
                 itemQuantityField.setText("");
                 itemNameComboBox.getSelectionModel().select(null);
-
                 updateTotalPriceLabel();
-                remainingQuantity = 0;
-            } else {
-                remainingQuantity -= currentStockQty;
-                currentStock.setQty(0);
 
-                OrderDetail orderDetail = new OrderDetail(selectedItem.getItemId(), currentStockQty, currentStock.getPrice(), currentStock.getBatchNo());
-                orderDetailsList.add(orderDetail);
-
-                itemNameListView.getItems().add(selectedItemName);
-                quantityListView.getItems().add(currentStockQty);
-                priceListView.getItems().add(currentStock.getPrice());
+                quantity -= processedQty; // Update remaining quantity
+                processedQuantity = true;
             }
         }
 
-        if (remainingQuantity > 0) {
-            showAlert("An error occurred while processing the request. Please try again.");
-        }
-    }
-
-    /**
-     * Handles the action when the Clear button is clicked.
-     * This method prompts the user for confirmation before clearing all items in the order.
-     * If the user confirms, it clears the order details and resets the combo box and quantity field.
-     */
-    @FXML
-    private void handleClearButton() {
-        if (confirmAction("Are you sure you want to clear all items in your order?")) {
-            clearOrderDetails();
-            itemNameComboBox.getSelectionModel().select(null);
-            itemQuantityField.setText("");
+        if (!processedQuantity) {
+            showAlert("An error occurred while processing the request. Please close and try again.");
         }
     }
 
@@ -353,12 +317,11 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
 
         if (!initialized) {
             addHoverEffect(addButton);
-            addHoverEffect(clearButton);
             addHoverEffect(okButton);
 
             initialized = true;
 
-            if (addButton != null && clearButton != null && okButton != null && itemNameComboBox != null && itemQuantityField != null && itemPriceLabel != null && itemNameListView != null) {
+            if (addButton != null && okButton != null && itemNameComboBox != null && itemQuantityField != null && itemPriceLabel != null && itemNameListView != null) {
                 addHoverEffect(okButton);
                 try {
                     LinkedList<Item> itemList = createSalesInvoiceAdminModel.fetchListOfItems();
@@ -379,10 +342,6 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
                 }
-            });
-
-            clearButton.setOnAction(actionEvent -> {
-                handleClearButton();
             });
 
             okButton.setOnAction(actionEvent -> {
@@ -406,6 +365,25 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
     }
 
     //Helper Methods
+
+    /**
+     * Retrieves amount, entered in the quantityField
+     * @return parsed int quantity
+     */
+    private int getQuantity(){
+        int quantity;
+        try {
+            quantity = Integer.parseInt(itemQuantityField.getText().trim());
+            if (quantity <= 0) {
+                showAlert("Quantity must be greater than zero.");
+                return 0;
+            }
+        } catch (NumberFormatException e) {
+            showAlert("Please enter a valid quantity.");
+            return 0;
+        }
+        return quantity;
+    }
 
     /**
      * Retrieves the selected item from the ComboBox.
@@ -438,19 +416,6 @@ public class CreateSalesInvoiceAdminController implements ControllerInterface {
             totalPrice += orderDetail.getQty() * orderDetail.getUnitPrice();
         }
         itemPriceLabel.setText(String.format("%.2f", totalPrice));
-    }
-
-    /**
-     * Clears all the order details.
-     * Removes all items from the orderDetailsList, itemNameListView, priceListView, and quantityListView.
-     * Updates the total price label to reflect the cleared order.
-     */
-    private void clearOrderDetails() {
-        orderDetailsList.clear();
-        itemNameListView.getItems().clear();
-        priceListView.getItems().clear();
-        quantityListView.getItems().clear();
-        updateTotalPriceLabel();
     }
 
     /**

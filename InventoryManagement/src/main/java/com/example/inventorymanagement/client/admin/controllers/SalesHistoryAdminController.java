@@ -142,7 +142,7 @@ public class SalesHistoryAdminController implements ControllerInterface {
      */
     @Override
     public String getObjectsUsed() throws RemoteException {
-        return "itemOrder";
+        return "itemorder";
     }
 
     //UI Handling

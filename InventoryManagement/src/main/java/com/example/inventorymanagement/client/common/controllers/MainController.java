@@ -15,6 +15,9 @@ import com.example.inventorymanagement.util.requests.UserRequestInterface;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -28,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
+import java.util.Optional;
 
 /**
  * Purpose:
@@ -515,6 +519,24 @@ public class MainController implements ControllerInterface {
             dialogStage.setTitle("Sales Invoice");
             Scene scene = new Scene(createSalesInvoiceSalesPanel);
             dialogStage.setScene(scene);
+            dialogStage.setOnCloseRequest(event -> {
+                Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmation.setTitle("Confirmation");
+                confirmation.setHeaderText("Confirm Close");
+                confirmation.setContentText("Are you sure you want to close the window? \nYour current selection will be removed");
+
+                ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+                ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+
+                confirmation.getButtonTypes().setAll(yesButton, noButton);
+
+                Optional<ButtonType> result = confirmation.showAndWait();
+                if (result.isPresent() && result.get() == yesButton) {
+                   dialogStage.close();
+                } else {
+                    event.consume();
+                }
+            });
 
             // Set the stage not resizable
             dialogStage.setResizable(false);
@@ -551,6 +573,24 @@ public class MainController implements ControllerInterface {
             dialogStage.setTitle("Sales Invoice");
             Scene scene = new Scene(createSalesInvoiceAdminPanel);
             dialogStage.setScene(scene);
+            dialogStage.setOnCloseRequest(event -> {
+                Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmation.setTitle("Confirmation");
+                confirmation.setHeaderText("Confirm Close");
+                confirmation.setContentText("Are you sure you want to close the window? \nYour current selection will be removed.");
+
+                ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+                ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+
+                confirmation.getButtonTypes().setAll(yesButton, noButton);
+
+                Optional<ButtonType> result = confirmation.showAndWait();
+                if (result.isPresent() && result.get() == yesButton) {
+                    dialogStage.close();
+                } else {
+                    event.consume();
+                }
+            });
 
             // Set the stage not resizable
             dialogStage.setResizable(false);

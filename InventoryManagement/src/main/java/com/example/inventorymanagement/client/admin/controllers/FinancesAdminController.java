@@ -277,8 +277,8 @@ public class FinancesAdminController implements ControllerInterface {
             // Fetch data from the model
             LinkedHashMap<Integer, Float> monthlyRevenueData = financesAdminModel.fetchMonthlyRevenue();
             LinkedHashMap<Integer, Float> monthlyCostData = financesAdminModel.fetchMonthlyCost();
-            float revenueTodayData = financesAdminModel.fetchRevenueToday();
-            float costTodayData = financesAdminModel.fetchCostToday();
+//            float revenueTodayData = financesAdminModel.fetchRevenueToday();
+//            float costTodayData = financesAdminModel.fetchCostToday();
 
             // Compute gross revenue
             float grossRevenue = financesAdminModel.computeGrossRevenue(monthlyRevenueData);
