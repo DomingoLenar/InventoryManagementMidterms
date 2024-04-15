@@ -29,9 +29,9 @@ public class NavigationBarAdminController implements ControllerInterface {
     @FXML
     private Button stockControlButtonAdmin;
     @FXML
-    private Button userManagementButtonAdmin;
-    @FXML
     private Button profileButtonAdmin;
+    @FXML
+    private Button userManagementButtonAdmin;
 
     // Reference to the main BorderPane
     private BorderPane mainPane;
@@ -65,14 +65,14 @@ public class NavigationBarAdminController implements ControllerInterface {
         financesButtonAdmin.setOnAction(event -> loadFinancesPanel());
         salesHistoryButtonAdmin.setOnAction(event -> loadSalesHistoryPanel());
         stockControlButtonAdmin.setOnAction(event -> loadStockControlPanel());
-        userManagementButtonAdmin.setOnAction(event -> loadUserManagementPanel());
         profileButtonAdmin.setOnAction(event -> loadProfileManagementPanel());
+        userManagementButtonAdmin.setOnAction(event -> loadEditUserManagementPanel());
 
+        addHoverEffect(userManagementButtonAdmin);
         addHoverEffect(dashboardButtonAdmin);
         addHoverEffect(financesButtonAdmin);
         addHoverEffect(salesHistoryButtonAdmin);
         addHoverEffect(stockControlButtonAdmin);
-        addHoverEffect(userManagementButtonAdmin);
         addHoverEffect(profileButtonAdmin);
     }
 
@@ -107,18 +107,6 @@ public class NavigationBarAdminController implements ControllerInterface {
       }
     }
 
-    private void loadUserManagementPanel() {
-        try{
-            MainController.getUserManagementAdminController().fetchAndUpdate();
-            mainPane.setRight(MainController.getUserManagementAdminPanel());
-            MainController.clientCallback.setCurrentPanel(MainController.getUserManagementAdminController());
-            UpdateCallback.process(MainController.clientCallback, MainController.registry);
-        } catch (IOException e){
-            throw new RuntimeException();
-        } catch (NotLoggedInException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private void loadStockControlPanel() {
         try {
@@ -159,6 +147,19 @@ public class NavigationBarAdminController implements ControllerInterface {
         }
     }
 
+    private void loadEditUserManagementPanel() {
+        try {
+            MainController.getEditUserAdminController().fetchAndUpdate();
+            mainPane.setRight(MainController.getEditUserAdminPanel());
+            MainController.clientCallback.setCurrentPanel(MainController.getEditUserAdminController());
+            UpdateCallback.process(MainController.clientCallback, MainController.registry);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (NotLoggedInException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @FXML
     public BorderPane getBorderPaneNavigationBarAdmin() { return borderPaneNavigationBarAdmin;}
 
@@ -167,9 +168,6 @@ public class NavigationBarAdminController implements ControllerInterface {
 
     @FXML
     public Button getFinancesButtonAdmin() { return financesButtonAdmin;}
-
-    @FXML
-    public Button getUserManagementButtonAdmin() { return userManagementButtonAdmin;}
 
     @FXML
     public Button getStockControlButtonAdmin() { return stockControlButtonAdmin; }

@@ -65,8 +65,6 @@ public class MainController implements ControllerInterface {
     static BorderPane dashboardAdminPanel;
     static FinancesAdminController financesAdminController;
     static BorderPane financesAdminPanel;
-    static UserManagementAdminController userManagementAdminController;
-    static BorderPane userManagementAdminPanel;
 
     static CreateSalesInvoiceAdminController createSalesInvoiceAdminController;
     static DialogPane createSalesInvoiceAdminPanel;
@@ -79,8 +77,10 @@ public class MainController implements ControllerInterface {
 
     static LowStocksAdminController lowStocksAdminController;
     static BorderPane lowStocksAdminPanel;
+
     static AddUserAdminController addUserAdminController;
     static BorderPane addUserAdminPanel;
+
     static ProfileManagementChangePassAdminController profileManagementChangePassAdminController;
     static BorderPane profileManagementChangePassAdminPanel;
 
@@ -140,7 +140,7 @@ public class MainController implements ControllerInterface {
     public static BorderPane getProfileManagementAdminPanel() { return profileManagementAdminPanel;}
     public static BorderPane getDashboardAdminPanel(){ return dashboardAdminPanel;}
     public static BorderPane getFinancesAdminPanel(){ return financesAdminPanel;}
-    public static BorderPane getUserManagementAdminPanel(){return userManagementAdminPanel;}
+    public static BorderPane getEditUserAdminPanel() {return editUserAdminPanel;}
 
     public static DialogPane getCreateSalesInvoiceSalesPanel() { return createSalesInvoiceSalesPanel;}
     public static DialogPane getCreateSalesInvoiceAdminPanel() { return createSalesInvoiceAdminPanel;}
@@ -174,7 +174,7 @@ public class MainController implements ControllerInterface {
     public static ProfileManagementAdminController getProfileManagementAdminController() { return profileManagementAdminController;}
     public static DashboardAdminController getDashboardAdminController(){ return dashboardAdminController;}
     public static FinancesAdminController getFinancesAdminController(){ return financesAdminController;}
-    public static UserManagementAdminController getUserManagementAdminController(){ return userManagementAdminController;}
+    public static EditUserAdminController getEditUserAdminController() {return editUserAdminController;}
 
     public static CreateSalesInvoiceSalesController getCreateSalesInvoiceSalesController() { return createSalesInvoiceSalesController;}
     public static CreateSalesInvoiceAdminController getCreateSalesInvoiceAdminController() { return createSalesInvoiceAdminController;}
@@ -327,15 +327,15 @@ public class MainController implements ControllerInterface {
         financesAdminPanel = financesLoader.load();
         financesAdminController = financesLoader.getController();
 
-        FXMLLoader userManagementLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/userManagement/userManagementAdmin-view.fxml"));
-        userManagementAdminPanel = userManagementLoader.load();
-        userManagementAdminController = userManagementLoader.getController();
-        userManagementAdminController.setMainController(this);
-
         FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/dashboard/dashboardAdmin-view.fxml"));
         dashboardAdminPanel = dashboardLoader.load();
         dashboardAdminController = dashboardLoader.getController();
         dashboardAdminController.setMainController(this);
+
+        FXMLLoader editUserLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/userManagement/editUserAdmin-view.fxml"));
+        editUserAdminPanel = editUserLoader.load();
+        editUserAdminController = editUserLoader.getController();
+        editUserAdminController.setMainController(this);
 
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
 
@@ -347,7 +347,7 @@ public class MainController implements ControllerInterface {
         }
 
         VBox rightComponents = new VBox();
-        rightComponents.getChildren().addAll(dashboardAdminPanel, stockControlAdminPanel, salesHistoryAdminPanel, profileManagementAdminPanel, financesAdminPanel, userManagementAdminPanel);
+        rightComponents.getChildren().addAll(dashboardAdminPanel, stockControlAdminPanel, salesHistoryAdminPanel, profileManagementAdminPanel, financesAdminPanel, editUserAdminPanel);
 
         BorderPane root = new BorderPane();
         root.setLeft(navigationBar);
@@ -897,38 +897,6 @@ public class MainController implements ControllerInterface {
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.setTitle("Change Password");
             Scene scene = new Scene(profileManagementSalesPanel);
-            dialogStage.setScene(scene);
-
-            // Set the stage not resizable
-            dialogStage.setResizable(false);
-
-            dialogStage.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void openEditUserAdminPanel(){
-        try {
-            Font.loadFont(getClass().getResourceAsStream("/fonts/ShareTechMono-Regular.ttf"), 20);
-
-            FXMLLoader editUserLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/userManagement/editUserAdmin-view.fxml"));
-            editUserAdminPanel = editUserLoader.load();
-            editUserAdminController = editUserLoader.getController();
-
-            InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
-            if (inputStream != null) {
-                Image image = new Image(inputStream);
-                stage.getIcons().add(image);
-            } else {
-                System.err.println("Failed to load image: logo.png");
-            }
-
-            Stage dialogStage = new Stage();
-            dialogStage.initOwner(stage);
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
-            dialogStage.setTitle("Change Password");
-            Scene scene = new Scene(editUserAdminPanel);
             dialogStage.setScene(scene);
 
             // Set the stage not resizable
