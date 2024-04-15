@@ -241,36 +241,38 @@ public class DashboardAdminController implements ControllerInterface {
 
     @Override
     public void fetchAndUpdate() throws RemoteException {
+        Platform.runLater(() -> {
+            try {
+                // Fetch data from the model
+                LinkedHashMap<Integer, Float> monthlyRevenueData = dashboardAdminModel.fetchMonthlyRevenue();
+                LinkedList<User> activeUsersData = dashboardAdminModel.fetchActiveUsers();
+                LinkedList<ItemOrder> transactionsTodayData = dashboardAdminModel.fetchTransactionsToday();
+                LinkedList<Item> lowestStockData = dashboardAdminModel.fetchLowestStock();
+
+
+                // Update the stacked bar chart for monthly revenue
+                updateMonthlyRevenueChart(monthlyRevenueData);
+
+                // Update the label for active users count
+                updateActiveUsersLabel(activeUsersData.size());
+
+                // Update the lowest stock of products
+                updateLowestStock(lowestStockData);
+
+                // update the transactions today data
+                updateTransactionsToday(transactionsTodayData);
+
+                // Populate the active users table
+                populateUsersActiveTableView(activeUsersData);
+
+                // Populate the today's transaction table
+                populateTransTodayTableView(transactionsTodayData);
+
+            } catch (NotLoggedInException | OutOfRoleException e) {
+                e.printStackTrace(); // Handle exceptions appropriately
+            }
+        });
         System.out.println("updated");
-        try {
-            // Fetch data from the model
-            LinkedHashMap<Integer, Float> monthlyRevenueData = dashboardAdminModel.fetchMonthlyRevenue();
-            LinkedList<User> activeUsersData = dashboardAdminModel.fetchActiveUsers();
-            LinkedList<ItemOrder> transactionsTodayData = dashboardAdminModel.fetchTransactionsToday();
-            LinkedList<Item> lowestStockData = dashboardAdminModel.fetchLowestStock();
-
-
-            // Update the stacked bar chart for monthly revenue
-            updateMonthlyRevenueChart(monthlyRevenueData);
-
-            // Update the label for active users count
-            updateActiveUsersLabel(activeUsersData.size());
-
-            // Update the lowest stock of products
-            updateLowestStock(lowestStockData);
-
-            // update the transactions today data
-            updateTransactionsToday(transactionsTodayData);
-
-            // Populate the active users table
-            populateUsersActiveTableView(activeUsersData);
-
-            // Populate the today's transaction table
-            populateTransTodayTableView(transactionsTodayData);
-
-        } catch (NotLoggedInException | OutOfRoleException e) {
-            e.printStackTrace(); // Handle exceptions appropriately
-        }
     }
     @Override
     public String getObjectsUsed() throws RemoteException {

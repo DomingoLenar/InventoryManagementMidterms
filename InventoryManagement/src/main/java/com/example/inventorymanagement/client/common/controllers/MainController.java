@@ -328,15 +328,15 @@ public class MainController implements ControllerInterface {
         financesAdminPanel = financesLoader.load();
         financesAdminController = financesLoader.getController();
 
-        FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/dashboard/dashboardAdmin-view.fxml"));
-        dashboardAdminPanel = dashboardLoader.load();
-        dashboardAdminController = dashboardLoader.getController();
-        dashboardAdminController.setMainController(this);
-
         FXMLLoader editUserLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/userManagement/editUserAdmin-view.fxml"));
         editUserAdminPanel = editUserLoader.load();
         editUserAdminController = editUserLoader.getController();
         editUserAdminController.setMainController(this);
+
+        FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/com/example/inventorymanagement/client/view/dashboard/dashboardAdmin-view.fxml"));
+        dashboardAdminPanel = dashboardLoader.load();
+        dashboardAdminController = dashboardLoader.getController();
+        dashboardAdminController.setMainController(this);
 
         InputStream inputStream = getClass().getResourceAsStream("/icons/logo.png");
 
