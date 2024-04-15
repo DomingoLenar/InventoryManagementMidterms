@@ -80,7 +80,7 @@
                   <Font name="Share Tech Mono" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="todayTransactionLabel" layoutX="471.0" layoutY="14.0" text="Today's Transactions">
+            <Label fx:id="todayTransactionsLabel" layoutX="471.0" layoutY="14.0" text="Today's Transactions">
                <font>
                   <Font name="Share Tech Mono" size="18.0" />
                </font>
