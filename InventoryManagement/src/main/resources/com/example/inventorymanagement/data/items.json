@@ -3,7 +3,7 @@
     {
       "itemName": "Whole Chicken",
       "itemId": 1,
-      "totalQty": "20",
+      "totalQty": "40",
       "stocks": [
         {
           "batchNo": "FeatherFarms_2023-12-29_200.00",
@@ -15,11 +15,19 @@
         },
         {
           "batchNo": "FeatherFarms_2024-01-03_200.00",
-          "qty": "20",
+          "qty": "10",
           "price": 299.75,
           "cost": 200.00,
           "supplier": "FeatherFarms",
           "date": "2023-01-03"
+        },
+        {
+          "batchNo": "Steel Craft_2024-04-15_200.0",
+          "qty": 30,
+          "price": 48.0,
+          "cost": 200.0,
+          "supplier": "Steel Craft",
+          "date": "2024-04-15"
         }
       ]
     },
