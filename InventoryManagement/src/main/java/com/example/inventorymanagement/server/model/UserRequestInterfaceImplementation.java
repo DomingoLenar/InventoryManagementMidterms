@@ -137,13 +137,10 @@ public class UserRequestInterfaceImplementation extends UnicastRemoteObject impl
 
     @Override
     public boolean isLoggedIn(ClientCallback clientCallback) throws RemoteException {
-        return clientCallbacks.stream().anyMatch(callbacks ->{
-            try {
-                return (callbacks.getUser().equals(clientCallback.getUser()));
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        for(int x = 0; x< clientCallbacks.size(); x++){
+            if(clientCallbacks.get(x).getUser().getUsername().equals(clientCallback.getUser().getUsername())) return true;
+        }
+        return false;
     }
 
     //PLease use this whenever you change panels
